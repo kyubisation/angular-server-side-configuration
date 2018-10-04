@@ -1,0 +1,32 @@
+{
+  "name": "angular-runtime-configuration",
+  "version": "0.0.0",
+  "description": "Configure an angular application at runtime on the server",
+  "main": "main.js",
+  "scripts": {
+    "tsc": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kyubisation/angular-runtime-configuration.git"
+  },
+  "keywords": [
+    "angular",
+    "configuration",
+    "runtime"
+  ],
+  "author": "kyubisation",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/kyubisation/angular-runtime-configuration/issues"
+  },
+  "homepage": "https://github.com/kyubisation/angular-runtime-configuration#readme",
+  "dependencies": {
+    "esm": "^3.0.84"
+  },
+  "devDependencies": {
+    "@types/node": "^10.11.4",
+    "typescript": "^3.1.1"
+  }
+}
