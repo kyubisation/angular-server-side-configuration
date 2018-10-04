@@ -3,9 +3,12 @@
   "version": "0.0.0",
   "description": "Configure an angular application at runtime on the server",
   "main": "main.js",
+  "types": "main.d.ts",
   "scripts": {
+    "clean": "rimraf src/*.d.ts src/*.js",
     "tsc": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepack": "tsc"
   },
   "repository": {
     "type": "git",
@@ -26,7 +29,13 @@
     "esm": "^3.0.84"
   },
   "devDependencies": {
+    "@types/chai": "^4.1.6",
+    "@types/mocha": "^5.2.5",
     "@types/node": "^10.11.4",
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
+    "rimraf": "^2.6.2",
+    "ts-node": "^7.0.1",
     "typescript": "^3.1.1"
   }
 }
