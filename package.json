@@ -1,6 +1,6 @@
 {
   "name": "angular-server-side-configuration",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Configure an angular application on the server",
   "main": "./src/main.js",
   "module": "./src/index.js",
@@ -8,7 +8,8 @@
   "scripts": {
     "clean": "rimraf src/*.d.ts src/*.js",
     "test": "nyc --require esm --require ts-node/register/transpile-only mocha src/**/*.spec.ts",
-    "prepack": "tsc"
+    "prepack": "tsc",
+    "postpublish": "npm run clean"
   },
   "repository": {
     "type": "git",
