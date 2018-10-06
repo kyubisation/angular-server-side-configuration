@@ -8,8 +8,9 @@ In a Continuous Delivery environment this is sometimes not enough.
 ## How it works & Limitations
 Environment variables are used for configuration. This package provides a script
 to search for usages in bundled angular files and a script for inserting populated
-environment variables into index.html file(s) (Missing environment variables will
-be represented by null). This should be done on the host serving the bundled angular files.
+environment variables into index.html file(s) by replacing `<!--CONFIG-->`
+(Missing environment variables will be represented by null). This should be done
+on the host serving the bundled angular files.
 
 ### AOT
 This will not work in Module.forRoot or Module.forChild scripts or parameters.
@@ -48,6 +49,27 @@ the typings for process.env.* in the code and register a fallback value for proc
 import 'angular-server-side-configuration/process';
 ```
 
+### index.html
+Add `<!--CONFIG-->` to index.html. This will be replaced by the configuration script tag.
+
+```html
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Angular Example</title>
+  <base href="/">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <!--CONFIG-->
+</head>
+<body>
+  <aria-root></aria-root>
+</body>
+</html>
+```
+
 ### server.ts (or any script executed on the host)
 `EnvironmentVariablesConfiguration` provides a way of looking for usages of process.env.*
 in the bundled angular javascript files and provides a way of inserting the environment variables
@@ -71,8 +93,12 @@ envVariables.insertAndSaveRecursively(bundledAngularFilesRoot)
 ## Documentation
 
 ### process
-Import this in polyfill.ts. This will enable the typings for process.env.*
-in the code and register a fallback value for process.env.
+Import `angular-server-side-configuration/process` in polyfill.ts. This will enable
+the typings for process.env.* in the code and register a fallback value for process.env.
+
+```typescript
+import 'angular-server-side-configuration/process';
+```
 
 ### EnvironmentVariablesConfiguration
 
@@ -86,6 +112,13 @@ const envVariables = new EnvironmentVariablesConfiguration(['PROD', 'API_ADDRESS
 By default the searchEnvironmentVariables method uses a regex
 (`/process\s*\.\s*env\s*\.\s*[a-zA-Z0-9_]+/gm`) to look for process.env.* usages.
 It is possible to provide a discovery function in the options as a second parameter.
+
+`root` The root directory from which to search.  
+`options` Optional options for searching environment variables.  
+`options.filePattern` The file pattern in which environment variables should be searched
+(Defaults to /.js$/).  
+`options.environmentVariablesDiscovery` The function to discover environment variables in
+the matched files (Defaults to process.env.VARIABLE => VARIABLE).
 
 Returns an instance of EnvironmentVariablesConfiguration.
 
@@ -122,7 +155,7 @@ into the specified file content without saving the file.
 `file` The file to be read.  
 `options` Optional options for insertion.  
 `options.insertionRegex` The replacement pattern, where the configuration should be inserted
-(Defaults to /<!--\s*CONFIG\s*-->/).
+(Defaults to `/<!--\s*CONFIG\s*-->/`).
 
 Returns a promise, which resolves to the file content with the environment variables inserted.
 
@@ -138,7 +171,7 @@ Inserts the discovered environment variables as an IIFE wrapped in a script tag 
 `file` The file into which the environment variables should be inserted.  
 `options` Optional options for insertion.  
 `options.insertionRegex` The replacement pattern, where the configuration should be inserted
-(Defaults to /<!--\s*CONFIG\s*-->/).
+(Defaults to `/<!--\s*CONFIG\s*-->/`).
 
 Returns a promise, which resolves after the enivornment variables have been saved to the given file.
 
@@ -155,7 +188,7 @@ Inserts the discovered enviornment variables as an IIFE wrapped in a script tag 
 `options.filePattern` The file pattern in which the configuration should be inserted
 (Defaults to /index.html$/).  
 `options.insertionRegex` The replacement pattern, where the configuration should
-be inserted (Defaults to /<!--\s*CONFIG\s*-->/).
+be inserted (Defaults to `/<!--\s*CONFIG\s*-->/`).
 
 Returns a promise, which resolves after the environment variables have been inserted to all matched files.
 
