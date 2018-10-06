@@ -9,7 +9,7 @@ const writeFileAsync = promisify(writeFile);
  */
 export class EnvironmentVariablesConfiguration {
 
-  private constructor(public readonly variables: string[]) { }
+  constructor(public readonly variables: string[]) { }
 
   /**
    * Searches for environment variable declarations in
@@ -51,7 +51,8 @@ export class EnvironmentVariablesConfiguration {
   }
 
   /**
-   * Inserts the discovered enviornment variables into the matched files.
+   * Inserts the discovered enviornment variables as an IIFE
+   * wrapped in a script tag into the matched files.
    * 
    * @param root The root directory from which to search insertion files.
    * @param options Optional options for insertion.
@@ -59,6 +60,8 @@ export class EnvironmentVariablesConfiguration {
    *   (Defaults to /index.html$/).
    * @param options.insertionRegex The replacement pattern, where the configuration should
    *   be inserted (Defaults to /<!--\s*CONFIG\s*-->/).
+   * @returns A promise, which resolves after the environment variables have been
+   *   inserted to all matched files.
    */
   async insertAndSaveRecursively(
     root: string, options: { filePattern?: RegExp, insertionRegex?: RegExp } = {}) {
@@ -69,12 +72,14 @@ export class EnvironmentVariablesConfiguration {
   }
 
   /**
-   * Inserts the discovered environment variables into the specified file.
+   * Inserts the discovered environment variables as an IIFE
+   * wrapped in a script tag into the specified file.
    * 
    * @param file The file into which the environment variables should be inserted.
    * @param options Optional options for insertion.
    * @param options.insertionRegex The replacement pattern, where the configuration should
    *   be inserted (Defaults to /<!--\s*CONFIG\s*-->/).
+   * @returns A promise, which resolves after the enivornment variables have been saved to the given file.
    */
   async insertAndSave(file: string, options: { insertionRegex?: RegExp } = {}) {
     const fileContent = await this.apply(file, options);
@@ -82,13 +87,14 @@ export class EnvironmentVariablesConfiguration {
   }
 
   /**
-   * Inserts the discovered environment variables into the specified file content
-   * without saving the file.
+   * Inserts the discovered environment variables as an IIFE wrapped in a script tag
+   * into the specified file content without saving the file.
    * 
    * @param file The file to be read.
    * @param options Optional options for insertion.
    * @param options.insertionRegex The replacement pattern, where the configuration should
    *   be inserted (Defaults to /<!--\s*CONFIG\s*-->/).
+   * @returns A promise, which resolves to the file content with the environment variables inserted.
    */
   async apply(file: string, options: { insertionRegex?: RegExp } = {}) {
     const insertionRegex = options.insertionRegex || /<!--\s*CONFIG\s*-->/;

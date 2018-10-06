@@ -1,14 +1,13 @@
 {
   "name": "angular-server-side-configuration",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Configure an angular application on the server",
-  "main": "main.js",
-  "module": "module.js",
-  "types": "main.d.ts",
+  "main": "./src/main.js",
+  "module": "./src/index.js",
+  "types": "./src/index.d.ts",
   "scripts": {
     "clean": "rimraf src/*.d.ts src/*.js",
-    "tsc": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "nyc --require esm --require ts-node/register/transpile-only mocha src/**/*.spec.ts",
     "prepack": "tsc"
   },
   "repository": {
@@ -36,6 +35,7 @@
     "@types/node": "^10.11.4",
     "chai": "^4.2.0",
     "mocha": "^5.2.0",
+    "nyc": "^13.0.1",
     "rimraf": "^2.6.2",
     "ts-node": "^7.0.1",
     "typescript": "^3.1.1"

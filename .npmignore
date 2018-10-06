@@ -1,4 +1,8 @@
 *.ts
 !*.d.ts
+*.spec.js
+*.spec.d.ts
 tsconfig.json
 .editorconfig
+testing
+.nyc_output
