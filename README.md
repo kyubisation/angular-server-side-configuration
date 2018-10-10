@@ -65,7 +65,7 @@ Add `<!--CONFIG-->` to index.html. This will be replaced by the configuration sc
   <!--CONFIG-->
 </head>
 <body>
-  <aria-root></aria-root>
+  <app-root></app-root>
 </body>
 </html>
 ```
@@ -76,14 +76,14 @@ in the bundled angular javascript files and provides a way of inserting the envi
 into the index.html file(s).
 
 ```typescript
+// Express is completely optional
+import * as express from 'express';
+const app = express();
 ...
 import { EnvironmentVariablesConfiguration } from 'angular-server-side-configuration';
-import * as express from 'express';
-...
-const app = express();
 const envVariables = EnvironmentVariablesConfiguration.searchEnvironmentVariables(bundledAngularFilesRoot);
-...
 envVariables.insertAndSaveRecursively(bundledAngularFilesRoot)
+  // Optional
   .then(() => {
     app.listen(PORT, () => {
       console.log(`Node server listening on http://localhost:${PORT}`);
@@ -145,7 +145,7 @@ Generates the IIFE in which the environment variables are assigned to window.pro
 const envVariables = new EnvironmentVariablesConfiguration(['PROD', 'API_ADDRESS']);
 process.env.API_ADDRESS = 'https://example-api.com';
 const iife = envVariables.generateIIFE();
-// (function(self){self.process={env:{"PROD":null,"API_ADDRESS":"https://example-api.com"};})(window)
+// (function(self){self.process={env:{"PROD":null,"API_ADDRESS":"https://example-api.com"}};})(window)
 ```
 
 #### EnvironmentVariablesConfiguration.prototype.apply
@@ -162,7 +162,7 @@ Returns a promise, which resolves to the file content with the environment varia
 ```typescript
 const envVariables = EnvironmentVariablesConfiguration.searchEnvironmentVariables(bundledAngularFilesRoot);
 const content = await envVariables.apply(pathToIndexHtml);
-// <html>...<script>(function(self){self.process={env:{"PROD":null,"API_ADDRESS":"https://example-api.com"};})(window)</script>...</html>
+// <html>...<script>(function(self){self.process={env:{"PROD":null,"API_ADDRESS":"https://example-api.com"}};})(window)</script>...</html>
 ```
 
 #### EnvironmentVariablesConfiguration.prototype.insertAndSave
@@ -180,7 +180,7 @@ const envVariables = EnvironmentVariablesConfiguration.searchEnvironmentVariable
 await envVariables.insertAndSave(pathToIndexHtml);
 ```
 
-#### EnvironmentVariablesConfiguration.prototype.insertAndSave
+#### EnvironmentVariablesConfiguration.prototype.insertAndSaveRecursively
 Inserts the discovered enviornment variables as an IIFE wrapped in a script tag into the matched files.
 
 `root` The root directory from which to search insertion files.  
@@ -196,6 +196,80 @@ Returns a promise, which resolves after the environment variables have been inse
 const envVariables = EnvironmentVariablesConfiguration.searchEnvironmentVariables(bundledAngularFilesRoot);
 await envVariables.insertAndSaveRecursively(bundledAngularFilesRoot);
 ```
+
+#### EnvironmentVariablesConfiguration.prototype.replace
+Add a replacement function for the file received through apply, insertAndSave or
+insertAndSaveRecursively. The function receives the file content and the file name as
+parameters and returns the file content with the replacement applied.
+
+`replacement` The replacement function.
+Returns this instance.
+
+```typescript
+const envVariables = EnvironmentVariablesConfiguration.searchEnvironmentVariables(bundledAngularFilesRoot);
+await envVariables
+  .replace((fileContent, fileName) => fileContent.replace('search-example', 'replace-example'))
+  .insertAndSaveRecursively(bundledAngularFilesRoot);
+```
+
+#### EnvironmentVariablesConfiguration.prototype.regexReplace
+Add a replacement for the file received through apply, insertAndSave or insertAndSaveRecursively.
+
+`regex` A RegExp object or literal. The match or matches are replaced with replaceValue.
+`replaceValue` The value that replaces the substring matched by the regex parameter.
+Returns this instance.
+
+```typescript
+const envVariables = EnvironmentVariablesConfiguration.searchEnvironmentVariables(bundledAngularFilesRoot);
+await envVariables
+  .regexReplace(/search-example-[0-9]/g, 'replace-example')
+  .insertAndSaveRecursively(bundledAngularFilesRoot);
+```
+
+#### EnvironmentVariablesConfiguration.prototype.replaceTagAttribute
+Replace the attribute value of a tag for the file received through
+apply, insertAndSave or insertAndSaveRecursively.
+
+`tag` The tag, whose attribute value should be replaced.
+`attribute` The attribute, whose value should be replaced.
+`newValue` The new attribute value.
+Returns this instance.
+
+```typescript
+const envVariables = EnvironmentVariablesConfiguration.searchEnvironmentVariables(bundledAngularFilesRoot);
+await envVariables
+  .replaceTagAttribute('body', 'id', newId)
+  .insertAndSaveRecursively(bundledAngularFilesRoot);
+```
+
+#### EnvironmentVariablesConfiguration.prototype.replaceHtmlLang
+Replace the html lang attribute for the file received through
+apply, insertAndSave or insertAndSaveRecursively.
+
+`newHtmlLang` The new base href.
+Returns this instance.
+
+```typescript
+const envVariables = EnvironmentVariablesConfiguration.searchEnvironmentVariables(bundledAngularFilesRoot);
+await envVariables
+  .replaceHtmlLang('de')
+  .insertAndSaveRecursively(bundledAngularFilesRoot);
+```
+
+#### EnvironmentVariablesConfiguration.prototype.replaceBaseHref
+Replace the base href attribute for the file received through
+apply, insertAndSave or insertAndSaveRecursively.
+
+`newBaseHref` The new base href.
+Returns this instance.
+
+```typescript
+const envVariables = EnvironmentVariablesConfiguration.searchEnvironmentVariables(bundledAngularFilesRoot);
+await envVariables
+  .replaceBaseHref('/de/')
+  .insertAndSaveRecursively(bundledAngularFilesRoot);
+```
+
 
 ## License
 Apache License, Version 2.0

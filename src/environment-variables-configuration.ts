@@ -9,7 +9,10 @@ const writeFileAsync = promisify(writeFile);
  */
 export class EnvironmentVariablesConfiguration {
 
-  constructor(public readonly variables: string[]) { }
+  constructor(
+    public readonly variables: string[],
+    public readonly replacements: Array<(fileContent: string, fileName: string) => string> = [],
+  ) { }
 
   /**
    * Searches for environment variable declarations in
@@ -51,8 +54,72 @@ export class EnvironmentVariablesConfiguration {
   }
 
   /**
+   * Replace the base href attribute for the file received through
+   * apply, insertAndSave or insertAndSaveRecursively.
+   * 
+   * @param newBaseHref The new base href.
+   * @returns This instance.
+   */
+  replaceBaseHref(newBaseHref: string) {
+    return this.replaceTagAttribute('base', 'href', newBaseHref);
+  }
+
+  /**
+   * Replace the html lang attribute for the file received through
+   * apply, insertAndSave or insertAndSaveRecursively.
+   * 
+   * @param newHtmlLang The new base href.
+   * @returns This instance.
+   */
+  replaceHtmlLang(newHtmlLang: string) {
+    return this.replaceTagAttribute('html', 'lang', newHtmlLang);
+  }
+
+  /**
+   * Replace the attribute value of a tag for the file received through
+   * apply, insertAndSave or insertAndSaveRecursively.
+   * 
+   * @param tag The tag, whose attribute value should be replaced.
+   * @param attribute The attribute, whose value should be replaced.
+   * @param newValue The new attribute value.
+   * @returns This instance.
+   */
+  replaceTagAttribute(tag: string, attribute: string, newValue: string) {
+    return this.replace(
+      c => c.replace(
+        new RegExp(`<${tag}[^>]*>`, 'gm'),
+         m => m.replace(
+           new RegExp(`(${attribute}=(")(.*?)"([\\s>/])|${attribute}=(')(.*?)'([\\s>/]))`, 'gm'),
+          (...m: string[]) => `${attribute}=${m[2]}${newValue}${m[2]}${m[4]}`)));
+  }
+
+  /**
+   * Add a replacement for the file received through apply, insertAndSave or insertAndSaveRecursively.
+   * 
+   * @param regex A RegExp object or literal. The match or matches are replaced with replaceValue.
+   * @param replaceValue The value that replaces the substring matched by the regex parameter.
+   * @returns This instance.
+   */
+  regexReplace(regex: RegExp, replaceValue: string) {
+    return this.replace(c => c.replace(regex, replaceValue));
+  }
+
+  /**
+   * Add a replacement function for the file received through apply, insertAndSave or
+   * insertAndSaveRecursively. The function receives the file content and the file name as
+   * parameters and returns the file content with the replacement applied.
+   * 
+   * @param replacement The replacement function.
+   * @returns This instance.
+   */
+  replace(replacement: (fileContent: string, fileName: string) => string) {
+    this.replacements.push(replacement);
+    return this;
+  }
+
+  /**
    * Inserts the discovered enviornment variables as an IIFE
-   * wrapped in a script tag into the matched files.
+   * wrapped in a script tag into the matched files and applies added replacements.
    * 
    * @param root The root directory from which to search insertion files.
    * @param options Optional options for insertion.
@@ -73,7 +140,7 @@ export class EnvironmentVariablesConfiguration {
 
   /**
    * Inserts the discovered environment variables as an IIFE
-   * wrapped in a script tag into the specified file.
+   * wrapped in a script tag into the specified file and applies added replacements.
    * 
    * @param file The file into which the environment variables should be inserted.
    * @param options Optional options for insertion.
@@ -88,7 +155,7 @@ export class EnvironmentVariablesConfiguration {
 
   /**
    * Inserts the discovered environment variables as an IIFE wrapped in a script tag
-   * into the specified file content without saving the file.
+   * into the specified file content and applies added replacements without saving the file.
    * 
    * @param file The file to be read.
    * @param options Optional options for insertion.
@@ -99,7 +166,9 @@ export class EnvironmentVariablesConfiguration {
   async apply(file: string, options: { insertionRegex?: RegExp } = {}) {
     const insertionRegex = options.insertionRegex || /<!--\s*CONFIG\s*-->/;
     const fileContent = await readFileAsync(file, 'utf8');
-    return fileContent.replace(insertionRegex, `<script>${this.generateIIFE()}</script>`);
+    return this.replacements
+      .concat(c => c.replace(insertionRegex, `<script>${this.generateIIFE()}</script>`))
+      .reduce((current, next) => next(current, file), fileContent);
   }
 
   /**

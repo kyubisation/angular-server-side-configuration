@@ -50,6 +50,28 @@ describe('EnvironmentVariablesConfiguration', () => {
     });
     contents.forEach(c => expect(c).to.contain(envVariables.generateIIFE()));
   });
+
+  it('should replace html lang attribute', async () => {
+    const file = join(root, 'index.html');
+    const envVariables = new EnvironmentVariablesConfiguration(['TEST', 'TEST2']);
+    const content = await temporaryFile(file, async () => {
+      await envVariables
+        .replaceHtmlLang('de')
+        .insertAndSave(file);
+    });
+    expect(content).to.contain('<html lang="de">');
+  });
+
+  it('should replace the base href attribute', async () => {
+    const file = join(root, 'index.html');
+    const envVariables = new EnvironmentVariablesConfiguration(['TEST', 'TEST2']);
+    const content = await temporaryFile(file, async () => {
+      await envVariables
+        .replaceBaseHref('/de/')
+        .insertAndSave(file);
+    });
+    expect(content).to.contain('<base href="/de/">');
+  });
 });
 
 const template = `<!doctype html>
