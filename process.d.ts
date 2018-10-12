@@ -1,1 +1,8 @@
-declare let process: { env: { [key: string]: string | undefined; } };
+declare namespace NodeJS {
+  interface NodeProcess {
+      env?: any;
+  }
+  interface Process extends NodeProcess {}
+}
+
+declare var process: NodeJS.Process;
