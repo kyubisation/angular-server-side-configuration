@@ -62,4 +62,5 @@ typings/
 
 # TypeScript
 *.js
+!testing/**/*.js
 *.d.ts
