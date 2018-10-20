@@ -5,11 +5,32 @@ import { writeFileSync, unlinkSync, readFileSync } from 'fs';
 import { EnvironmentVariablesConfiguration } from './environment-variables-configuration';
 
 describe('EnvironmentVariablesConfiguration', () => {
-  const root = join(__dirname, '..', 'testing', 'environment-variables-configuration');
+  const root = join(__dirname, '..', 'test', 'environment-variables-configuration');
+
+  it('should throw on missing directory', () => {
+    const missingDirectory = join(root, 'missing-directory');
+    expect(
+      () => EnvironmentVariablesConfiguration.searchEnvironmentVariables(missingDirectory))
+      .to.throw(Error);
+  });
+
+  it('should throw on invalid directory', async () => {
+    const invalidDirectory = join(root, 'index.html');
+    await temporaryFile(invalidDirectory, async () => {
+      expect(
+        () => EnvironmentVariablesConfiguration.searchEnvironmentVariables(invalidDirectory))
+        .to.throw(Error);
+    });
+  });
 
   it('should find TEST and TEST2', () => {
     const envVariables = EnvironmentVariablesConfiguration.searchEnvironmentVariables(root);
     expect(envVariables.variables).eql(['TEST', 'TEST2']);
+  });
+
+  it('should find nothing', () => {
+    const envVariables = EnvironmentVariablesConfiguration.searchEnvironmentVariables(join(root, 'nothing'));
+    expect(envVariables.variables).to.be.empty;
   });
 
   it('should populate variables from process.env', () => {
@@ -71,6 +92,18 @@ describe('EnvironmentVariablesConfiguration', () => {
         .insertAndSave(file);
     });
     expect(content).to.contain('<base href="/de/">');
+  });
+
+  it('should replace regex match', async () => {
+    const file = join(root, 'index.html');
+    const envVariables = new EnvironmentVariablesConfiguration(['TEST', 'TEST2']);
+    const newTitle = '<title>Regex</title>';
+    const content = await temporaryFile(file, async () => {
+      await envVariables
+        .regexReplace(/<title>[a-zA-Z0-9]+<\/title>/g, newTitle)
+        .insertAndSave(file);
+    });
+    expect(content).to.contain(newTitle);
   });
 });
 

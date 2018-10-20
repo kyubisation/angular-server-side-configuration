@@ -203,6 +203,7 @@ insertAndSaveRecursively. The function receives the file content and the file na
 parameters and returns the file content with the replacement applied.
 
 `replacement` The replacement function.
+
 Returns this instance.
 
 ```typescript
@@ -217,6 +218,7 @@ Add a replacement for the file received through apply, insertAndSave or insertAn
 
 `regex` A RegExp object or literal. The match or matches are replaced with replaceValue.
 `replaceValue` The value that replaces the substring matched by the regex parameter.
+
 Returns this instance.
 
 ```typescript
@@ -233,6 +235,7 @@ apply, insertAndSave or insertAndSaveRecursively.
 `tag` The tag, whose attribute value should be replaced.
 `attribute` The attribute, whose value should be replaced.
 `newValue` The new attribute value.
+
 Returns this instance.
 
 ```typescript
@@ -247,6 +250,7 @@ Replace the html lang attribute for the file received through
 apply, insertAndSave or insertAndSaveRecursively.
 
 `newHtmlLang` The new base href.
+
 Returns this instance.
 
 ```typescript
@@ -261,6 +265,7 @@ Replace the base href attribute for the file received through
 apply, insertAndSave or insertAndSaveRecursively.
 
 `newBaseHref` The new base href.
+
 Returns this instance.
 
 ```typescript
