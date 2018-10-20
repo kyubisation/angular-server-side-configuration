@@ -1,6 +1,6 @@
 {
   "name": "angular-server-side-configuration",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0",
   "description": "Configure an angular application on the server",
   "main": "./src/main.js",
   "module": "./src/index.js",
@@ -9,8 +9,7 @@
     "clean": "rimraf .nyc_output coverage src/*.d.ts src/*.js",
     "pretest": "npm run clean",
     "test": "nyc mocha ./src/*.spec.ts",
-    "prepack": "tsc",
-    "postpublish": "npm run clean"
+    "prepack": "tsc"
   },
   "nyc": {
     "check-coverage": true,
