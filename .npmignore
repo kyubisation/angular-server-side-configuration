@@ -4,6 +4,6 @@
 *.spec.d.ts
 tsconfig.json
 .editorconfig
-testing
+test
 .nyc_output
 coverage
