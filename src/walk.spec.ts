@@ -4,7 +4,7 @@ import { join } from 'path';
 import { walk } from './walk';
 
 describe('walk', () => {
-  const root = join(__dirname, '..', 'testing', 'walk');
+  const root = join(__dirname, '..', 'test', 'walk');
 
   it('should return sub/t1.js, t1.js, t2.js for .js$', () => {
     const expected = [join('sub', 't1.js'), 't1.js', 't2.js']
