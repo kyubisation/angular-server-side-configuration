@@ -54,6 +54,19 @@ export class EnvironmentVariablesConfiguration {
   }
 
   /**
+   * Changes the location to find scripts and stylesheets
+   * @param deployUrl The new deploy url
+   */
+  replaceDeployUrl(deployUrl: string) {
+    const srcRegex = /(src=)(")(runtime|scripts|main|polyfills)/gm;
+    const hrefRegex = /(href=)(")(styles)/gm;
+    const replace = '$1$2' + deployUrl + '$3';
+    this.regexReplace(srcRegex, replace);
+    this.regexReplace(hrefRegex, replace);
+    return this;
+  }
+
+  /**
    * Replace the base href attribute for the file received through
    * apply, insertAndSave or insertAndSaveRecursively.
    * 
