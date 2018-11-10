@@ -2,14 +2,17 @@
   "name": "angular-server-side-configuration",
   "version": "1.0.0",
   "description": "Configure an angular application on the server",
-  "main": "./src/main.js",
-  "module": "./src/index.js",
+  "main": "./main.js",
+  "module": "./index.js",
   "types": "./src/index.d.ts",
   "scripts": {
-    "clean": "rimraf .nyc_output coverage src/*.d.ts src/*.js",
+    "clean": "rimraf .rpt2_cache .nyc_output coverage index.d.ts index.js",
+    "build:ts": "rollup -c rollup.config.js",
+    "build:dts": "dts-bundle-generator -o index.d.ts ./src/index.ts",
+    "build": "npm run build:ts && npm run build:dts",
     "pretest": "npm run clean",
     "test": "nyc mocha ./src/*.spec.ts",
-    "prepack": "tsc"
+    "prepack": "npm run build"
   },
   "nyc": {
     "check-coverage": true,
@@ -60,9 +63,12 @@
     "@types/mocha": "^5.2.5",
     "@types/node": "^10.11.4",
     "chai": "^4.2.0",
+    "dts-bundle-generator": "^1.6.1",
     "mocha": "^5.2.0",
     "nyc": "^13.0.1",
     "rimraf": "^2.6.2",
+    "rollup": "^0.67.0",
+    "rollup-plugin-typescript2": "^0.17.2",
     "ts-node": "^7.0.1",
     "typescript": "^3.1.1"
   }
