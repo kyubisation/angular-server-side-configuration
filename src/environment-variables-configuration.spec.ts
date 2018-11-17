@@ -105,6 +105,61 @@ describe('EnvironmentVariablesConfiguration', () => {
     });
     expect(content).to.contain(newTitle);
   });
+
+  it('should set the directory', () => {
+    const envVariables = new EnvironmentVariablesConfiguration();
+    expect(envVariables.directory).not.to.eq(root);
+    expect(envVariables.setDirectory(root).directory).to.eq(root);
+  });
+
+  it('should find TEST and TEST2 (instance method)', () => {
+    const envVariables = new EnvironmentVariablesConfiguration()
+      .setDirectory(root)
+      .searchEnvironmentVariables();
+    expect(envVariables.variables).eql(['TEST', 'TEST2']);
+  });
+
+  it('should replace placeholder', async () => {
+    const file = join(root, 'index.html');
+    const envVariables = new EnvironmentVariablesConfiguration(['TEST', 'TEST2'])
+      .insertVariables();
+    const content = await temporaryFile(file, async () => {
+      await envVariables.applyAndSaveTo(file);
+    });
+    expect(content).to.contain(envVariables.generateIIFE());
+  });
+
+  it('should replace custom placeholder', async () => {
+    const file = join(root, 'index.html');
+    const envVariables = new EnvironmentVariablesConfiguration(['TEST', 'TEST2'])
+      .insertVariables('<!--CONFIG-->');
+    const content = await temporaryFile(file, async () => {
+      await envVariables.applyAndSaveTo(file);
+    });
+    expect(content).to.contain(envVariables.generateIIFE());
+  });
+
+  it('should insert IIFE at end of head', async () => {
+    const file = join(root, 'index.html');
+    const envVariables = new EnvironmentVariablesConfiguration(['TEST', 'TEST2'])
+      .insertVariablesAtEndOfHead();
+    const content = await temporaryFile(file, async () => {
+      await envVariables.applyAndSaveTo(file);
+    });
+    expect(content).to.contain(`${envVariables.generateIIFE()}</script></head>`);
+  });
+
+  it('should insert the environment variables into all files', async () => {
+    const files = ['index.html', join('de', 'index.html'), join('en', 'index.html')]
+      .map(f => join(root, f));
+    const envVariables = new EnvironmentVariablesConfiguration(['TEST', 'TEST2'])
+      .setDirectory(root)
+      .insertVariables();
+    const contents = await temporaryFiles(files, async () => {
+      await envVariables.applyAndSaveRecursively();
+    });
+    contents.forEach(c => expect(c).to.contain(envVariables.generateIIFE()));
+  });
 });
 
 const template = `<!doctype html>
