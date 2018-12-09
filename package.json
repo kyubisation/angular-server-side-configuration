@@ -1,18 +1,22 @@
 {
   "name": "angular-server-side-configuration",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Configure an angular application on the server",
   "main": "./main.js",
   "module": "./index.js",
   "types": "./src/index.d.ts",
+  "bin": {
+    "ngssc": "./bin/ngssc"
+  },
   "scripts": {
     "clean": "rimraf .rpt2_cache .nyc_output coverage index.d.ts index.js",
     "build:ts": "rollup -c rollup.config.js",
-    "build:dts": "dts-bundle-generator -o index.d.ts ./src/index.ts",
+    "build:dts": "dts-bundle-generator --external-inlines=@types/yargs -o index.d.ts ./src/index.ts",
     "build": "npm run build:ts && npm run build:dts",
     "pretest": "npm run clean",
-    "test": "nyc mocha ./src/*.spec.ts",
-    "prepack": "npm run build"
+    "test": "nyc mocha ./src/**/*.spec.ts",
+    "prepack": "npm run build",
+    "docs": "typedoc --theme markdown"
   },
   "nyc": {
     "check-coverage": true,
@@ -25,8 +29,7 @@
       "src"
     ],
     "exclude": [
-      "**/*.spec.ts",
-      "src/main.ts"
+      "**/*.spec.ts"
     ],
     "extension": [
       ".ts"
@@ -47,7 +50,10 @@
     "angular",
     "configuration",
     "server",
-    "server-side"
+    "server-side",
+    "docker",
+    "openshift",
+    "kubernetes"
   ],
   "author": "kyubisation",
   "license": "Apache-2.0",
@@ -60,16 +66,25 @@
   },
   "devDependencies": {
     "@types/chai": "^4.1.6",
+    "@types/chai-as-promised": "^7.1.0",
     "@types/mocha": "^5.2.5",
     "@types/node": "^10.11.4",
+    "@types/rimraf": "^2.0.2",
     "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "commander": "^2.19.0",
     "dts-bundle-generator": "^1.6.1",
     "mocha": "^5.2.0",
     "nyc": "^13.0.1",
     "rimraf": "^2.6.2",
     "rollup": "^0.67.0",
+    "rollup-plugin-commonjs": "^9.2.0",
+    "rollup-plugin-json": "^3.1.0",
+    "rollup-plugin-node-resolve": "^3.4.0",
     "rollup-plugin-typescript2": "^0.17.2",
     "ts-node": "^7.0.1",
+    "typedoc": "^0.13.0",
+    "typedoc-plugin-markdown": "^1.1.19",
     "typescript": "^3.1.1"
   }
 }

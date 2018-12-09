@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { join } from 'path';
-import { writeFileSync, unlinkSync, readFileSync } from 'fs';
 
+import { indexHtmlContent, temporaryFile, temporaryFiles } from '../test/temporary-fs';
 import { EnvironmentVariablesConfiguration } from './environment-variables-configuration';
 
 describe('EnvironmentVariablesConfiguration', () => {
@@ -16,7 +16,7 @@ describe('EnvironmentVariablesConfiguration', () => {
 
   it('should throw on invalid directory', async () => {
     const invalidDirectory = join(root, 'index.html');
-    await temporaryFile(invalidDirectory, async () => {
+    await temporaryFile({ file: invalidDirectory, content: indexHtmlContent }, async () => {
       expect(
         () => EnvironmentVariablesConfiguration.searchEnvironmentVariables(invalidDirectory))
         .to.throw(Error);
@@ -46,7 +46,7 @@ describe('EnvironmentVariablesConfiguration', () => {
   it('should apply the environment variables without modifying the file', async () => {
     const file = join(root, 'index.html');
     const envVariables = new EnvironmentVariablesConfiguration(['TEST', 'TEST2']);
-    const content = await temporaryFile(file, async () => {
+    const content = await temporaryFile({ file, content: indexHtmlContent }, async () => {
       const appliedContent = await envVariables.apply(file);
       expect(appliedContent).to.contain(envVariables.generateIIFE());
     });
@@ -56,7 +56,7 @@ describe('EnvironmentVariablesConfiguration', () => {
   it('should insert the environment variables into the file', async () => {
     const file = join(root, 'index.html');
     const envVariables = new EnvironmentVariablesConfiguration(['TEST', 'TEST2']);
-    const content = await temporaryFile(file, async () => {
+    const content = await temporaryFile({ file, content: indexHtmlContent }, async () => {
       await envVariables.insertAndSave(file);
     });
     expect(content).to.contain(envVariables.generateIIFE());
@@ -64,7 +64,7 @@ describe('EnvironmentVariablesConfiguration', () => {
 
   it('should insert the environment variables into all files', async () => {
     const files = ['index.html', join('de', 'index.html'), join('en', 'index.html')]
-      .map(f => join(root, f));
+      .map(f => ({ file: join(root, f), content: indexHtmlContent }));
     const envVariables = new EnvironmentVariablesConfiguration(['TEST', 'TEST2']);
     const contents = await temporaryFiles(files, async () => {
       await envVariables.insertAndSaveRecursively(root);
@@ -75,7 +75,7 @@ describe('EnvironmentVariablesConfiguration', () => {
   it('should replace html lang attribute', async () => {
     const file = join(root, 'index.html');
     const envVariables = new EnvironmentVariablesConfiguration(['TEST', 'TEST2']);
-    const content = await temporaryFile(file, async () => {
+    const content = await temporaryFile({ file, content: indexHtmlContent }, async () => {
       await envVariables
         .replaceHtmlLang('de')
         .insertAndSave(file);
@@ -86,7 +86,7 @@ describe('EnvironmentVariablesConfiguration', () => {
   it('should replace the base href attribute', async () => {
     const file = join(root, 'index.html');
     const envVariables = new EnvironmentVariablesConfiguration(['TEST', 'TEST2']);
-    const content = await temporaryFile(file, async () => {
+    const content = await temporaryFile({ file, content: indexHtmlContent }, async () => {
       await envVariables
         .replaceBaseHref('/de/')
         .insertAndSave(file);
@@ -98,7 +98,7 @@ describe('EnvironmentVariablesConfiguration', () => {
     const file = join(root, 'index.html');
     const envVariables = new EnvironmentVariablesConfiguration(['TEST', 'TEST2']);
     const newTitle = '<title>Regex</title>';
-    const content = await temporaryFile(file, async () => {
+    const content = await temporaryFile({ file, content: indexHtmlContent }, async () => {
       await envVariables
         .regexReplace(/<title>[a-zA-Z0-9]+<\/title>/g, newTitle)
         .insertAndSave(file);
@@ -123,7 +123,7 @@ describe('EnvironmentVariablesConfiguration', () => {
     const file = join(root, 'index.html');
     const envVariables = new EnvironmentVariablesConfiguration(['TEST', 'TEST2'])
       .insertVariables();
-    const content = await temporaryFile(file, async () => {
+    const content = await temporaryFile({ file, content: indexHtmlContent }, async () => {
       await envVariables.applyAndSaveTo(file);
     });
     expect(content).to.contain(envVariables.generateIIFE());
@@ -133,25 +133,36 @@ describe('EnvironmentVariablesConfiguration', () => {
     const file = join(root, 'index.html');
     const envVariables = new EnvironmentVariablesConfiguration(['TEST', 'TEST2'])
       .insertVariables('<!--CONFIG-->');
-    const content = await temporaryFile(file, async () => {
+    const content = await temporaryFile({ file, content: indexHtmlContent }, async () => {
       await envVariables.applyAndSaveTo(file);
     });
     expect(content).to.contain(envVariables.generateIIFE());
   });
 
+  it('should insert IIFE into head', async () => {
+    const file = join(root, 'index.html');
+    const envVariables = new EnvironmentVariablesConfiguration(['TEST', 'TEST2'])
+      .insertVariablesIntoHead();
+    const content = await temporaryFile({ file, content: indexHtmlContent }, async () => {
+      await envVariables.applyAndSaveTo(file);
+    });
+    expect(content).to.contain(`</title><script>${envVariables.generateIIFE()}</script>`);
+  });
+
   it('should insert IIFE at end of head', async () => {
     const file = join(root, 'index.html');
     const envVariables = new EnvironmentVariablesConfiguration(['TEST', 'TEST2'])
-      .insertVariablesAtEndOfHead();
-    const content = await temporaryFile(file, async () => {
+      .insertVariablesIntoHead();
+    const htmlContent = `<html><head></head><body></body></html>`;
+    const content = await temporaryFile({ file, content: htmlContent }, async () => {
       await envVariables.applyAndSaveTo(file);
     });
-    expect(content).to.contain(`${envVariables.generateIIFE()}</script></head>`);
+    expect(content).to.contain(`<script>${envVariables.generateIIFE()}</script></head>`);
   });
 
   it('should insert the environment variables into all files', async () => {
     const files = ['index.html', join('de', 'index.html'), join('en', 'index.html')]
-      .map(f => join(root, f));
+      .map(f => ({ file: join(root, f), content: indexHtmlContent }));
     const envVariables = new EnvironmentVariablesConfiguration(['TEST', 'TEST2'])
       .setDirectory(root)
       .insertVariables();
@@ -162,33 +173,3 @@ describe('EnvironmentVariablesConfiguration', () => {
   });
 });
 
-const template = `<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Test</title>
-  <base href="/">
-
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-<link rel="stylesheet" href="styles.34c57ab7888ec1573f9c.css"><!--CONFIG--></head>
-<body>
-  <aria-root></aria-root>
-<script type="text/javascript" src="runtime.a66f828dca56eeb90e02.js"></script>
-<script type="text/javascript" src="polyfills.b55409616db62255773a.js"></script>
-<script type="text/javascript" src="main.9f14237bc2ddea0bb62d.js"></script></body>
-</html>
-`;
-
-async function temporaryFile(file: string, action: () => Promise<any>): Promise<string> {
-  const contents = await temporaryFiles([file], action);
-  return contents[0];
-}
-
-async function temporaryFiles(files: string[], action: () => Promise<any>): Promise<string[]> {
-  files.forEach(f => writeFileSync(f, template, 'utf8'));
-  await action();
-  const contents = files.map(f => readFileSync(f, 'utf8'));
-  files.forEach(f => unlinkSync(f));
-  return contents;
-}

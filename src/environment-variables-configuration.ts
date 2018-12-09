@@ -1,7 +1,6 @@
 import { lstatSync, readFileSync, readFile, writeFile } from 'fs';
 import { promisify } from 'util';
-import { deprecated } from './deprecated';
-import { walk } from './walk';
+import { deprecated, walk } from './common/index';
 const readFileAsync = promisify(readFile);
 const writeFileAsync = promisify(writeFile);
 
@@ -18,6 +17,11 @@ export class EnvironmentVariablesConfiguration {
    * The directory. Defaults to current working directory.
    */
   directory = process.cwd();
+
+  /**
+   * The default pattern for files to have the environment variables inserted into.
+   */
+  readonly defaultInsertionFilePattern = /index.html$/;
 
   /**
    * @param variables Optional array of environment variable names to populate.
@@ -161,13 +165,15 @@ export class EnvironmentVariablesConfiguration {
   }
 
   /**
-   * Insert the populated variables (wrapped in an IIFE inside a script tag) before the closing
-   * head tag.
+   * Insert the populated variables (wrapped in an IIFE inside a script tag) into the head tag.
+   * Appends variables to title tag, or if not found, at the end of the head tag.
    * @returns This instance.
    */
-  insertVariablesAtEndOfHead() {
+  insertVariablesIntoHead() {
     return this.replace(
-      f => f.replace('</head>', `<script>${this.generateIIFE()}</script></head>`));
+      f => f.includes('</title>')
+        ? f.replace('</title>', `</title><script>${this.generateIIFE()}</script>`)
+        : f.replace('</head>', `<script>${this.generateIIFE()}</script></head>`));
   }
 
   /**
@@ -195,9 +201,9 @@ export class EnvironmentVariablesConfiguration {
    *   be inserted (Defaults to /<!--\s*CONFIG\s*-->/).
    * @returns A promise, which resolves after the environment variables have been
    *   inserted into all matched files. The promise resolves to an array of the matched files.
-   * @deprecated Use insertVariables or insertVariablesAtEndOfHead and applyAndSaveRecursively instead.
+   * @deprecated Use insertVariables or insertVariablesIntoHead and applyAndSaveRecursively instead.
    */
-  @deprecated('Use insertVariables or insertVariablesAtEndOfHead and applyAndSaveRecursively instead.')
+  @deprecated('Use insertVariables or insertVariablesIntoHead and applyAndSaveRecursively instead.')
   async insertAndSaveRecursively(
     root: string, options: { filePattern?: RegExp, insertionRegex?: RegExp } = {}) {
     const files = walk(root, options.filePattern || /index.html$/);
@@ -215,9 +221,9 @@ export class EnvironmentVariablesConfiguration {
    *   be inserted (Defaults to /<!--\s*CONFIG\s*-->/).
    * @returns A promise, which resolves after the enivornment variables have been saved to the
    *   given file.
-   * @deprecated Use insertVariables or insertVariablesAtEndOfHead and applyAndSaveTo instead.
+   * @deprecated Use insertVariables or insertVariablesIntoHead and applyAndSaveTo instead.
    */
-  @deprecated('Use insertVariables or insertVariablesAtEndOfHead and applyAndSaveTo instead.')
+  @deprecated('Use insertVariables or insertVariablesIntoHead and applyAndSaveTo instead.')
   async insertAndSave(file: string, options: { insertionRegex?: RegExp } = {}) {
     const fileContent = await this.apply(file, options);
     await writeFileAsync(file, fileContent, 'utf8');
@@ -232,9 +238,9 @@ export class EnvironmentVariablesConfiguration {
    * @param options.insertionRegex The replacement pattern, where the configuration should
    *   be inserted (Defaults to /<!--\s*CONFIG\s*-->/).
    * @returns A promise, which resolves to the file content with the environment variables inserted.
-   * @deprecated Use insertVariables or insertVariablesAtEndOfHead and applyTo instead.
+   * @deprecated Use insertVariables or insertVariablesIntoHead and applyTo instead.
    */
-  @deprecated('Use insertVariables or insertVariablesAtEndOfHead and applyTo instead.')
+  @deprecated('Use insertVariables or insertVariablesIntoHead and applyTo instead.')
   async apply(file: string, options: { insertionRegex?: RegExp } = {}) {
     const insertionRegex = options.insertionRegex || /<!--\s*CONFIG\s*-->/;
     const fileContent = await readFileAsync(file, 'utf8');
@@ -253,9 +259,9 @@ export class EnvironmentVariablesConfiguration {
    * @returns A promise, which resolves to the matched files, after all matched files have had the
    *   replacements applied.
    */
-  async applyAndSaveRecursively(options: { directory?: string, filePattern?: RegExp, } = {}) {
+  async applyAndSaveRecursively(options: { directory?: string, filePattern?: RegExp } = {}) {
     const directory = options.directory || this.directory;
-    const files = walk(directory, options.filePattern || /index.html$/);
+    const files = walk(directory, options.filePattern || this.defaultInsertionFilePattern);
     await Promise.all(files.map(f => this.applyAndSaveTo(f)));
     return files;
   }
