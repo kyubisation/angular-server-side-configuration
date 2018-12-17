@@ -15,7 +15,8 @@
     "build:docs": "typedoc --theme markdown --out documentation --mode modules --exclude **/*.spec.ts src",
     "build": "npm run build:ts && npm run build:dts && npm run build:docs",
     "pretest": "npm run clean",
-    "test": "nyc mocha",
+    "test": "nyc mocha './src/**/*.spec.ts'",
+    "wintest": "nyc mocha ./src/**/*.spec.ts",
     "prepack": "npm run build"
   },
   "nyc": {
