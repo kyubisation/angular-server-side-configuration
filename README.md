@@ -1,4 +1,7 @@
 # angular-server-side-configuration
+
+[Documentation](https://github.com/kyubisation/angular-server-side-configuration/blob/master/documentation/README.md)
+
 Configure an angular application at runtime on the server via environment variables.
 
 ## Motivation
@@ -62,6 +65,40 @@ It is however the safest option.
 npm install -g angular-server-side-configuration
 ngssc insert /path/to/angular/files --search
 ```
+
+## CLI
+angular-server-side-configuration provides a CLI.
+
+```bash
+npm install angular-server-side-configuration -g
+ngssc --help
+```
+
+### Insert
+Usage: insert [options] [directory]
+
+Search and replace the placeholder with environment variables (Directory defaults to current working directory)
+
+| Options | Description |
+| --- | --- |
+| `-s, --search`              | Search environment variables in available .js files (Defaults to false) |
+| `-e, --env <value>`         | Add an environment variable to be resolved (default: []) |
+| `-p, --placeholder <value>` | Set the placeholder to replace with the environment variables (Defaults to `<!--CONFIG-->`) |
+| `-h, --head`                | Insert environment variables into the head tag (after title tag, if available, otherwise before closing head tag) |
+| `--dry`                     | Perform the insert without actually inserting the variables |
+| `-h, --help`                | output usage information |
+
+### Init
+Usage: init [options] [directory]
+
+Initialize an angular project with angular-server-side-configuration (Directory defaults to current working directory)
+
+| Options | Description |
+| --- | --- |
+| `-ef, --environment-file` | The environment file to initialize (environmentFile defaults to src/environments/environment.prod.ts) |
+| `--npm`                   | Install angular-service-side-configuration via npm (Default) |
+| `--yarn`                  | Install angular-service-side-configuration via yarn |
+| `-h, --help`              | output usage information |
 
 ## License
 Apache License, Version 2.0
