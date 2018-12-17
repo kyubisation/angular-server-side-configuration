@@ -11,7 +11,7 @@
   "scripts": {
     "clean": "rimraf .rpt2_cache .nyc_output coverage index.d.ts index.js",
     "build:ts": "rollup -c rollup.config.js",
-    "build:dts": "dts-bundle-generator --external-inlines=@types/yargs -o index.d.ts ./src/index.ts",
+    "build:dts": "dts-bundle-generator -o index.d.ts ./src/index.ts",
     "build:docs": "typedoc --theme markdown --out documentation --mode modules --exclude **/*.spec.ts src",
     "build": "npm run build:ts && npm run build:dts && npm run build:docs",
     "pretest": "npm run clean",
