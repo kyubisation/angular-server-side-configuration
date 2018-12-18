@@ -1,0 +1,17 @@
+import { expect } from 'chai';
+
+import { cli } from './cli';
+
+describe('cli', () => {
+  it('should fail due to no input', () => {
+    expect(() => cli().parse([])).to.throw();
+  });
+
+  it('should execute the insert command', () => {
+    cli().parse(`node program insert --dry --env=TEST`.split(' '));
+  });
+
+  it('should execute the init command', () => {
+    cli().parse(`node program init`.split(' '));
+  });
+});

@@ -1,4 +1,7 @@
 # angular-server-side-configuration
+
+[Documentation](https://github.com/kyubisation/angular-server-side-configuration/blob/master/documentation/README.md)
+
 Configure an angular application at runtime on the server via environment variables.
 
 ## Motivation
@@ -26,31 +29,18 @@ Use process.env.NAME in your environment.prod.ts, where NAME is the
 environment variable that should be used.
 
 ```typescript
+import 'angular-server-side-configuration/process';
+
 export const environment = {
   production: process.env.PROD !== 'false',
   apiAddress: process.env.API_ADDRESS || 'https://example-api.com'
 };
 ```
 
-### polyfill.ts
-Import `angular-server-side-configuration/process` in polyfill.ts. This will enable
-the typings for process.env.* in the code and register a fallback value for process.env.
-
-```typescript
-/**
- * This file includes polyfills needed by Angular and is loaded before the app.
- * You can add your own extra polyfills to this file.
-...
-
-/***************************************************************************************************
- * APPLICATION IMPORTS
- */
-
-import 'angular-server-side-configuration/process';
-```
-
-### index.html
+### index.html (Optional)
 Add `<!--CONFIG-->` to index.html. This will be replaced by the configuration script tag.
+This is optional, as the environment variables can simply be inserted somewhere in the head tag.
+It is however the safest option.
 
 ```html
 <!doctype html>
@@ -70,211 +60,45 @@ Add `<!--CONFIG-->` to index.html. This will be replaced by the configuration sc
 </html>
 ```
 
-### server.ts (or any script executed on the host)
-`EnvironmentVariablesConfiguration` provides a way of looking for usages of process.env.*
-in the bundled angular javascript files and provides a way of inserting the environment variables
-into the index.html file(s).
-
-```typescript
-// Express is completely optional
-import * as express from 'express';
-const app = express();
-...
-import { EnvironmentVariablesConfiguration } from 'angular-server-side-configuration';
-const envVariables = EnvironmentVariablesConfiguration.searchEnvironmentVariables(bundledAngularFilesRoot);
-envVariables.insertAndSaveRecursively(bundledAngularFilesRoot)
-  // Optional
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log(`Node server listening on http://localhost:${PORT}`);
-    });
-  });
-```
-## Documentation
-
-### process
-Import `angular-server-side-configuration/process` in polyfill.ts. This will enable
-the typings for process.env.* in the code and register a fallback value for process.env.
-
-```typescript
-import 'angular-server-side-configuration/process';
+### On host server or in Dockerfile (or similar)
+```bash
+npm install -g angular-server-side-configuration
+ngssc insert /path/to/angular/files --search
 ```
 
-### EnvironmentVariablesConfiguration
+## CLI
+angular-server-side-configuration provides a CLI.
 
-#### Constructor
-Accepts an array of environment variables.
-```typescript
-const envVariables = new EnvironmentVariablesConfiguration(['PROD', 'API_ADDRESS']);
+```bash
+npm install angular-server-side-configuration -g
+ngssc --help
 ```
 
-#### EnvironmentVariablesConfiguration.searchEnvironmentVariables
-By default the searchEnvironmentVariables method uses a regex
-(`/process\s*\.\s*env\s*\.\s*[a-zA-Z0-9_]+/gm`) to look for process.env.* usages.
-It is possible to provide a discovery function in the options as a second parameter.
+### Insert
+Usage: insert [options] [directory]
 
-`root` The root directory from which to search.  
-`options` Optional options for searching environment variables.  
-`options.filePattern` The file pattern in which environment variables should be searched
-(Defaults to /.js$/).  
-`options.environmentVariablesDiscovery` The function to discover environment variables in
-the matched files (Defaults to process.env.VARIABLE => VARIABLE).
+Search and replace the placeholder with environment variables (Directory defaults to current working directory)
 
-Returns an instance of EnvironmentVariablesConfiguration.
+| Options | Description |
+| --- | --- |
+| `-s, --search`              | Search environment variables in available .js files (Defaults to false) |
+| `-e, --env <value>`         | Add an environment variable to be resolved (default: []) |
+| `-p, --placeholder <value>` | Set the placeholder to replace with the environment variables (Defaults to `<!--CONFIG-->`) |
+| `-h, --head`                | Insert environment variables into the head tag (after title tag, if available, otherwise before closing head tag) |
+| `--dry`                     | Perform the insert without actually inserting the variables |
+| `-h, --help`                | output usage information |
 
-```typescript
-const envVariables: EnvironmentVariablesConfiguration =
-  EnvironmentVariablesConfiguration.searchEnvironmentVariables(bundledAngularFilesRoot);
-```
+### Init
+Usage: init [options] [directory]
 
-#### EnvironmentVariablesConfiguration.prototype.populateVariables
-Generates an object, with the environment variable names being the key and
-the actual values being the values. Missing environment variables will be represented by null.
+Initialize an angular project with angular-server-side-configuration (Directory defaults to current working directory)
 
-```typescript
-const envVariables = new EnvironmentVariablesConfiguration(['PROD', 'API_ADDRESS']);
-process.env.API_ADDRESS = 'https://example-api.com';
-const variables = envVariables.populateVariables();
-// { PROD: null, API_ADDRESS: 'https://example-api.com' }
-```
-
-#### EnvironmentVariablesConfiguration.prototype.generateIIFE
-Generates the IIFE in which the environment variables are assigned to window.process.env.
-
-```typescript
-const envVariables = new EnvironmentVariablesConfiguration(['PROD', 'API_ADDRESS']);
-process.env.API_ADDRESS = 'https://example-api.com';
-const iife = envVariables.generateIIFE();
-// (function(self){self.process={env:{"PROD":null,"API_ADDRESS":"https://example-api.com"}};})(window)
-```
-
-#### EnvironmentVariablesConfiguration.prototype.apply
-Inserts the discovered environment variables as an IIFE wrapped in a script tag
-into the specified file content without saving the file.
-
-`file` The file to be read.  
-`options` Optional options for insertion.  
-`options.insertionRegex` The replacement pattern, where the configuration should be inserted
-(Defaults to `/<!--\s*CONFIG\s*-->/`).
-
-Returns a promise, which resolves to the file content with the environment variables inserted.
-
-```typescript
-const envVariables = EnvironmentVariablesConfiguration.searchEnvironmentVariables(bundledAngularFilesRoot);
-const content = await envVariables.apply(pathToIndexHtml);
-// <html>...<script>(function(self){self.process={env:{"PROD":null,"API_ADDRESS":"https://example-api.com"}};})(window)</script>...</html>
-```
-
-#### EnvironmentVariablesConfiguration.prototype.insertAndSave
-Inserts the discovered environment variables as an IIFE wrapped in a script tag into the specified file.
-
-`file` The file into which the environment variables should be inserted.  
-`options` Optional options for insertion.  
-`options.insertionRegex` The replacement pattern, where the configuration should be inserted
-(Defaults to `/<!--\s*CONFIG\s*-->/`).
-
-Returns a promise, which resolves after the enivornment variables have been saved to the given file.
-
-```typescript
-const envVariables = EnvironmentVariablesConfiguration.searchEnvironmentVariables(bundledAngularFilesRoot);
-await envVariables.insertAndSave(pathToIndexHtml);
-```
-
-#### EnvironmentVariablesConfiguration.prototype.insertAndSaveRecursively
-Inserts the discovered enviornment variables as an IIFE wrapped in a script tag into the matched files.
-
-`root` The root directory from which to search insertion files.  
-`options` Optional options for insertion.  
-`options.filePattern` The file pattern in which the configuration should be inserted
-(Defaults to /index.html$/).  
-`options.insertionRegex` The replacement pattern, where the configuration should
-be inserted (Defaults to `/<!--\s*CONFIG\s*-->/`).
-
-Returns a promise, which resolves after the environment variables have been inserted to all matched files.
-
-```typescript
-const envVariables = EnvironmentVariablesConfiguration.searchEnvironmentVariables(bundledAngularFilesRoot);
-await envVariables.insertAndSaveRecursively(bundledAngularFilesRoot);
-```
-
-#### EnvironmentVariablesConfiguration.prototype.replace
-Add a replacement function for the file received through apply, insertAndSave or
-insertAndSaveRecursively. The function receives the file content and the file name as
-parameters and returns the file content with the replacement applied.
-
-`replacement` The replacement function.
-
-Returns this instance.
-
-```typescript
-const envVariables = EnvironmentVariablesConfiguration.searchEnvironmentVariables(bundledAngularFilesRoot);
-await envVariables
-  .replace((fileContent, fileName) => fileContent.replace('search-example', 'replace-example'))
-  .insertAndSaveRecursively(bundledAngularFilesRoot);
-```
-
-#### EnvironmentVariablesConfiguration.prototype.regexReplace
-Add a replacement for the file received through apply, insertAndSave or insertAndSaveRecursively.
-
-`regex` A RegExp object or literal. The match or matches are replaced with replaceValue.
-`replaceValue` The value that replaces the substring matched by the regex parameter.
-
-Returns this instance.
-
-```typescript
-const envVariables = EnvironmentVariablesConfiguration.searchEnvironmentVariables(bundledAngularFilesRoot);
-await envVariables
-  .regexReplace(/search-example-[0-9]/g, 'replace-example')
-  .insertAndSaveRecursively(bundledAngularFilesRoot);
-```
-
-#### EnvironmentVariablesConfiguration.prototype.replaceTagAttribute
-Replace the attribute value of a tag for the file received through
-apply, insertAndSave or insertAndSaveRecursively.
-
-`tag` The tag, whose attribute value should be replaced.
-`attribute` The attribute, whose value should be replaced.
-`newValue` The new attribute value.
-
-Returns this instance.
-
-```typescript
-const envVariables = EnvironmentVariablesConfiguration.searchEnvironmentVariables(bundledAngularFilesRoot);
-await envVariables
-  .replaceTagAttribute('body', 'id', newId)
-  .insertAndSaveRecursively(bundledAngularFilesRoot);
-```
-
-#### EnvironmentVariablesConfiguration.prototype.replaceHtmlLang
-Replace the html lang attribute for the file received through
-apply, insertAndSave or insertAndSaveRecursively.
-
-`newHtmlLang` The new base href.
-
-Returns this instance.
-
-```typescript
-const envVariables = EnvironmentVariablesConfiguration.searchEnvironmentVariables(bundledAngularFilesRoot);
-await envVariables
-  .replaceHtmlLang('de')
-  .insertAndSaveRecursively(bundledAngularFilesRoot);
-```
-
-#### EnvironmentVariablesConfiguration.prototype.replaceBaseHref
-Replace the base href attribute for the file received through
-apply, insertAndSave or insertAndSaveRecursively.
-
-`newBaseHref` The new base href.
-
-Returns this instance.
-
-```typescript
-const envVariables = EnvironmentVariablesConfiguration.searchEnvironmentVariables(bundledAngularFilesRoot);
-await envVariables
-  .replaceBaseHref('/de/')
-  .insertAndSaveRecursively(bundledAngularFilesRoot);
-```
-
+| Options | Description |
+| --- | --- |
+| `-ef, --environment-file` | The environment file to initialize (environmentFile defaults to src/environments/environment.prod.ts) |
+| `--npm`                   | Install angular-service-side-configuration via npm (Default) |
+| `--yarn`                  | Install angular-service-side-configuration via yarn |
+| `-h, --help`              | output usage information |
 
 ## License
 Apache License, Version 2.0
