@@ -64,3 +64,4 @@ typings/
 *.js
 !test/**/*.js
 *.d.ts
+.rpt2_cache

@@ -4,6 +4,8 @@ node_js:
 cache:
   directories:
     - "node_modules"
+before_script:
+  - npm i -g yarn
 deploy:
   provider: npm
   email: "lukas.spirig@gmail.com"

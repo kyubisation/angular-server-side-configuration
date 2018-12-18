@@ -1,9 +1,9 @@
-*.ts
-!*.d.ts
-*.spec.js
-*.spec.d.ts
-tsconfig.json
 .editorconfig
-test
+.travis.yml
+rollup.config.js
+tsconfig.json
 .nyc_output
+.rpt2_cache
 coverage
+src
+test
