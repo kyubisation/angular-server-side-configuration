@@ -100,5 +100,36 @@ Initialize an angular project with angular-server-side-configuration (Directory 
 | `--yarn`                  | Install angular-service-side-configuration via yarn |
 | `-h, --help`              | output usage information |
 
+### Wrap-Aot
+Usage: wrap-aot [options] [ng...]
+
+Wrap an angular command with aot compilation to retain configuration (Use "ngssc wrap-aot ng build ..."). This will temporarily replace the
+content of the environment file with tokens. After the inner command completes, this is reverted and the tokens in the dist files will be replaced by the actual values.
+
+| Options | Description |
+| --- | --- |
+| `-ef, --environment-file` | The environment file to prepare for aot-compilation (Defaults to src/environments/environment.prod.ts) |
+| `--dist`                  | The output path of the ng build (Defaults to dist/**) |
+| `-h, --help`              | output usage information |
+
+## Native CLI
+If node.js cannot be used on the target system, it is also possible to compile ngssc to a native CLI with tools like [pkg](https://www.npmjs.com/package/pkg) or [nexe](https://www.npmjs.com/package/nexe).
+
+Create a file named ngssc.js:
+```javascript
+require('angular-server-side-configuration').cli().parse(process.argv);
+```
+
+And then use pkg or nexe to build the native ngssc CLI:
+```
+npm install pkg -g
+pkg ngssc.js
+```
+```
+npm install nexe -g
+nexe ngssc.js --target os-of-target-system
+```
+
+
 ## License
 Apache License, Version 2.0

@@ -2,6 +2,7 @@
 import { Command } from 'commander';
 import { InsertCommand } from './insert-command';
 import { InitCommand } from './init-command';
+import { WrapAotCommand } from './wrap-aot';
 
 export function cli(): { parse(args: string[]): any } {
   const program = new Command();
@@ -34,11 +35,32 @@ export function cli(): { parse(args: string[]): any } {
     .option(
       '-ef, --environment-file',
       'The environment file to initialize '
-      + '(environmentFile defaults to src/environments/environment.prod.ts)')
+      + '(Defaults to src/environments/environment.prod.ts)')
     .option('--npm', 'Install angular-service-side-configuration via npm (Default)')
     .option('--yarn', 'Install angular-service-side-configuration via yarn')
     .action(
       async (directory: string, options: any) =>
         await new InitCommand({ directory, ...options }).execute());
+  program
+    .command('wrap-aot [ng...]')
+    .description(
+      'Wrap an angular command with aot compilation to retain configuration '
+      + '(Use "ngssc wrap-aot ng build ..."). This will temporarily replace the content '
+      + 'of the environment file with tokens. After the inner command completes, this is '
+      + 'reverted and the tokens in the dist files will be replaced by the actual values.')
+    .option(
+      '-ef, --environment-file',
+      'The environment file to prepare for aot-compilation '
+      + '(Defaults to src/environments/environment.prod.ts)')
+    .option('--dist', 'The output path of the ng build (Defaults to dist/**)')
+    .allowUnknownOption()
+    .action(
+      async (ngCommands: string[], options: any) =>
+        await new WrapAotCommand({
+          ngCommands: process.argv.slice(process.argv.indexOf(ngCommands[0])),
+          directory: process.cwd(),
+          ...options
+        })
+          .execute());
   return program;
 }

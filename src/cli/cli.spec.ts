@@ -14,4 +14,8 @@ describe('cli', () => {
   it('should execute the init command', () => {
     cli().parse(`node program init`.split(' '));
   });
+
+  it('should execute the wrap-aot command', () => {
+    cli().parse(`node program wrap-aot`.split(' '));
+  });
 });
