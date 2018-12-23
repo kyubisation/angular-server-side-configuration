@@ -39,7 +39,7 @@
 
 ⊕ **new CommandBase**(_name: *`string`*): [CommandBase](_cli_command_base_.commandbase.md)
 
-*Defined in [cli/command-base.ts:1](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/cli/command-base.ts#L1)*
+*Defined in [cli/command-base.ts:1](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/cli/command-base.ts#L1)*
 
 **Parameters:**
 
@@ -59,7 +59,7 @@ ___
 
 **● _name**: *`string`*
 
-*Defined in [cli/command-base.ts:2](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/cli/command-base.ts#L2)*
+*Defined in [cli/command-base.ts:2](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/cli/command-base.ts#L2)*
 
 ___
 
@@ -71,7 +71,7 @@ ___
 
 ▸ **_execute**(): `Promise`<`void`>
 
-*Defined in [cli/command-base.ts:11](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/cli/command-base.ts#L11)*
+*Defined in [cli/command-base.ts:11](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/cli/command-base.ts#L11)*
 
 **Returns:** `Promise`<`void`>
 
@@ -82,7 +82,7 @@ ___
 
 ▸ **_log**(message: *`string`*): `void`
 
-*Defined in [cli/command-base.ts:19](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/cli/command-base.ts#L19)*
+*Defined in [cli/command-base.ts:19](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/cli/command-base.ts#L19)*
 
 **Parameters:**
 
@@ -99,7 +99,7 @@ ___
 
 ▸ **_logValue**(message: *`string`*, value: *`any`*): `void`
 
-*Defined in [cli/command-base.ts:13](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/cli/command-base.ts#L13)*
+*Defined in [cli/command-base.ts:13](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/cli/command-base.ts#L13)*
 
 **Parameters:**
 
@@ -117,7 +117,7 @@ ___
 
 ▸ **execute**(): `Promise`<`void`>
 
-*Defined in [cli/command-base.ts:5](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/cli/command-base.ts#L5)*
+*Defined in [cli/command-base.ts:5](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/cli/command-base.ts#L5)*
 
 **Returns:** `Promise`<`void`>
 

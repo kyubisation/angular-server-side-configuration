@@ -49,7 +49,7 @@
 
 *Overrides [CommandBase](_cli_command_base_.commandbase.md).[constructor](_cli_command_base_.commandbase.md#constructor)*
 
-*Defined in [cli/wrap-aot.ts:13](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/cli/wrap-aot.ts#L13)*
+*Defined in [cli/wrap-aot.ts:13](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/cli/wrap-aot.ts#L13)*
 
 **Parameters:**
 
@@ -74,7 +74,7 @@ ___
 
 **● _directory**: *`string`*
 
-*Defined in [cli/wrap-aot.ts:10](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/cli/wrap-aot.ts#L10)*
+*Defined in [cli/wrap-aot.ts:10](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/cli/wrap-aot.ts#L10)*
 
 ___
 <a id="_dist"></a>
@@ -83,7 +83,7 @@ ___
 
 **● _dist**: *`string`*
 
-*Defined in [cli/wrap-aot.ts:12](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/cli/wrap-aot.ts#L12)*
+*Defined in [cli/wrap-aot.ts:12](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/cli/wrap-aot.ts#L12)*
 
 ___
 <a id="_environmentfile"></a>
@@ -92,7 +92,7 @@ ___
 
 **● _environmentFile**: *`string`*
 
-*Defined in [cli/wrap-aot.ts:11](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/cli/wrap-aot.ts#L11)*
+*Defined in [cli/wrap-aot.ts:11](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/cli/wrap-aot.ts#L11)*
 
 ___
 <a id="_ngcommand"></a>
@@ -101,7 +101,7 @@ ___
 
 **● _ngCommand**: *`string`[]*
 
-*Defined in [cli/wrap-aot.ts:9](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/cli/wrap-aot.ts#L9)*
+*Defined in [cli/wrap-aot.ts:9](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/cli/wrap-aot.ts#L9)*
 
 ___
 <a id="_tokencounter"></a>
@@ -110,7 +110,7 @@ ___
 
 **● _tokenCounter**: *`number`* = 0
 
-*Defined in [cli/wrap-aot.ts:13](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/cli/wrap-aot.ts#L13)*
+*Defined in [cli/wrap-aot.ts:13](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/cli/wrap-aot.ts#L13)*
 
 ___
 
@@ -122,7 +122,7 @@ ___
 
 ▸ **_applyReplacements**(fileContent: *`string`*, replacements: *`object`[]*): `void`
 
-*Defined in [cli/wrap-aot.ts:82](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/cli/wrap-aot.ts#L82)*
+*Defined in [cli/wrap-aot.ts:82](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/cli/wrap-aot.ts#L82)*
 
 **Parameters:**
 
@@ -140,7 +140,7 @@ ___
 
 ▸ **_createReplacements**(fileContent: *`string`*): `Promise`<`object`[]>
 
-*Defined in [cli/wrap-aot.ts:49](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/cli/wrap-aot.ts#L49)*
+*Defined in [cli/wrap-aot.ts:49](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/cli/wrap-aot.ts#L49)*
 
 **Parameters:**
 
@@ -159,7 +159,7 @@ ___
 
 *Overrides [CommandBase](_cli_command_base_.commandbase.md).[_execute](_cli_command_base_.commandbase.md#_execute)*
 
-*Defined in [cli/wrap-aot.ts:32](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/cli/wrap-aot.ts#L32)*
+*Defined in [cli/wrap-aot.ts:32](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/cli/wrap-aot.ts#L32)*
 
 **Returns:** `Promise`<`void`>
 
@@ -170,7 +170,7 @@ ___
 
 ▸ **_loadTypescript**(): `Promise`<`object`>
 
-*Defined in [cli/wrap-aot.ts:64](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/cli/wrap-aot.ts#L64)*
+*Defined in [cli/wrap-aot.ts:64](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/cli/wrap-aot.ts#L64)*
 
 **Returns:** `Promise`<`object`>
 
@@ -183,7 +183,7 @@ ___
 
 *Inherited from [CommandBase](_cli_command_base_.commandbase.md).[_log](_cli_command_base_.commandbase.md#_log)*
 
-*Defined in [cli/command-base.ts:19](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/cli/command-base.ts#L19)*
+*Defined in [cli/command-base.ts:19](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/cli/command-base.ts#L19)*
 
 **Parameters:**
 
@@ -202,7 +202,7 @@ ___
 
 *Inherited from [CommandBase](_cli_command_base_.commandbase.md).[_logValue](_cli_command_base_.commandbase.md#_logvalue)*
 
-*Defined in [cli/command-base.ts:13](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/cli/command-base.ts#L13)*
+*Defined in [cli/command-base.ts:13](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/cli/command-base.ts#L13)*
 
 **Parameters:**
 
@@ -220,7 +220,7 @@ ___
 
 ▸ **_resolveExpression**(node: *`Node`*, SyntaxKind: *`object`*): `string`
 
-*Defined in [cli/wrap-aot.ts:88](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/cli/wrap-aot.ts#L88)*
+*Defined in [cli/wrap-aot.ts:88](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/cli/wrap-aot.ts#L88)*
 
 **Parameters:**
 
@@ -238,7 +238,7 @@ ___
 
 ▸ **_resolveReplacements**(node: *`Node`*): `Node`[]
 
-*Defined in [cli/wrap-aot.ts:69](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/cli/wrap-aot.ts#L69)*
+*Defined in [cli/wrap-aot.ts:69](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/cli/wrap-aot.ts#L69)*
 
 **Parameters:**
 
@@ -255,7 +255,7 @@ ___
 
 ▸ **_revertReplacements**(fileContent: *`string`*, replacements: *`object`[]*): `void`
 
-*Defined in [cli/wrap-aot.ts:104](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/cli/wrap-aot.ts#L104)*
+*Defined in [cli/wrap-aot.ts:104](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/cli/wrap-aot.ts#L104)*
 
 **Parameters:**
 
@@ -273,7 +273,7 @@ ___
 
 ▸ **_spawnCommand**(): `Promise`<`void`>
 
-*Defined in [cli/wrap-aot.ts:95](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/cli/wrap-aot.ts#L95)*
+*Defined in [cli/wrap-aot.ts:95](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/cli/wrap-aot.ts#L95)*
 
 **Returns:** `Promise`<`void`>
 
@@ -284,7 +284,7 @@ ___
 
 ▸ **_validateOptions**(): `void`
 
-*Defined in [cli/wrap-aot.ts:41](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/cli/wrap-aot.ts#L41)*
+*Defined in [cli/wrap-aot.ts:41](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/cli/wrap-aot.ts#L41)*
 
 **Returns:** `void`
 
@@ -297,7 +297,7 @@ ___
 
 *Inherited from [CommandBase](_cli_command_base_.commandbase.md).[execute](_cli_command_base_.commandbase.md#execute)*
 
-*Defined in [cli/command-base.ts:5](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/cli/command-base.ts#L5)*
+*Defined in [cli/command-base.ts:5](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/cli/command-base.ts#L5)*
 
 **Returns:** `Promise`<`void`>
 

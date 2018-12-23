@@ -15,9 +15,12 @@ environment variables into index.html file(s) by replacing `<!--CONFIG-->`
 (Missing environment variables will be represented by null). This should be done
 on the host serving the bundled angular files.
 
-### AOT
-This will not work in Module.forRoot or Module.forChild scripts or parameters.
-These are build time only due to AOT restrictions.
+### AoT
+By default, this will not work in Module.forRoot or Module.forChild scripts or parameters.
+These are build time only due to AoT restrictions.
+
+With `ngssc wrap-aot ng build ...` it is however possible to retain the configuration, by replacing
+the environment variables with tokens during the AoT build and reverting afterwards. (See [CLI wrap-aot](#wrap-aot))
 
 ## Getting Started
 ```
