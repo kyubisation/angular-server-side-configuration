@@ -43,7 +43,7 @@
 
 *Overrides [CommandBase](_cli_command_base_.commandbase.md).[constructor](_cli_command_base_.commandbase.md#constructor)*
 
-*Defined in [cli/init-command.ts:10](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/cli/init-command.ts#L10)*
+*Defined in [cli/init-command.ts:10](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/cli/init-command.ts#L10)*
 
 **Parameters:**
 
@@ -68,7 +68,7 @@ ___
 
 **● _directory**: *`string`*
 
-*Defined in [cli/init-command.ts:10](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/cli/init-command.ts#L10)*
+*Defined in [cli/init-command.ts:10](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/cli/init-command.ts#L10)*
 
 ___
 <a id="_environmentfile"></a>
@@ -77,7 +77,7 @@ ___
 
 **● _environmentFile**: *`string`*
 
-*Defined in [cli/init-command.ts:9](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/cli/init-command.ts#L9)*
+*Defined in [cli/init-command.ts:9](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/cli/init-command.ts#L9)*
 
 ___
 <a id="_options"></a>
@@ -86,7 +86,7 @@ ___
 
 **● _options**: *`object`*
 
-*Defined in [cli/init-command.ts:12](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/cli/init-command.ts#L12)*
+*Defined in [cli/init-command.ts:12](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/cli/init-command.ts#L12)*
 
 #### Type declaration
 
@@ -105,7 +105,7 @@ ___
 
 **● _packagePath**: *`string`*
 
-*Defined in [cli/init-command.ts:8](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/cli/init-command.ts#L8)*
+*Defined in [cli/init-command.ts:8](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/cli/init-command.ts#L8)*
 
 ___
 
@@ -119,7 +119,7 @@ ___
 
 *Overrides [CommandBase](_cli_command_base_.commandbase.md).[_execute](_cli_command_base_.commandbase.md#_execute)*
 
-*Defined in [cli/init-command.ts:26](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/cli/init-command.ts#L26)*
+*Defined in [cli/init-command.ts:26](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/cli/init-command.ts#L26)*
 
 **Returns:** `Promise`<`void`>
 
@@ -130,7 +130,7 @@ ___
 
 ▸ **_initEnvironmentFile**(): `void`
 
-*Defined in [cli/init-command.ts:42](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/cli/init-command.ts#L42)*
+*Defined in [cli/init-command.ts:42](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/cli/init-command.ts#L42)*
 
 **Returns:** `void`
 
@@ -141,7 +141,7 @@ ___
 
 ▸ **_installPackage**(): `void`
 
-*Defined in [cli/init-command.ts:74](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/cli/init-command.ts#L74)*
+*Defined in [cli/init-command.ts:74](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/cli/init-command.ts#L74)*
 
 **Returns:** `void`
 
@@ -154,7 +154,7 @@ ___
 
 *Inherited from [CommandBase](_cli_command_base_.commandbase.md).[_log](_cli_command_base_.commandbase.md#_log)*
 
-*Defined in [cli/command-base.ts:19](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/cli/command-base.ts#L19)*
+*Defined in [cli/command-base.ts:19](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/cli/command-base.ts#L19)*
 
 **Parameters:**
 
@@ -173,7 +173,7 @@ ___
 
 *Inherited from [CommandBase](_cli_command_base_.commandbase.md).[_logValue](_cli_command_base_.commandbase.md#_logvalue)*
 
-*Defined in [cli/command-base.ts:13](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/cli/command-base.ts#L13)*
+*Defined in [cli/command-base.ts:13](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/cli/command-base.ts#L13)*
 
 **Parameters:**
 
@@ -191,7 +191,7 @@ ___
 
 ▸ **_validateOptions**(): `void`
 
-*Defined in [cli/init-command.ts:32](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/cli/init-command.ts#L32)*
+*Defined in [cli/init-command.ts:32](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/cli/init-command.ts#L32)*
 
 **Returns:** `void`
 
@@ -204,7 +204,7 @@ ___
 
 *Inherited from [CommandBase](_cli_command_base_.commandbase.md).[execute](_cli_command_base_.commandbase.md#execute)*
 
-*Defined in [cli/command-base.ts:5](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/cli/command-base.ts#L5)*
+*Defined in [cli/command-base.ts:5](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/cli/command-base.ts#L5)*
 
 **Returns:** `Promise`<`void`>
 
