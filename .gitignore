@@ -65,3 +65,4 @@ typings/
 !test/**/*.js
 *.d.ts
 .rpt2_cache
+.vscode
