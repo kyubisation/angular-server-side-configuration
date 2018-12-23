@@ -18,7 +18,7 @@
 
 ▸ **walk**(root: *`string`*, filePattern: *`RegExp`*): `string`[]
 
-*Defined in [common/walk.ts:4](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/common/walk.ts#L4)*
+*Defined in [common/walk.ts:4](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/common/walk.ts#L4)*
 
 **Parameters:**
 

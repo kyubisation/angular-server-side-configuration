@@ -18,7 +18,7 @@
 
 ▸ **cli**(): `object`
 
-*Defined in [cli/cli.ts:7](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/cli/cli.ts#L7)*
+*Defined in [cli/cli.ts:7](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/cli/cli.ts#L7)*
 
 **Returns:** `object`
 

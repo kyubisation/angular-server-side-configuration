@@ -117,7 +117,7 @@ If node.js cannot be used on the target system, it is also possible to compile n
 
 Create a file named ngssc.js:
 ```javascript
-require('./main').cli().parse(process.argv);
+require('angular-server-side-configuration').cli().parse(process.argv);
 ```
 
 And then use pkg or nexe to build the native ngssc CLI:

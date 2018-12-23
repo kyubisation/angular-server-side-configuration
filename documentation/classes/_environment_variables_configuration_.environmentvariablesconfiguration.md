@@ -52,7 +52,7 @@ Discover and apply configuration via environment variables.
 
 ⊕ **new EnvironmentVariablesConfiguration**(variables?: *`string`[]*, replacements?: *`Array`<`function`>*): [EnvironmentVariablesConfiguration](_environment_variables_configuration_.environmentvariablesconfiguration.md)
 
-*Defined in [environment-variables-configuration.ts:24](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/environment-variables-configuration.ts#L24)*
+*Defined in [environment-variables-configuration.ts:24](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/environment-variables-configuration.ts#L24)*
 
 **Parameters:**
 
@@ -73,7 +73,7 @@ ___
 
 **● defaultInsertionFilePattern**: *`RegExp`* =  /index.html$/
 
-*Defined in [environment-variables-configuration.ts:24](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/environment-variables-configuration.ts#L24)*
+*Defined in [environment-variables-configuration.ts:24](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/environment-variables-configuration.ts#L24)*
 
 The default pattern for files to have the environment variables inserted into.
 
@@ -84,7 +84,7 @@ ___
 
 **● directory**: *`string`* =  process.cwd()
 
-*Defined in [environment-variables-configuration.ts:19](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/environment-variables-configuration.ts#L19)*
+*Defined in [environment-variables-configuration.ts:19](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/environment-variables-configuration.ts#L19)*
 
 The directory. Defaults to current working directory.
 
@@ -95,7 +95,7 @@ ___
 
 **● replacements**: *`Array`<`function`>*
 
-*Defined in [environment-variables-configuration.ts:32](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/environment-variables-configuration.ts#L32)*
+*Defined in [environment-variables-configuration.ts:32](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/environment-variables-configuration.ts#L32)*
 
 Optional array of replacement functions.
 
@@ -106,7 +106,7 @@ ___
 
 **● variables**: *`string`[]*
 
-*Defined in [environment-variables-configuration.ts:31](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/environment-variables-configuration.ts#L31)*
+*Defined in [environment-variables-configuration.ts:31](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/environment-variables-configuration.ts#L31)*
 
 Optional array of environment variable names to populate.
 
@@ -120,7 +120,7 @@ ___
 
 ▸ **apply**(file: *`string`*, options?: *`object`*): `Promise`<`string`>
 
-*Defined in [environment-variables-configuration.ts:244](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/environment-variables-configuration.ts#L244)*
+*Defined in [environment-variables-configuration.ts:244](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/environment-variables-configuration.ts#L244)*
 
 Inserts the discovered environment variables as an IIFE wrapped in a script tag into the specified file content and applies added replacements without saving the file.
 *__deprecated__*: Use insertVariables or insertVariablesIntoHead and applyTo instead.
@@ -149,7 +149,7 @@ ___
 
 ▸ **applyAndSaveRecursively**(options?: *`object`*): `Promise`<`string`[]>
 
-*Defined in [environment-variables-configuration.ts:262](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/environment-variables-configuration.ts#L262)*
+*Defined in [environment-variables-configuration.ts:262](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/environment-variables-configuration.ts#L262)*
 
 Apply the replacements to the content of the matched files and save them asynchronously.
 
@@ -175,7 +175,7 @@ ___
 
 ▸ **applyAndSaveTo**(file: *`string`*): `Promise`<`void`>
 
-*Defined in [environment-variables-configuration.ts:274](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/environment-variables-configuration.ts#L274)*
+*Defined in [environment-variables-configuration.ts:274](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/environment-variables-configuration.ts#L274)*
 
 Apply the replacements to the content of the given file and save it asynchronously.
 
@@ -195,7 +195,7 @@ ___
 
 ▸ **applyTo**(file: *`string`*): `Promise`<`string`>
 
-*Defined in [environment-variables-configuration.ts:285](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/environment-variables-configuration.ts#L285)*
+*Defined in [environment-variables-configuration.ts:285](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/environment-variables-configuration.ts#L285)*
 
 Apply the replacements to the content of the given file and return the resulting content as a promise.
 
@@ -215,7 +215,7 @@ ___
 
 ▸ **generateIIFE**(): `string`
 
-*Defined in [environment-variables-configuration.ts:293](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/environment-variables-configuration.ts#L293)*
+*Defined in [environment-variables-configuration.ts:293](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/environment-variables-configuration.ts#L293)*
 
 Generates the IIFE in which the environment variables are assigned to window.process.env.
 
@@ -228,7 +228,7 @@ ___
 
 ▸ **insertAndSave**(file: *`string`*, options?: *`object`*): `Promise`<`void`>
 
-*Defined in [environment-variables-configuration.ts:227](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/environment-variables-configuration.ts#L227)*
+*Defined in [environment-variables-configuration.ts:227](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/environment-variables-configuration.ts#L227)*
 
 Inserts the discovered environment variables as an IIFE wrapped in a script tag into the specified file and applies added replacements.
 *__deprecated__*: Use insertVariables or insertVariablesIntoHead and applyAndSaveTo instead.
@@ -258,7 +258,7 @@ ___
 
 ▸ **insertAndSaveRecursively**(root: *`string`*, options?: *`object`*): `Promise`<`string`[]>
 
-*Defined in [environment-variables-configuration.ts:207](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/environment-variables-configuration.ts#L207)*
+*Defined in [environment-variables-configuration.ts:207](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/environment-variables-configuration.ts#L207)*
 
 Inserts the discovered enviornment variables as an IIFE wrapped in a script tag into the matched files and applies added replacements.
 *__deprecated__*: Use insertVariables or insertVariablesIntoHead and applyAndSaveRecursively instead.
@@ -289,7 +289,7 @@ ___
 
 ▸ **insertVariables**(placeholder?: *`string` | `RegExp`*): `this`
 
-*Defined in [environment-variables-configuration.ts:163](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/environment-variables-configuration.ts#L163)*
+*Defined in [environment-variables-configuration.ts:163](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/environment-variables-configuration.ts#L163)*
 
 Replace the placeholder with the populated variables wrapped in an IIFE inside a script tag.
 
@@ -309,7 +309,7 @@ ___
 
 ▸ **insertVariablesIntoHead**(): `this`
 
-*Defined in [environment-variables-configuration.ts:172](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/environment-variables-configuration.ts#L172)*
+*Defined in [environment-variables-configuration.ts:172](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/environment-variables-configuration.ts#L172)*
 
 Insert the populated variables (wrapped in an IIFE inside a script tag) into the head tag. Appends variables to title tag, or if not found, at the end of the head tag.
 
@@ -323,7 +323,7 @@ ___
 
 ▸ **populateVariables**(): `object`
 
-*Defined in [environment-variables-configuration.ts:302](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/environment-variables-configuration.ts#L302)*
+*Defined in [environment-variables-configuration.ts:302](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/environment-variables-configuration.ts#L302)*
 
 Generates an object, with the environment variable names being the key and the actual values being the values.
 
@@ -336,7 +336,7 @@ ___
 
 ▸ **regexReplace**(regex: *`RegExp`*, replaceValue: *`string`*): `this`
 
-*Defined in [environment-variables-configuration.ts:153](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/environment-variables-configuration.ts#L153)*
+*Defined in [environment-variables-configuration.ts:153](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/environment-variables-configuration.ts#L153)*
 
 Add a replacement for the file received through applyTo, applyAndSaveTo or applyAndSaveRecursively.
 
@@ -357,7 +357,7 @@ ___
 
 ▸ **replace**(replacement: *`function`*): `this`
 
-*Defined in [environment-variables-configuration.ts:187](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/environment-variables-configuration.ts#L187)*
+*Defined in [environment-variables-configuration.ts:187](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/environment-variables-configuration.ts#L187)*
 
 Add a replacement function for the file received through applyTo, applyAndSaveTo or applyAndSaveRecursively. The function receives the file content and the file name as parameters and returns the file content with the replacement applied.
 
@@ -377,7 +377,7 @@ ___
 
 ▸ **replaceBaseHref**(newBaseHref: *`string`*): `this`
 
-*Defined in [environment-variables-configuration.ts:113](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/environment-variables-configuration.ts#L113)*
+*Defined in [environment-variables-configuration.ts:113](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/environment-variables-configuration.ts#L113)*
 
 Replace the base href attribute for the file received through applyTo, applyAndSaveTo or applyAndSaveRecursively.
 
@@ -397,7 +397,7 @@ ___
 
 ▸ **replaceHtmlLang**(newHtmlLang: *`string`*): `this`
 
-*Defined in [environment-variables-configuration.ts:124](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/environment-variables-configuration.ts#L124)*
+*Defined in [environment-variables-configuration.ts:124](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/environment-variables-configuration.ts#L124)*
 
 Replace the html lang attribute for the file received through applyTo, applyAndSaveTo or applyAndSaveRecursively.
 
@@ -417,7 +417,7 @@ ___
 
 ▸ **replaceTagAttribute**(tag: *`string`*, attribute: *`string`*, newValue: *`string`*): `this`
 
-*Defined in [environment-variables-configuration.ts:137](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/environment-variables-configuration.ts#L137)*
+*Defined in [environment-variables-configuration.ts:137](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/environment-variables-configuration.ts#L137)*
 
 Replace the attribute value of a tag for the file received through applyTo, applyAndSaveTo or applyAndSaveRecursively.
 
@@ -439,7 +439,7 @@ ___
 
 ▸ **searchEnvironmentVariables**(options?: *`object`*): `this`
 
-*Defined in [environment-variables-configuration.ts:83](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/environment-variables-configuration.ts#L83)*
+*Defined in [environment-variables-configuration.ts:83](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/environment-variables-configuration.ts#L83)*
 
 Searches for environment variable declarations in files matched by file pattern, starting from given directory.
 
@@ -465,7 +465,7 @@ ___
 
 ▸ **setDirectory**(directory: *`string`*): `this`
 
-*Defined in [environment-variables-configuration.ts:65](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/environment-variables-configuration.ts#L65)*
+*Defined in [environment-variables-configuration.ts:65](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/environment-variables-configuration.ts#L65)*
 
 Set the directory, where the files to be configured reside in. Default is current working directory.
 
@@ -485,7 +485,7 @@ ___
 
 ▸ **searchEnvironmentVariables**(directory: *`string`*, options?: *`object`*): [EnvironmentVariablesConfiguration](_environment_variables_configuration_.environmentvariablesconfiguration.md)
 
-*Defined in [environment-variables-configuration.ts:49](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/environment-variables-configuration.ts#L49)*
+*Defined in [environment-variables-configuration.ts:49](https://github.com/kyubisation/angular-server-side-configuration/blob/c276a03/src/environment-variables-configuration.ts#L49)*
 
 Searches for environment variable declarations in files matched by file pattern, starting from given directory.
 *__deprecated__*: Static searchEnvironmentVariables is deprecated. Use the instance method instead.
