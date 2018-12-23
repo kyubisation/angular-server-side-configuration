@@ -16,9 +16,11 @@ How it works & Limitations
 
 Environment variables are used for configuration. This package provides a script to search for usages in bundled angular files and a script for inserting populated environment variables into index.html file(s) by replacing `<!--CONFIG-->` (Missing environment variables will be represented by null). This should be done on the host serving the bundled angular files.
 
-### AOT
+### AoT
 
-This will not work in Module.forRoot or Module.forChild scripts or parameters. These are build time only due to AOT restrictions.
+By default, this will not work in Module.forRoot or Module.forChild scripts or parameters. These are build time only due to AoT restrictions.
+
+With `ngssc wrap-aot ng build ...` it is however possible to retain the configuration, by replacing the environment variables with tokens during the AoT build and reverting afterwards. (See [CLI wrap-aot](#wrap-aot))
 
 Getting Started
 ---------------
@@ -80,86 +82,42 @@ ngssc --help
 ```
 
 ### Insert
-
-Usage: insert \[options\] \[directory\]
+Usage: insert [options] [directory]
 
 Search and replace the placeholder with environment variables (Directory defaults to current working directory)
 
-Options
-
-Description
-
-`-s, --search`
-
-Search environment variables in available .js files (Defaults to false)
-
-`-e, --env <value>`
-
-Add an environment variable to be resolved (default: \[\])
-
-`-p, --placeholder <value>`
-
-Set the placeholder to replace with the environment variables (Defaults to `<!--CONFIG-->`)
-
-`-h, --head`
-
-Insert environment variables into the head tag (after title tag, if available, otherwise before closing head tag)
-
-`--dry`
-
-Perform the insert without actually inserting the variables
-
-`-h, --help`
-
-output usage information
+| Options | Description |
+| --- | --- |
+| `-s, --search`              | Search environment variables in available .js files (Defaults to false) |
+| `-e, --env <value>`         | Add an environment variable to be resolved (default: []) |
+| `-p, --placeholder <value>` | Set the placeholder to replace with the environment variables (Defaults to `<!--CONFIG-->`) |
+| `-h, --head`                | Insert environment variables into the head tag (after title tag, if available, otherwise before closing head tag) |
+| `--dry`                     | Perform the insert without actually inserting the variables |
+| `-h, --help`                | output usage information |
 
 ### Init
-
-Usage: init \[options\] \[directory\]
+Usage: init [options] [directory]
 
 Initialize an angular project with angular-server-side-configuration (Directory defaults to current working directory)
 
-Options
-
-Description
-
-`-ef, --environment-file`
-
-The environment file to initialize (environmentFile defaults to src/environments/environment.prod.ts)
-
-`--npm`
-
-Install angular-service-side-configuration via npm (Default)
-
-`--yarn`
-
-Install angular-service-side-configuration via yarn
-
-`-h, --help`
-
-output usage information
+| Options | Description |
+| --- | --- |
+| `-ef, --environment-file` | The environment file to initialize (environmentFile defaults to src/environments/environment.prod.ts) |
+| `--npm`                   | Install angular-service-side-configuration via npm (Default) |
+| `--yarn`                  | Install angular-service-side-configuration via yarn |
+| `-h, --help`              | output usage information |
 
 ### Wrap-Aot
+Usage: wrap-aot [options] [ng...]
 
-Usage: wrap-aot \[options\] \[ng...\]
+Wrap an angular command with aot compilation to retain configuration (Use "ngssc wrap-aot ng build ..."). This will temporarily replace the
+content of the environment file with tokens. After the inner command completes, this is reverted and the tokens in the dist files will be replaced by the actual values.
 
-Wrap an angular command with aot compilation to retain configuration (Use "ngssc wrap-aot ng build ..."). This will temporarily replace the content of the environment file with tokens. After the inner command completes, this is reverted and the tokens in the dist files will be replaced by the actual values.
-
-Options
-
-Description
-
-`-ef, --environment-file`
-
-The environment file to prepare for aot-compilation (Defaults to src/environments/environment.prod.ts)
-
-`--dist`
-
-The output path of the ng build (Defaults to dist/\*\*)
-
-`-h, --help`
-
-output usage information
+| Options | Description |
+| --- | --- |
+| `-ef, --environment-file` | The environment file to prepare for aot-compilation (Defaults to src/environments/environment.prod.ts) |
+| `--dist`                  | The output path of the ng build (Defaults to dist/**) |
+| `-h, --help`              | output usage information |
 
 Native CLI
 ----------
