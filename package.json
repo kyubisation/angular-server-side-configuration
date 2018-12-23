@@ -4,7 +4,7 @@
   "description": "Configure an angular application on the server",
   "main": "./main.js",
   "module": "./index.js",
-  "types": "./src/index.d.ts",
+  "types": "./index.d.ts",
   "bin": {
     "ngssc": "./bin/ngssc"
   },
