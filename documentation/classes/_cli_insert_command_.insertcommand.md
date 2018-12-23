@@ -46,7 +46,7 @@
 
 *Overrides [CommandBase](_cli_command_base_.commandbase.md).[constructor](_cli_command_base_.commandbase.md#constructor)*
 
-*Defined in [cli/insert-command.ts:7](https://github.com/kyubisation/angular-server-side-configuration/blob/e20a7d2/src/cli/insert-command.ts#L7)*
+*Defined in [cli/insert-command.ts:7](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/cli/insert-command.ts#L7)*
 
 **Parameters:**
 
@@ -54,12 +54,12 @@
 
 | Name | Type |
 | ------ | ------ |
-| `Optional` directory |  `undefined` &#124; `string`|
-| `Optional` dry |  `undefined` &#124; `false` &#124; `true`|
+| `Optional` directory | `undefined` | `string` |
+| `Optional` dry | `undefined` | `false` | `true` |
 | `Optional` env | `string`[] |
-| `Optional` head |  `undefined` &#124; `false` &#124; `true`|
-| `Optional` placeholder |  `undefined` &#124; `string`|
-| `Optional` search |  `undefined` &#124; `false` &#124; `true`|
+| `Optional` head | `undefined` | `false` | `true` |
+| `Optional` placeholder | `undefined` | `string` |
+| `Optional` search | `undefined` | `false` | `true` |
 
 **Returns:** [InsertCommand](_cli_insert_command_.insertcommand.md)
 
@@ -73,7 +73,7 @@ ___
 
 **● _envVariables**: *[EnvironmentVariablesConfiguration](_environment_variables_configuration_.environmentvariablesconfiguration.md)* =  new EnvironmentVariablesConfiguration()
 
-*Defined in [cli/insert-command.ts:7](https://github.com/kyubisation/angular-server-side-configuration/blob/e20a7d2/src/cli/insert-command.ts#L7)*
+*Defined in [cli/insert-command.ts:7](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/cli/insert-command.ts#L7)*
 
 ___
 <a id="_options"></a>
@@ -82,21 +82,21 @@ ___
 
 **● _options**: *`object`*
 
-*Defined in [cli/insert-command.ts:9](https://github.com/kyubisation/angular-server-side-configuration/blob/e20a7d2/src/cli/insert-command.ts#L9)*
+*Defined in [cli/insert-command.ts:9](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/cli/insert-command.ts#L9)*
 
 #### Type declaration
 
-`Optional`  directory:  `undefined` &#124; `string`
+`Optional`  directory: `undefined` | `string`
 
-`Optional`  dry:  `undefined` &#124; `false` &#124; `true`
+`Optional`  dry: `undefined` | `false` | `true`
 
 `Optional`  env: `string`[]
 
-`Optional`  head:  `undefined` &#124; `false` &#124; `true`
+`Optional`  head: `undefined` | `false` | `true`
 
-`Optional`  placeholder:  `undefined` &#124; `string`
+`Optional`  placeholder: `undefined` | `string`
 
-`Optional`  search:  `undefined` &#124; `false` &#124; `true`
+`Optional`  search: `undefined` | `false` | `true`
 
 ___
 
@@ -108,7 +108,7 @@ ___
 
 ▸ **_addEnvironmentVariablesFromCommandLine**(): `void`
 
-*Defined in [cli/insert-command.ts:57](https://github.com/kyubisation/angular-server-side-configuration/blob/e20a7d2/src/cli/insert-command.ts#L57)*
+*Defined in [cli/insert-command.ts:57](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/cli/insert-command.ts#L57)*
 
 **Returns:** `void`
 
@@ -119,7 +119,7 @@ ___
 
 ▸ **_configureDirectory**(): `void`
 
-*Defined in [cli/insert-command.ts:43](https://github.com/kyubisation/angular-server-side-configuration/blob/e20a7d2/src/cli/insert-command.ts#L43)*
+*Defined in [cli/insert-command.ts:43](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/cli/insert-command.ts#L43)*
 
 **Returns:** `void`
 
@@ -130,7 +130,7 @@ ___
 
 ▸ **_configureReplacement**(): `void`
 
-*Defined in [cli/insert-command.ts:64](https://github.com/kyubisation/angular-server-side-configuration/blob/e20a7d2/src/cli/insert-command.ts#L64)*
+*Defined in [cli/insert-command.ts:64](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/cli/insert-command.ts#L64)*
 
 **Returns:** `void`
 
@@ -141,7 +141,7 @@ ___
 
 ▸ **_dryMessage**(): `void`
 
-*Defined in [cli/insert-command.ts:37](https://github.com/kyubisation/angular-server-side-configuration/blob/e20a7d2/src/cli/insert-command.ts#L37)*
+*Defined in [cli/insert-command.ts:37](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/cli/insert-command.ts#L37)*
 
 **Returns:** `void`
 
@@ -154,7 +154,7 @@ ___
 
 *Overrides [CommandBase](_cli_command_base_.commandbase.md).[_execute](_cli_command_base_.commandbase.md#_execute)*
 
-*Defined in [cli/insert-command.ts:20](https://github.com/kyubisation/angular-server-side-configuration/blob/e20a7d2/src/cli/insert-command.ts#L20)*
+*Defined in [cli/insert-command.ts:20](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/cli/insert-command.ts#L20)*
 
 **Returns:** `Promise`<`void`>
 
@@ -165,7 +165,7 @@ ___
 
 ▸ **_insertEnvironmentVariables**(): `Promise`<`void`>
 
-*Defined in [cli/insert-command.ts:81](https://github.com/kyubisation/angular-server-side-configuration/blob/e20a7d2/src/cli/insert-command.ts#L81)*
+*Defined in [cli/insert-command.ts:81](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/cli/insert-command.ts#L81)*
 
 **Returns:** `Promise`<`void`>
 
@@ -178,7 +178,7 @@ ___
 
 *Inherited from [CommandBase](_cli_command_base_.commandbase.md).[_log](_cli_command_base_.commandbase.md#_log)*
 
-*Defined in [cli/command-base.ts:19](https://github.com/kyubisation/angular-server-side-configuration/blob/e20a7d2/src/cli/command-base.ts#L19)*
+*Defined in [cli/command-base.ts:19](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/cli/command-base.ts#L19)*
 
 **Parameters:**
 
@@ -195,7 +195,7 @@ ___
 
 ▸ **_logPopulatedEnvironmentVariables**(): `void`
 
-*Defined in [cli/insert-command.ts:77](https://github.com/kyubisation/angular-server-side-configuration/blob/e20a7d2/src/cli/insert-command.ts#L77)*
+*Defined in [cli/insert-command.ts:77](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/cli/insert-command.ts#L77)*
 
 **Returns:** `void`
 
@@ -208,7 +208,7 @@ ___
 
 *Inherited from [CommandBase](_cli_command_base_.commandbase.md).[_logValue](_cli_command_base_.commandbase.md#_logvalue)*
 
-*Defined in [cli/command-base.ts:13](https://github.com/kyubisation/angular-server-side-configuration/blob/e20a7d2/src/cli/command-base.ts#L13)*
+*Defined in [cli/command-base.ts:13](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/cli/command-base.ts#L13)*
 
 **Parameters:**
 
@@ -226,7 +226,7 @@ ___
 
 ▸ **_searchEnvironmentVariables**(): `void`
 
-*Defined in [cli/insert-command.ts:49](https://github.com/kyubisation/angular-server-side-configuration/blob/e20a7d2/src/cli/insert-command.ts#L49)*
+*Defined in [cli/insert-command.ts:49](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/cli/insert-command.ts#L49)*
 
 **Returns:** `void`
 
@@ -237,7 +237,7 @@ ___
 
 ▸ **_validateConfig**(): `void`
 
-*Defined in [cli/insert-command.ts:31](https://github.com/kyubisation/angular-server-side-configuration/blob/e20a7d2/src/cli/insert-command.ts#L31)*
+*Defined in [cli/insert-command.ts:31](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/cli/insert-command.ts#L31)*
 
 **Returns:** `void`
 
@@ -250,7 +250,7 @@ ___
 
 *Inherited from [CommandBase](_cli_command_base_.commandbase.md).[execute](_cli_command_base_.commandbase.md#execute)*
 
-*Defined in [cli/command-base.ts:5](https://github.com/kyubisation/angular-server-side-configuration/blob/e20a7d2/src/cli/command-base.ts#L5)*
+*Defined in [cli/command-base.ts:5](https://github.com/kyubisation/angular-server-side-configuration/blob/2bc156e/src/cli/command-base.ts#L5)*
 
 **Returns:** `Promise`<`void`>
 
