@@ -1,4 +1,6 @@
 export abstract class CommandBase {
+  private _logger = new Console();
+
   constructor(private _name: string) {
   }
 
@@ -17,6 +19,6 @@ export abstract class CommandBase {
   }
 
   protected _log(message: string) {
-    console.log(message);
+    this._logger.log(message);
   }
 }

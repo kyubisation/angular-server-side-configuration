@@ -35,7 +35,7 @@ describe('cli insert', () => {
     expect((command as any)._directory).to.eq(process.cwd());
   });
 
-  it('should initialize correctly', async function () {
+  it('should initialize correctly', async function() {
     this.timeout(20000);
     const directory = join(root, 'tmp');
     for (const content of ['', environmentTemplate]) {
@@ -45,7 +45,7 @@ describe('cli insert', () => {
         const environmentFilePath = join(directory, 'environment.prod.ts');
         const [packageJson, environmentFile] = await temporaryFiles([
           { file: packageJsonPath, content: packageTemplate },
-          { file: environmentFilePath, content }
+          { file: environmentFilePath, content },
         ], async () => await command.execute());
 
         expect(packageJson).to.contain('"angular-server-side-configuration"');
@@ -54,7 +54,7 @@ describe('cli insert', () => {
     }
   });
 
-  it('should initialize correctly with yarn', async function () {
+  it('should initialize correctly with yarn', async function() {
     this.timeout(20000);
     const directory = join(root, 'tmp');
     await temporaryDirectory(directory, async () => {
@@ -63,7 +63,7 @@ describe('cli insert', () => {
       const environmentFilePath = join(directory, 'environment.prod.ts');
       const [packageJson, environmentFile] = await temporaryFiles([
         { file: packageJsonPath, content: packageTemplate },
-        { file: environmentFilePath, content: '' }
+        { file: environmentFilePath, content: '' },
       ], async () => await command.execute());
 
       expect(packageJson).to.contain('"angular-server-side-configuration"');

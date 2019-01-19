@@ -30,6 +30,7 @@ describe('EnvironmentVariablesConfiguration', () => {
 
   it('should find nothing', () => {
     const envVariables = EnvironmentVariablesConfiguration.searchEnvironmentVariables(join(root, 'nothing'));
+    // tslint:disable-next-line
     expect(envVariables.variables).to.be.empty;
   });
 
@@ -172,4 +173,3 @@ describe('EnvironmentVariablesConfiguration', () => {
     contents.forEach(c => expect(c).to.contain(envVariables.generateIIFE()));
   });
 });
-

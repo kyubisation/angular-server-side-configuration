@@ -13,7 +13,7 @@ export class InitCommand extends CommandBase {
     directory?: string,
     environmentFile?: string,
     npm?: boolean,
-    yarn?: boolean
+    yarn?: boolean,
   }) {
     super('Initialize Configuration');
     this._directory = this._options.directory ? resolve(this._options.directory) : process.cwd();
@@ -33,7 +33,7 @@ export class InitCommand extends CommandBase {
     if (!existsSync(this._packagePath)) {
       throw new Error('This command must be executed in a directory with a package.json!');
     } else if (this._options.npm && this._options.yarn) {
-      throw new Error('Do not use --npm and --yarn at the same time!')
+      throw new Error('Do not use --npm and --yarn at the same time!');
     } else if (!existsSync(this._environmentFile)) {
       throw new Error(`Given file does not exist: ${this._environmentFile}`);
     }
@@ -52,9 +52,9 @@ export class InitCommand extends CommandBase {
 
 /**
  * How to use angular-server-side-configuration:
- * 
+ *
  * Use process.env.NAME_OF_YOUR_ENVIRONMENT_VARIABLE
- * 
+ *
  * export const environment = {
  *   stringValue: process.env.STRING_VALUE,
  *   stringValueWithDefault: process.env.STRING_VALUE || 'defaultValue',
