@@ -1,6 +1,4 @@
 export abstract class CommandBase {
-  private _logger = new Console();
-
   constructor(private _name: string) {
   }
 
@@ -19,6 +17,7 @@ export abstract class CommandBase {
   }
 
   protected _log(message: string) {
-    this._logger.log(message);
+    // tslint:disable-next-line
+    console.log(message);
   }
 }
