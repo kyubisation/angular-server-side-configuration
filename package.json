@@ -37,6 +37,8 @@
       ".ts"
     ],
     "reporter": [
+      "lcov",
+      "lcovonly",
       "text-summary",
       "html"
     ],
