@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { join } from 'path';
 
 import { indexHtmlContent, temporaryFile, temporaryFiles } from '../test/temporary-fs';
@@ -9,29 +8,27 @@ describe('EnvironmentVariablesConfiguration', () => {
 
   it('should throw on missing directory', () => {
     const missingDirectory = join(root, 'missing-directory');
-    expect(
-      () => EnvironmentVariablesConfiguration.searchEnvironmentVariables(missingDirectory))
-      .to.throw(Error);
+    expect(() => EnvironmentVariablesConfiguration.searchEnvironmentVariables(missingDirectory))
+      .toThrow(/no such file or directory/);
   });
 
   it('should throw on invalid directory', async () => {
     const invalidDirectory = join(root, 'index.html');
     await temporaryFile({ file: invalidDirectory, content: indexHtmlContent }, async () => {
-      expect(
-        () => EnvironmentVariablesConfiguration.searchEnvironmentVariables(invalidDirectory))
-        .to.throw(Error);
+      expect(() => EnvironmentVariablesConfiguration.searchEnvironmentVariables(invalidDirectory))
+        .toThrow(/is not a valid directory!/);
     });
   });
 
   it('should find TEST and TEST2', () => {
     const envVariables = EnvironmentVariablesConfiguration.searchEnvironmentVariables(root);
-    expect(envVariables.variables).eql(['TEST', 'TEST2']);
+    expect(envVariables.variables).toEqual(['TEST', 'TEST2']);
   });
 
   it('should find nothing', () => {
     const envVariables = EnvironmentVariablesConfiguration.searchEnvironmentVariables(join(root, 'nothing'));
     // tslint:disable-next-line
-    expect(envVariables.variables).to.be.empty;
+    expect(envVariables.variables).toEqual([]);
   });
 
   it('should populate variables from process.env', () => {
@@ -41,7 +38,7 @@ describe('EnvironmentVariablesConfiguration', () => {
     };
     process.env.TEST = expected.TEST;
     const envVariables = new EnvironmentVariablesConfiguration(Object.keys(expected));
-    expect(envVariables.populateVariables()).eql(expected);
+    expect(envVariables.populateVariables()).toEqual(expected);
   });
 
   it('should apply the environment variables without modifying the file', async () => {
@@ -49,9 +46,9 @@ describe('EnvironmentVariablesConfiguration', () => {
     const envVariables = new EnvironmentVariablesConfiguration(['TEST', 'TEST2']);
     const content = await temporaryFile({ file, content: indexHtmlContent }, async () => {
       const appliedContent = await envVariables.apply(file);
-      expect(appliedContent).to.contain(envVariables.generateIIFE());
+      expect(appliedContent).toContain(envVariables.generateIIFE());
     });
-    expect(content).not.to.contain(envVariables.generateIIFE());
+    expect(content).not.toContain(envVariables.generateIIFE());
   });
 
   it('should insert the environment variables into the file', async () => {
@@ -60,7 +57,7 @@ describe('EnvironmentVariablesConfiguration', () => {
     const content = await temporaryFile({ file, content: indexHtmlContent }, async () => {
       await envVariables.insertAndSave(file);
     });
-    expect(content).to.contain(envVariables.generateIIFE());
+    expect(content).toContain(envVariables.generateIIFE());
   });
 
   it('should insert the environment variables into all files', async () => {
@@ -70,7 +67,7 @@ describe('EnvironmentVariablesConfiguration', () => {
     const contents = await temporaryFiles(files, async () => {
       await envVariables.insertAndSaveRecursively(root);
     });
-    contents.forEach(c => expect(c).to.contain(envVariables.generateIIFE()));
+    contents.forEach(c => expect(c).toContain(envVariables.generateIIFE()));
   });
 
   it('should replace html lang attribute', async () => {
@@ -81,7 +78,7 @@ describe('EnvironmentVariablesConfiguration', () => {
         .replaceHtmlLang('de')
         .insertAndSave(file);
     });
-    expect(content).to.contain('<html lang="de">');
+    expect(content).toContain('<html lang="de">');
   });
 
   it('should replace the base href attribute', async () => {
@@ -92,7 +89,7 @@ describe('EnvironmentVariablesConfiguration', () => {
         .replaceBaseHref('/de/')
         .insertAndSave(file);
     });
-    expect(content).to.contain('<base href="/de/">');
+    expect(content).toContain('<base href="/de/">');
   });
 
   it('should replace regex match', async () => {
@@ -104,20 +101,20 @@ describe('EnvironmentVariablesConfiguration', () => {
         .regexReplace(/<title>[a-zA-Z0-9]+<\/title>/g, newTitle)
         .insertAndSave(file);
     });
-    expect(content).to.contain(newTitle);
+    expect(content).toContain(newTitle);
   });
 
   it('should set the directory', () => {
     const envVariables = new EnvironmentVariablesConfiguration();
-    expect(envVariables.directory).not.to.eq(root);
-    expect(envVariables.setDirectory(root).directory).to.eq(root);
+    expect(envVariables.directory).not.toEqual(root);
+    expect(envVariables.setDirectory(root).directory).toEqual(root);
   });
 
   it('should find TEST and TEST2 (instance method)', () => {
     const envVariables = new EnvironmentVariablesConfiguration()
       .setDirectory(root)
       .searchEnvironmentVariables();
-    expect(envVariables.variables).eql(['TEST', 'TEST2']);
+    expect(envVariables.variables).toEqual(['TEST', 'TEST2']);
   });
 
   it('should replace placeholder', async () => {
@@ -127,7 +124,7 @@ describe('EnvironmentVariablesConfiguration', () => {
     const content = await temporaryFile({ file, content: indexHtmlContent }, async () => {
       await envVariables.applyAndSaveTo(file);
     });
-    expect(content).to.contain(envVariables.generateIIFE());
+    expect(content).toContain(envVariables.generateIIFE());
   });
 
   it('should replace custom placeholder', async () => {
@@ -137,7 +134,7 @@ describe('EnvironmentVariablesConfiguration', () => {
     const content = await temporaryFile({ file, content: indexHtmlContent }, async () => {
       await envVariables.applyAndSaveTo(file);
     });
-    expect(content).to.contain(envVariables.generateIIFE());
+    expect(content).toContain(envVariables.generateIIFE());
   });
 
   it('should insert IIFE into head', async () => {
@@ -147,7 +144,7 @@ describe('EnvironmentVariablesConfiguration', () => {
     const content = await temporaryFile({ file, content: indexHtmlContent }, async () => {
       await envVariables.applyAndSaveTo(file);
     });
-    expect(content).to.contain(`</title><script>${envVariables.generateIIFE()}</script>`);
+    expect(content).toContain(`</title><script>${envVariables.generateIIFE()}</script>`);
   });
 
   it('should insert IIFE at end of head', async () => {
@@ -158,7 +155,7 @@ describe('EnvironmentVariablesConfiguration', () => {
     const content = await temporaryFile({ file, content: htmlContent }, async () => {
       await envVariables.applyAndSaveTo(file);
     });
-    expect(content).to.contain(`<script>${envVariables.generateIIFE()}</script></head>`);
+    expect(content).toContain(`<script>${envVariables.generateIIFE()}</script></head>`);
   });
 
   it('should insert the environment variables into all files', async () => {
@@ -170,6 +167,6 @@ describe('EnvironmentVariablesConfiguration', () => {
     const contents = await temporaryFiles(files, async () => {
       await envVariables.applyAndSaveRecursively();
     });
-    contents.forEach(c => expect(c).to.contain(envVariables.generateIIFE()));
+    contents.forEach(c => expect(c).toContain(envVariables.generateIIFE()));
   });
 });

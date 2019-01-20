@@ -1,5 +1,4 @@
 
-import { expect } from 'chai';
 import { join } from 'path';
 
 import { indexHtmlContent, temporaryFile } from '../../test/temporary-fs';
@@ -13,7 +12,7 @@ describe('cli insert', () => {
     const command = new InsertCommand({ dry: true, directory: root });
     const envVariables: EnvironmentVariablesConfiguration = (command as any)._envVariables;
     await command.execute();
-    expect(envVariables.variables.length).to.eq(0);
+    expect(envVariables.variables.length).toEqual(0);
   });
 
   it('should have environment variables from command line', async () => {
@@ -21,14 +20,14 @@ describe('cli insert', () => {
     const command = new InsertCommand({ dry: true, directory: root, env });
     const envVariables: EnvironmentVariablesConfiguration = (command as any)._envVariables;
     await command.execute();
-    expect(envVariables.variables).to.eql(env);
+    expect(envVariables.variables).toEqual(env);
   });
 
   it('should find environment variables, when searching', async () => {
     const command = new InsertCommand({ dry: true, directory: root, search: true });
     const envVariables: EnvironmentVariablesConfiguration = (command as any)._envVariables;
     await command.execute();
-    expect(envVariables.variables).to.eql(['TEST', 'TEST2']);
+    expect(envVariables.variables).toEqual(['TEST', 'TEST2']);
   });
 
   it('should be able to configure replacement', async () => {
@@ -36,7 +35,7 @@ describe('cli insert', () => {
       const command = new InsertCommand(Object.assign({ dry: true, directory: root }, config));
       const envVariables: EnvironmentVariablesConfiguration = (command as any)._envVariables;
       await command.execute();
-      expect(envVariables.replacements.length).to.eq(1);
+      expect(envVariables.replacements.length).toEqual(1);
     });
     await Promise.all(configs);
   });
@@ -49,11 +48,11 @@ describe('cli insert', () => {
       async () => {
         await command.execute();
       });
-    expect(fileContent).to.contain(envVariables.generateIIFE());
+    expect(fileContent).toContain(envVariables.generateIIFE());
   });
 
   it('should throw, when --placeholder and --head is provided', async () => {
     const command = new InsertCommand({ placeholder: 'test', head: true });
-    await expect(command.execute()).to.eventually.rejected;
+    await expect(command.execute()).rejects.toBeInstanceOf(Error);
   });
 });
