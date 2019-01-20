@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { readFileSync, unlinkSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
@@ -11,20 +10,17 @@ describe('cli wrap-aot', () => {
 
   it('should fail due to missing ng command', async () => {
     const command = new WrapAotCommand({ ngCommands: [], directory: root });
-    await expect(command.execute()).to.eventually
-      .rejectedWith('No command given to ngssc wrap-aot!');
+    await expect(command.execute()).rejects.toThrow('No command given to ngssc wrap-aot!');
   });
 
   it('should fail due to missing environment file', async () => {
     const command = new WrapAotCommand({ ngCommands: ['ng', 'build'], directory: root });
-    await expect(command.execute()).to.eventually
-      .rejectedWith(/^Given file does not exist/);
+    await expect(command.execute()).rejects.toThrow(/^Given file does not exist/);
   });
 
   it('should resolve dist directory', async () => {
     const command = new WrapAotCommand({ ngCommands: ['ng', 'build'], directory: root, dist: 'dist' });
-    await expect(command.execute()).to.eventually
-      .rejectedWith(/^Given file does not exist/);
+    await expect(command.execute()).rejects.toThrow(/^Given file does not exist/);
   });
 
   it('should tokenize environment file', async () => {
@@ -41,8 +37,7 @@ describe('cli wrap-aot', () => {
       directory: root, environmentFile: 'environment.prod.ts', ngCommands: ['ng', 'build'],
     });
     await temporaryFile({ file: environmentFilePath, content: environmentProdContent }, async () => {
-      await expect(command.execute()).to.eventually
-        .rejectedWith(
+      await expect(command.execute()).rejects.toThrow(
           'ngssc wrap-aot requires an installation of typescript!'
           + ' This is expected to be available in an angular project.');
     });
@@ -124,9 +119,9 @@ describe('cli wrap-aot', () => {
     const finalDistContent = readFileSync(distFilePath, 'utf8');
     unlinkSync(distFilePath);
 
-    expect(tokenizedContent).to.contain('ngssc-token-');
-    expect((tokenizedContent.match(/process\./g) || []).length).to.eq(7);
-    expect(finalContent).to.eq(environmentProdContent);
-    expect(finalDistContent).to.contain('process.');
+    expect(tokenizedContent).toContain('ngssc-token-');
+    expect((tokenizedContent.match(/process\./g) || []).length).toEqual(7);
+    expect(finalContent).toEqual(environmentProdContent);
+    expect(finalDistContent).toContain('process.');
   }
 });
