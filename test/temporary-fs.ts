@@ -1,11 +1,13 @@
-import { writeFileSync, unlinkSync, readFileSync, mkdirSync } from 'fs';
+import { mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
 import rimraf from 'rimraf';
 
-export async function temporaryFile(file: { file: string, content: string }, action: () => Promise<any>): Promise<string> {
+export async function temporaryFile(
+  file: { file: string, content: string }, action: () => Promise<any>): Promise<string> {
   return (await temporaryFiles([file], action))[0];
 }
 
-export async function temporaryFiles(files: { file: string, content: string }[], action: () => Promise<any>): Promise<string[]> {
+export async function temporaryFiles(
+  files: Array<{ file: string, content: string }>, action: () => Promise<any>): Promise<string[]> {
   files.forEach(f => writeFileSync(f.file, f.content, 'utf8'));
   await action();
   const contents = files.map(f => readFileSync(f.file, 'utf8'));
@@ -42,9 +44,9 @@ import 'angular-server-side-configuration/process';
 
 /**
  * How to use angular-server-side-configuration:
- * 
+ *
  * Use process.env.NAME_OF_YOUR_ENVIRONMENT_VARIABLE
- * 
+ *
  * export const environment = {
  *   stringValue: process.env.STRING_VALUE,
  *   stringValueWithDefault: process.env.STRING_VALUE || 'defaultValue',

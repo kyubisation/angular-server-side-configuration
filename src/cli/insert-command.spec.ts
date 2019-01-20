@@ -3,8 +3,8 @@ import { expect } from 'chai';
 import { join } from 'path';
 
 import { indexHtmlContent, temporaryFile } from '../../test/temporary-fs';
-import { InsertCommand } from './insert-command';
 import { EnvironmentVariablesConfiguration } from '../environment-variables-configuration';
+import { InsertCommand } from './insert-command';
 
 describe('cli insert', () => {
   const root = join(__dirname, '..', '..', 'test', 'environment-variables-configuration');

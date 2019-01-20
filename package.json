@@ -17,7 +17,8 @@
     "pretest": "npm run clean",
     "test": "nyc mocha './src/**/*.spec.ts'",
     "wintest": "nyc mocha ./src/**/*.spec.ts",
-    "prepack": "npm run build"
+    "prepack": "npm run build",
+    "lint": "tslint -p tsconfig.json"
   },
   "nyc": {
     "check-coverage": true,
@@ -36,6 +37,8 @@
       ".ts"
     ],
     "reporter": [
+      "lcov",
+      "lcovonly",
       "text-summary",
       "html"
     ],
@@ -86,6 +89,7 @@
     "rollup-plugin-node-resolve": "^3.4.0",
     "rollup-plugin-typescript2": "^0.17.2",
     "ts-node": "^7.0.1",
+    "tslint": "^5.12.1",
     "typedoc": "^0.13.0",
     "typedoc-plugin-markdown": "^1.1.20",
     "typescript": "^3.2.2"

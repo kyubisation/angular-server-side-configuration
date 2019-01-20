@@ -85,6 +85,6 @@ export class InsertCommand extends CommandBase {
     this._log(`\n${this._options.dry ? 'Insertion targets' : 'Inserted into'}:`);
     files
       .map(f => relative(this._envVariables.directory, f))
-      .forEach(f => console.log(f));
+      .forEach(f => this._log(f));
   }
 }

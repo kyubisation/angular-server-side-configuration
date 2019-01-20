@@ -1,4 +1,4 @@
-import { lstatSync, readFileSync, readFile, writeFile } from 'fs';
+import { lstatSync, readFile, readFileSync, writeFile } from 'fs';
 import { promisify } from 'util';
 import { deprecated, walk } from './common/index';
 const readFileAsync = promisify(readFile);
@@ -28,14 +28,14 @@ export class EnvironmentVariablesConfiguration {
    * @param replacements Optional array of replacement functions.
    */
   constructor(
-    public readonly variables: string[] = [],
-    public readonly replacements: Array<(fileContent: string, fileName: string) => string> = [],
+    readonly variables: string[] = [],
+    readonly replacements: Array<(fileContent: string, fileName: string) => string> = [],
   ) { }
 
   /**
    * Searches for environment variable declarations in
    * files matched by file pattern, starting from given directory.
-   * 
+   *
    * @param directory The root directory from which to search.
    * @param options Optional options for searching environment variables.
    * @param options.filePattern The file pattern in which environment
@@ -70,7 +70,7 @@ export class EnvironmentVariablesConfiguration {
   /**
    * Searches for environment variable declarations in
    * files matched by file pattern, starting from given directory.
-   * 
+   *
    * @param options Optional options for searching environment variables.
    * @param options.directory The root directory from which to search.
    * @param options.filePattern The file pattern in which environment
@@ -106,7 +106,7 @@ export class EnvironmentVariablesConfiguration {
   /**
    * Replace the base href attribute for the file received through
    * applyTo, applyAndSaveTo or applyAndSaveRecursively.
-   * 
+   *
    * @param newBaseHref The new base href.
    * @returns This instance.
    */
@@ -117,7 +117,7 @@ export class EnvironmentVariablesConfiguration {
   /**
    * Replace the html lang attribute for the file received through
    * applyTo, applyAndSaveTo or applyAndSaveRecursively.
-   * 
+   *
    * @param newHtmlLang The new base href.
    * @returns This instance.
    */
@@ -128,7 +128,7 @@ export class EnvironmentVariablesConfiguration {
   /**
    * Replace the attribute value of a tag for the file received through
    * applyTo, applyAndSaveTo or applyAndSaveRecursively.
-   * 
+   *
    * @param tag The tag, whose attribute value should be replaced.
    * @param attribute The attribute, whose value should be replaced.
    * @param newValue The new attribute value.
@@ -140,12 +140,12 @@ export class EnvironmentVariablesConfiguration {
         new RegExp(`<${tag}[^>]*>`, 'gm'),
         m => m.replace(
           new RegExp(`(${attribute}=(")(.*?)"([\\s>/])|${attribute}=(')(.*?)'([\\s>/]))`, 'gm'),
-          (...m: string[]) => `${attribute}=${m[2]}${newValue}${m[2]}${m[4]}`)));
+          (...n: string[]) => `${attribute}=${n[2]}${newValue}${n[2]}${n[4]}`)));
   }
 
   /**
    * Add a replacement for the file received through applyTo, applyAndSaveTo or applyAndSaveRecursively.
-   * 
+   *
    * @param regex A RegExp object or literal. The match or matches are replaced with replaceValue.
    * @param replaceValue The value that replaces the substring matched by the regex parameter.
    * @returns This instance.
@@ -180,7 +180,7 @@ export class EnvironmentVariablesConfiguration {
    * Add a replacement function for the file received through applyTo, applyAndSaveTo or
    * applyAndSaveRecursively. The function receives the file content and the file name as
    * parameters and returns the file content with the replacement applied.
-   * 
+   *
    * @param replacement The replacement function.
    * @returns This instance.
    */
@@ -192,7 +192,7 @@ export class EnvironmentVariablesConfiguration {
   /**
    * Inserts the discovered enviornment variables as an IIFE
    * wrapped in a script tag into the matched files and applies added replacements.
-   * 
+   *
    * @param root The root directory from which to search insertion files.
    * @param options Optional options for insertion.
    * @param options.filePattern The file pattern in which the configuration should be inserted
@@ -214,7 +214,7 @@ export class EnvironmentVariablesConfiguration {
   /**
    * Inserts the discovered environment variables as an IIFE
    * wrapped in a script tag into the specified file and applies added replacements.
-   * 
+   *
    * @param file The file into which the environment variables should be inserted.
    * @param options Optional options for insertion.
    * @param options.insertionRegex The replacement pattern, where the configuration should
@@ -232,7 +232,7 @@ export class EnvironmentVariablesConfiguration {
   /**
    * Inserts the discovered environment variables as an IIFE wrapped in a script tag
    * into the specified file content and applies added replacements without saving the file.
-   * 
+   *
    * @param file The file to be read.
    * @param options Optional options for insertion.
    * @param options.insertionRegex The replacement pattern, where the configuration should
@@ -302,6 +302,9 @@ export class EnvironmentVariablesConfiguration {
   populateVariables() {
     const resolveEnvironmentVariable = (name: string) =>
       name in process.env && process.env[name] !== undefined ? process.env[name] : null;
-    return this.variables.reduce((current, next) => Object.assign(current, { [next]: resolveEnvironmentVariable(next) }), {} as { [variable: string]: any });
+    return this.variables
+      .reduce(
+        (current, next) => Object.assign(current, { [next]: resolveEnvironmentVariable(next) }),
+        {} as { [variable: string]: any });
   }
 }
