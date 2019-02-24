@@ -1,0 +1,20 @@
+version: "3.5"
+services:
+  start:
+    image: zephinzer/golang-dev:latest
+    # ports:
+    #   - "3000:3000"
+    user: "${UID}"
+    entrypoint: ["start"]
+    volumes:
+      - "./pkg:/go/pkg"
+      - "./:/go/src/app"
+  test:
+    image: zephinzer/golang-dev:latest
+    # ports:
+    #   - "3000:3000"
+    user: "${UID}"
+    entrypoint: ["test"]
+    volumes:
+      - "./pkg:/go/pkg"
+      - "./:/go/src/app"
