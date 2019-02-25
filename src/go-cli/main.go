@@ -9,7 +9,7 @@ import (
 
 func main() {
 	ngssc := cli.NewApp()
-	ngssc.Name = "greet"
+	ngssc.Name = "Angular Server Side Configuration"
 	ngssc.Usage = "fight the loneliness!"
 	ngssc.Version = "0.0.1"
 
@@ -19,7 +19,7 @@ func main() {
 			Category: "Server Side",
 			Usage:    "Search and replace the placeholder with environment variables (Directory defaults to current working directory)",
 			Flags: []cli.Flag{
-				cli.StringFlag{
+				cli.StringSliceFlag{
 					Name:  "env, e",
 					Usage: "Add an environment variable named `ENV_NAME` to be resolved",
 				},
