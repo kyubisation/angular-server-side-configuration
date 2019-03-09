@@ -1,59 +1,54 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
 	"regexp"
+	"strings"
 
 	"github.com/urfave/cli"
 )
 
 func InsertCommand(c *cli.Context) error {
-	// Dry Run Flag
-	dryRun := c.Bool("dry")
+	// Init Flags
+	dryRunFlag := c.Bool("dry")
+	placeholderFlag := c.String("placeholder")
+	headFlag := c.Bool("head")
 
-	if dryRun == true {
-		fmt.Println("RUNNING IN DRY MODE")
+	// Validate Flags
+	if len(placeholderFlag) != 0 && headFlag {
+		return cli.NewExitError("--placeholder amd -head cannot be used at the same time!", 1)
 	}
 
-	// Root for Searching Files
+	// Dry Run Flag
+
+	if dryRunFlag == true {
+		fmt.Println("RUNNING IN DRY MODE! NO FILES WILL BE CHANGED!")
+	}
+
+	// Use Root if not Path is set for Searching Files
 	root := "./"
 	if c.NArg() > 0 {
 		root = c.Args()[0]
 	}
 
-	//  Environment Variables
-	if c.StringSlice("env") == nil {
-		return cli.NewExitError("No Variables set", 1)
+	// Generate Environment Variables
+	envMap, err := GenerateEnvMap(c.StringSlice("env"), false)
+	if err != nil {
+		return cli.NewExitError(err, 1)
 	}
-	if len(c.StringSlice("env")) == 0 {
-		return cli.NewExitError("No Variables set", 1)
+	fmt.Println("Populated environment variables:")
+	for key, value := range envMap {
+		fmt.Println("  " + key + ": " + value)
 	}
-	envMap := make(map[string]string)
-	for _, env := range c.StringSlice("env") {
-
-		value := os.Getenv(env)
-		if len(value) == 0 {
-			return cli.NewExitError("Variable \""+env+"\" not defined in environment. Use 'export "+env+"=\"content\"' or $Env:"+env+" = \"content\"", 1)
-		}
-		envMap[env] = value
-		fmt.Println("Populated environment variables")
-		fmt.Println("  " + env + ": " + value)
-	}
-
-	// Generate Javascript Code to place in file
-	jsonMap, _ := json.Marshal(envMap)
-	javascript := "<script>(function(self){self.process=" + string(jsonMap) + ";})(window)</script>"
-	// fmt.Println(string(jsonMap))
 
 	// Go through the files
 	fmt.Println("Searching in: ", root)
 
-	err := filepath.Walk(root, func(path string, file os.FileInfo, err error) error {
+	err = filepath.Walk(root, func(path string, file os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
@@ -68,28 +63,38 @@ func InsertCommand(c *cli.Context) error {
 
 		if matched {
 			fmt.Println("Matched: " + path)
-			if dryRun != true {
+			if dryRunFlag != true {
 
 				read, err := ioutil.ReadFile(path)
 				if err != nil {
 					panic(err)
 				}
 
-				//fmt.Println(string(read))
+				re := regexp.MustCompile(PrepareReplacementString(headFlag, placeholderFlag))
 
-				var re = regexp.MustCompile(`<!--\s*CONFIG\s*-->`)
-				// Use Regex if no other String is specified
-				newContents := re.ReplaceAllString(string(read), javascript)
-				// newContents := strings.Replace(string(read), "<!--CONFIG-->", "new", -1)
+				// Search for occurrences of the placeholder
+				found := re.FindString(string(read))
+				if found != "" {
 
-				err = ioutil.WriteFile(path, []byte(newContents), 0)
-				if err != nil {
-					panic(err)
+					insertString := PrepareJavascriptString(envMap)
+					if headFlag {
+						insertString += "\n" + found
+					}
+
+					// Replace the first occurrence
+					newContents := strings.Replace(string(read), found, insertString, 1)
+
+					// Write back to File
+					err = ioutil.WriteFile(path, []byte(newContents), 0644)
+					if err != nil {
+						panic(err)
+					}
+					fmt.Println(" -> Injected the variables.")
+				} else {
+					fmt.Println(" -> Nothing found to replace.")
 				}
 			}
-
 		}
-
 		return nil
 	})
 
@@ -97,6 +102,5 @@ func InsertCommand(c *cli.Context) error {
 		log.Fatal(err)
 		return nil
 	}
-
 	return nil
 }

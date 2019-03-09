@@ -7,7 +7,27 @@ import (
 )
 
 var path = "./test.html"
-var envPath string
+var startContent = `<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Docker - Angular Runtime Variables Demo</title>
+  <base href="/" />
+
+  <!--CONFIG-->
+
+  <link href="https://fonts.googleapis.com/css?family=Major+Mono+Display" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+</head>
+
+<body>
+  <app-root></app-root>
+</body>
+
+</html>
+`
 
 func TestMain(m *testing.M) {
 	setup()
@@ -16,45 +36,24 @@ func TestMain(m *testing.M) {
 	os.Exit(retCode)
 }
 
-func setup() error {
-
-	// Generate Test File
-	content := `<!DOCTYPE html>
-  <html lang="en">
-
-  <head>
-    <meta charset="utf-8" />
-    <title>Docker - Angular Runtime Variables Demo</title>
-    <base href="/" />
-    <!-- <script>
-        var ENV = {
-          test: "${TEST_ENV}"
-        };
-      </script> -->
-
-    <!--CONFIG-->
-
-    <link href="https://fonts.googleapis.com/css?family=Major+Mono+Display" rel="stylesheet" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/x-icon" href="favicon.ico" />
-  </head>
-
-  <body>
-    <app-root></app-root>
-  </body>
-
-  </html>
-  `
-	err := ioutil.WriteFile(path, []byte(content), 0)
-	if err != nil {
-		panic(err)
-	}
-	return nil
+func setup() {
 }
 
 func teardown() {
-	// var err = os.Remove(path)
-	// if err != nil {
-	// 	return
-	// }
+	var err = os.Remove(path)
+	if err != nil {
+		return
+	}
+}
+
+func prepareTestFile() {
+	// Generate Test File
+	WriteFile(path, startContent)
+}
+
+func WriteFile(path string, content string) {
+	err := ioutil.WriteFile(path, []byte(content), 0644)
+	if err != nil {
+		panic(err)
+	}
 }

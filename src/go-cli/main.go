@@ -27,7 +27,7 @@ func main() {
 					Name:  "placeholder, p",
 					Usage: "Set the placeholder to replace with the environment variables (Defaults to <!--CONFIG-->)'",
 				},
-				cli.StringFlag{
+				cli.BoolFlag{
 					Name:  "head",
 					Usage: "Insert environment variables into the head tag (after title tag, if available, otherwise before closing head tag)",
 				},

@@ -13,3 +13,14 @@ Test the executable by simply running it.
 # Debug
 
 https://github.com/Microsoft/vscode-go/wiki/Debugging-Go-code-using-VS-Code
+
+# Tests
+
+> Tests do only run on linux!
+
+Run `ng test`
+
+# Todo
+
+Packing for linux executable
+https://blog.filippo.io/shrink-your-go-binaries-with-this-one-weird-trick/
