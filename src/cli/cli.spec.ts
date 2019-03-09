@@ -1,10 +1,9 @@
-import { expect } from 'chai';
-
 import { cli } from './cli';
 
 describe('cli', () => {
+  console.log = () => void 0;
   it('should fail due to no input', () => {
-    expect(() => cli().parse([])).to.throw();
+    expect(() => cli().parse([])).toThrow();
   });
 
   it('should execute the insert command', () => {

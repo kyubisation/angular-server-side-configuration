@@ -16,7 +16,7 @@ export class WrapAotCommand extends CommandBase {
     ngCommands: string[],
     directory: string,
     environmentFile?: string,
-    dist?: string
+    dist?: string,
   }) {
     super('Wrap AOT');
     this._ngCommand = options.ngCommands;
@@ -79,16 +79,16 @@ export class WrapAotCommand extends CommandBase {
     }
   }
 
-  private _applyReplacements(fileContent: string, replacements: { replace: string, token: string }[]) {
+  private _applyReplacements(fileContent: string, replacements: Array<{ replace: string, token: string }>) {
     const tokenizedContent = replacements
       .reduce((current, next) => current.replace(next.replace, `${next.token} as any`), fileContent);
     writeFileSync(this._environmentFile, tokenizedContent, 'utf8');
   }
 
-  private _resolveExpression(node: Node, SyntaxKind: { [key: number]: string }) {
+  private _resolveExpression(node: Node, syntaxKind: { [key: number]: string }) {
     const ancestor = node.parent.parent;
     const ancestorParent = ancestor.parent;
-    const name = SyntaxKind[ancestorParent.kind];
+    const name = syntaxKind[ancestorParent.kind];
     return name.endsWith('Expression') ? ancestorParent.getText() : ancestor.getText();
   }
 
@@ -101,14 +101,14 @@ export class WrapAotCommand extends CommandBase {
     });
   }
 
-  private _revertReplacements(fileContent: string, replacements: { replace: string, token: string }[]) {
+  private _revertReplacements(fileContent: string, replacements: Array<{ replace: string, token: string }>) {
     writeFileSync(this._environmentFile, fileContent, 'utf8');
     walk(this._dist, /.js$/g)
       .map(file => ({ file, content: readFileSync(file, 'utf8') }))
       .filter(f => replacements.some(r => f.content.includes(r.token)))
       .map(f => Object.assign(f, {
         content: replacements
-          .reduce((current, next) => current.replace(new RegExp(next.token, 'g'), next.replace), f.content)
+          .reduce((current, next) => current.replace(new RegExp(next.token, 'g'), next.replace), f.content),
       }))
       .forEach(f => writeFileSync(f.file, f.content, 'utf8'));
   }

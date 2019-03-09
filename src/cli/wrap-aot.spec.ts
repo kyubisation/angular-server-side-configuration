@@ -1,30 +1,27 @@
-import { expect } from 'chai';
-import { readFileSync, writeFileSync, unlinkSync } from 'fs';
+import { readFileSync, unlinkSync, writeFileSync } from 'fs';
 import { join } from 'path';
-
 import { environmentProdContent, temporaryFile } from '../../test/temporary-fs';
 import { WrapAotCommand } from './wrap-aot';
 
+
 describe('cli wrap-aot', () => {
+  console.log = () => void 0;
   const root = join(__dirname, '..', '..', 'test', 'wrap-aot-command');
   const environmentFilePath = join(root, 'environment.prod.ts');
 
   it('should fail due to missing ng command', async () => {
     const command = new WrapAotCommand({ ngCommands: [], directory: root });
-    await expect(command.execute()).to.eventually
-      .rejectedWith('No command given to ngssc wrap-aot!');
+    await expect(command.execute()).rejects.toThrow('No command given to ngssc wrap-aot!');
   });
 
   it('should fail due to missing environment file', async () => {
     const command = new WrapAotCommand({ ngCommands: ['ng', 'build'], directory: root });
-    await expect(command.execute()).to.eventually
-      .rejectedWith(/^Given file does not exist/);
+    await expect(command.execute()).rejects.toThrow(/^Given file does not exist/);
   });
 
   it('should resolve dist directory', async () => {
     const command = new WrapAotCommand({ ngCommands: ['ng', 'build'], directory: root, dist: 'dist' });
-    await expect(command.execute()).to.eventually
-      .rejectedWith(/^Given file does not exist/);
+    await expect(command.execute()).rejects.toThrow(/^Given file does not exist/);
   });
 
   it('should tokenize environment file', async () => {
@@ -38,11 +35,10 @@ describe('cli wrap-aot', () => {
       }
     }
     const command = new SpecCommand({
-      ngCommands: ['ng', 'build'], directory: root, environmentFile: 'environment.prod.ts'
+      directory: root, environmentFile: 'environment.prod.ts', ngCommands: ['ng', 'build'],
     });
     await temporaryFile({ file: environmentFilePath, content: environmentProdContent }, async () => {
-      await expect(command.execute()).to.eventually
-        .rejectedWith(
+      await expect(command.execute()).rejects.toThrow(
           'ngssc wrap-aot requires an installation of typescript!'
           + ' This is expected to be available in an angular project.');
     });
@@ -70,9 +66,9 @@ describe('cli wrap-aot', () => {
 
   it('should spawn given command', async () => {
     const command = new WrapAotCommand({
-      ngCommands: ['npm', '-v'],
       directory: root,
-      environmentFile: 'environment.prod.ts'
+      environmentFile: 'environment.prod.ts',
+      ngCommands: ['npm', '-v'],
     });
     await temporaryFile({ file: environmentFilePath, content: environmentProdContent }, async () => {
       await command.execute();
@@ -81,9 +77,9 @@ describe('cli wrap-aot', () => {
 
   it('should execute with invalid command', async () => {
     const command = new WrapAotCommand({
-      ngCommands: ['thisisaninvalidcommandandshouldnotcomplete', 'test'],
       directory: root,
-      environmentFile: 'environment.prod.ts'
+      environmentFile: 'environment.prod.ts',
+      ngCommands: ['thisisaninvalidcommandandshouldnotcomplete', 'test'],
     });
     await temporaryFile({ file: environmentFilePath, content: environmentProdContent }, async () => {
       await command.execute();
@@ -91,6 +87,7 @@ describe('cli wrap-aot', () => {
   });
 
   async function testTypeScriptVersion(version: string) {
+    // tslint:disable-next-line
     await testReplacement(class extends WrapAotCommand {
       async _loadTypescript(): Promise<any> {
         return require(`../../test/wrap-aot-command/ts-versions/typescript-${version}/typescript`);
@@ -98,10 +95,11 @@ describe('cli wrap-aot', () => {
     });
   }
 
-  async function testReplacement(Command: typeof WrapAotCommand = WrapAotCommand) {
+  async function testReplacement(commandClass: typeof WrapAotCommand = WrapAotCommand) {
     const distFilePath = join(root, 'dist', 'tmp.js');
     let tokenizedContent = '';
-    class SpecCommand extends WrapAotCommand {
+    // tslint:disable-next-line
+    class SpecCommand extends commandClass {
       async _spawnCommand() {
         tokenizedContent = readFileSync(environmentFilePath, 'utf8');
         const distFileContent = (tokenizedContent.match(/"ngssc-token-\d+-\d+"/g) || [])
@@ -111,7 +109,7 @@ describe('cli wrap-aot', () => {
       }
     }
     const command = new SpecCommand({
-      ngCommands: ['ng', 'build'], directory: root, environmentFile: 'environment.prod.ts'
+      directory: root, environmentFile: 'environment.prod.ts', ngCommands: ['ng', 'build'],
     });
 
     const finalContent = await temporaryFile(
@@ -122,9 +120,9 @@ describe('cli wrap-aot', () => {
     const finalDistContent = readFileSync(distFilePath, 'utf8');
     unlinkSync(distFilePath);
 
-    expect(tokenizedContent).to.contain('ngssc-token-');
-    expect((tokenizedContent.match(/process\./g) || []).length).to.eq(7);
-    expect(finalContent).to.eq(environmentProdContent);
-    expect(finalDistContent).to.contain('process.');
+    expect(tokenizedContent).toContain('ngssc-token-');
+    expect((tokenizedContent.match(/process\./g) || []).length).toEqual(7);
+    expect(finalContent).toEqual(environmentProdContent);
+    expect(finalDistContent).toContain('process.');
   }
 });

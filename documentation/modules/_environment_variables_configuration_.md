@@ -13,10 +13,6 @@
 * [readFileAsync](_environment_variables_configuration_.md#readfileasync)
 * [writeFileAsync](_environment_variables_configuration_.md#writefileasync)
 
-### Functions
-
-* [environmentVariablesDiscoveryFunction](_environment_variables_configuration_.md#environmentvariablesdiscoveryfunction)
-
 ---
 
 ## Variables
@@ -27,7 +23,7 @@
 
 **● readFileAsync**: *`__promisify__`* =  promisify(readFile)
 
-*Defined in [environment-variables-configuration.ts:4](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/environment-variables-configuration.ts#L4)*
+*Defined in [environment-variables-configuration.ts:5](https://github.com/kyubisation/angular-server-side-configuration/blob/76af84f/src/environment-variables-configuration.ts#L5)*
 
 ___
 <a id="writefileasync"></a>
@@ -36,27 +32,7 @@ ___
 
 **● writeFileAsync**: *`__promisify__`* =  promisify(writeFile)
 
-*Defined in [environment-variables-configuration.ts:5](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/environment-variables-configuration.ts#L5)*
-
-___
-
-## Functions
-
-<a id="environmentvariablesdiscoveryfunction"></a>
-
-### `<Const>` environmentVariablesDiscoveryFunction
-
-▸ **environmentVariablesDiscoveryFunction**(fileContent: *`string`*): `string`[]
-
-*Defined in [environment-variables-configuration.ts:7](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/environment-variables-configuration.ts#L7)*
-
-**Parameters:**
-
-| Name | Type |
-| ------ | ------ |
-| fileContent | `string` |
-
-**Returns:** `string`[]
+*Defined in [environment-variables-configuration.ts:6](https://github.com/kyubisation/angular-server-side-configuration/blob/76af84f/src/environment-variables-configuration.ts#L6)*
 
 ___
 

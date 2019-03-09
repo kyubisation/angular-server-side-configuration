@@ -17,6 +17,7 @@ export abstract class CommandBase {
   }
 
   protected _log(message: string) {
+    // tslint:disable-next-line
     console.log(message);
   }
 }

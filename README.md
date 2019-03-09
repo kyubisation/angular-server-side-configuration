@@ -1,5 +1,10 @@
 # angular-server-side-configuration
 
+![](https://img.shields.io/travis/kyubisation/angular-server-side-configuration/master.svg)
+![](https://img.shields.io/codeclimate/coverage/kyubisation/angular-server-side-configuration.svg)
+![](https://img.shields.io/npm/v/angular-server-side-configuration.svg)
+![](https://img.shields.io/npm/l/angular-server-side-configuration.svg)
+
 [Documentation](https://github.com/kyubisation/angular-server-side-configuration/blob/master/documentation/README.md)
 
 Configure an angular application at runtime on the server via environment variables.

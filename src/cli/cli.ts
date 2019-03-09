@@ -1,11 +1,15 @@
-//import program from 'commander';
 import { Command } from 'commander';
-import { InsertCommand } from './insert-command';
 import { InitCommand } from './init-command';
+import { InsertCommand } from './insert-command';
 import { WrapAotCommand } from './wrap-aot';
 
 export function cli(): { parse(args: string[]): any } {
   const program = new Command();
+  [insertCommand, initCommand, wrapAotCommand].forEach(c => c(program));
+  return program;
+}
+
+function insertCommand(program: Command) {
   program
     .command('insert [directory]')
     .description(
@@ -27,6 +31,9 @@ export function cli(): { parse(args: string[]): any } {
     .action(
       async (directory: string, options: any) =>
         await new InsertCommand({ directory, ...options }).execute());
+}
+
+function initCommand(program: Command) {
   program
     .command('init [directory]')
     .description(
@@ -41,6 +48,9 @@ export function cli(): { parse(args: string[]): any } {
     .action(
       async (directory: string, options: any) =>
         await new InitCommand({ directory, ...options }).execute());
+}
+
+function wrapAotCommand(program: Command) {
   program
     .command('wrap-aot [ng...]')
     .description(
@@ -57,10 +67,9 @@ export function cli(): { parse(args: string[]): any } {
     .action(
       async (ngCommands: string[], options: any) =>
         await new WrapAotCommand({
-          ngCommands: process.argv.slice(process.argv.indexOf(ngCommands[0])),
           directory: process.cwd(),
-          ...options
+          ngCommands: process.argv.slice(process.argv.indexOf(ngCommands[0])),
+          ...options,
         })
           .execute());
-  return program;
 }
