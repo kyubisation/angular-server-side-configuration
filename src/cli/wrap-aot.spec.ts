@@ -1,10 +1,11 @@
 import { readFileSync, unlinkSync, writeFileSync } from 'fs';
 import { join } from 'path';
-
 import { environmentProdContent, temporaryFile } from '../../test/temporary-fs';
 import { WrapAotCommand } from './wrap-aot';
 
+
 describe('cli wrap-aot', () => {
+  console.log = () => void 0;
   const root = join(__dirname, '..', '..', 'test', 'wrap-aot-command');
   const environmentFilePath = join(root, 'environment.prod.ts');
 

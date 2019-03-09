@@ -1,10 +1,10 @@
 
 import { join } from 'path';
-
 import { temporaryDirectory, temporaryFile, temporaryFiles } from '../../test/temporary-fs';
 import { InitCommand } from './init-command';
 
 describe('cli insert', () => {
+  console.log = () => void 0;
   const root = join(__dirname, '..', '..', 'test', 'init-command');
 
   it('should fail due to missing package.json', async () => {
@@ -35,7 +35,7 @@ describe('cli insert', () => {
   });
 
   it('should initialize correctly', async () => {
-    const directory = join(root, 'tmp');
+    const directory = join(root, 'tmp1');
     for (const content of ['', environmentTemplate]) {
       await temporaryDirectory(directory, async () => {
         const command = new InitCommand({ directory, environmentFile: 'environment.prod.ts' });
@@ -53,7 +53,7 @@ describe('cli insert', () => {
   }, 20000);
 
   it('should initialize correctly with yarn', async () => {
-    const directory = join(root, 'tmp');
+    const directory = join(root, 'tmp2');
     await temporaryDirectory(directory, async () => {
       const command = new InitCommand({ directory, environmentFile: 'environment.prod.ts', yarn: true });
       const packageJsonPath = join(directory, 'package.json');
