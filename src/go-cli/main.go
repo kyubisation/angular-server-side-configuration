@@ -9,8 +9,8 @@ import (
 
 func main() {
 	ngssc := cli.NewApp()
-	ngssc.Name = "Angular Server Side Configuration"
-	ngssc.Usage = "fight the loneliness!"
+	ngssc.Name = "ngssc"
+	ngssc.Usage = "Angular Server Side Configuration"
 	ngssc.Version = "0.0.1"
 
 	ngssc.Commands = []cli.Command{
