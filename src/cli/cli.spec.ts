@@ -1,6 +1,7 @@
 import { cli } from './cli';
 
 describe('cli', () => {
+  console.log = () => void 0;
   it('should fail due to no input', () => {
     expect(() => cli().parse([])).toThrow();
   });
