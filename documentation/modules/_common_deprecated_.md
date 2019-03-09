@@ -18,7 +18,7 @@
 
 ▸ **deprecated**(message: *`string`*): `MethodDecorator`
 
-*Defined in [common/deprecated.ts:3](https://github.com/kyubisation/angular-server-side-configuration/blob/dfc956e/src/common/deprecated.ts#L3)*
+*Defined in [common/deprecated.ts:3](https://github.com/kyubisation/angular-server-side-configuration/blob/76af84f/src/common/deprecated.ts#L3)*
 
 **Parameters:**
 

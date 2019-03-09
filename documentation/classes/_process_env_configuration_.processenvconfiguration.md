@@ -1,53 +1,46 @@
-[angular-server-side-configuration](../README.md) > ["environment-variables-configuration"](../modules/_environment_variables_configuration_.md) > [EnvironmentVariablesConfiguration](../classes/_environment_variables_configuration_.environmentvariablesconfiguration.md)
+[angular-server-side-configuration](../README.md) > ["process-env-configuration"](../modules/_process_env_configuration_.md) > [ProcessEnvConfiguration](../classes/_process_env_configuration_.processenvconfiguration.md)
 
-# Class: EnvironmentVariablesConfiguration
+# Class: ProcessEnvConfiguration
 
-Discover and apply configuration via environment variables.
-
-*__deprecated__*: Use ProcessEnvConfiguration instead.
+Discover and apply configuration via environment variables discovered via process.env usage.
 
 ## Hierarchy
 
  [Configuration](_configuration_.configuration.md)
 
-**↳ EnvironmentVariablesConfiguration**
+**↳ ProcessEnvConfiguration**
 
 ## Index
 
 ### Constructors
 
-* [constructor](_environment_variables_configuration_.environmentvariablesconfiguration.md#constructor)
+* [constructor](_process_env_configuration_.processenvconfiguration.md#constructor)
 
 ### Properties
 
-* [defaultInsertionFilePattern](_environment_variables_configuration_.environmentvariablesconfiguration.md#defaultinsertionfilepattern)
-* [directory](_environment_variables_configuration_.environmentvariablesconfiguration.md#directory)
-* [replacements](_environment_variables_configuration_.environmentvariablesconfiguration.md#replacements)
-* [variables](_environment_variables_configuration_.environmentvariablesconfiguration.md#variables)
+* [defaultInsertionFilePattern](_process_env_configuration_.processenvconfiguration.md#defaultinsertionfilepattern)
+* [directory](_process_env_configuration_.processenvconfiguration.md#directory)
+* [replacements](_process_env_configuration_.processenvconfiguration.md#replacements)
+* [variables](_process_env_configuration_.processenvconfiguration.md#variables)
 
 ### Methods
 
-* [apply](_environment_variables_configuration_.environmentvariablesconfiguration.md#apply)
-* [applyAndSaveRecursively](_environment_variables_configuration_.environmentvariablesconfiguration.md#applyandsaverecursively)
-* [applyAndSaveTo](_environment_variables_configuration_.environmentvariablesconfiguration.md#applyandsaveto)
-* [applyTo](_environment_variables_configuration_.environmentvariablesconfiguration.md#applyto)
-* [discoverVariables](_environment_variables_configuration_.environmentvariablesconfiguration.md#discovervariables)
-* [environmentVariablesDiscoveryFunction](_environment_variables_configuration_.environmentvariablesconfiguration.md#environmentvariablesdiscoveryfunction)
-* [generateIIFE](_environment_variables_configuration_.environmentvariablesconfiguration.md#generateiife)
-* [insertAndSave](_environment_variables_configuration_.environmentvariablesconfiguration.md#insertandsave)
-* [insertAndSaveRecursively](_environment_variables_configuration_.environmentvariablesconfiguration.md#insertandsaverecursively)
-* [insertVariables](_environment_variables_configuration_.environmentvariablesconfiguration.md#insertvariables)
-* [insertVariablesIntoHead](_environment_variables_configuration_.environmentvariablesconfiguration.md#insertvariablesintohead)
-* [populateVariables](_environment_variables_configuration_.environmentvariablesconfiguration.md#populatevariables)
-* [regexReplace](_environment_variables_configuration_.environmentvariablesconfiguration.md#regexreplace)
-* [renderIIFE](_environment_variables_configuration_.environmentvariablesconfiguration.md#renderiife)
-* [replace](_environment_variables_configuration_.environmentvariablesconfiguration.md#replace)
-* [replaceBaseHref](_environment_variables_configuration_.environmentvariablesconfiguration.md#replacebasehref)
-* [replaceHtmlLang](_environment_variables_configuration_.environmentvariablesconfiguration.md#replacehtmllang)
-* [replaceTagAttribute](_environment_variables_configuration_.environmentvariablesconfiguration.md#replacetagattribute)
-* [searchEnvironmentVariables](_environment_variables_configuration_.environmentvariablesconfiguration.md#searchenvironmentvariables)
-* [setDirectory](_environment_variables_configuration_.environmentvariablesconfiguration.md#setdirectory)
-* [searchEnvironmentVariables](_environment_variables_configuration_.environmentvariablesconfiguration.md#searchenvironmentvariables-1)
+* [applyAndSaveRecursively](_process_env_configuration_.processenvconfiguration.md#applyandsaverecursively)
+* [applyAndSaveTo](_process_env_configuration_.processenvconfiguration.md#applyandsaveto)
+* [applyTo](_process_env_configuration_.processenvconfiguration.md#applyto)
+* [discoverVariables](_process_env_configuration_.processenvconfiguration.md#discovervariables)
+* [generateIIFE](_process_env_configuration_.processenvconfiguration.md#generateiife)
+* [insertVariables](_process_env_configuration_.processenvconfiguration.md#insertvariables)
+* [insertVariablesIntoHead](_process_env_configuration_.processenvconfiguration.md#insertvariablesintohead)
+* [populateVariables](_process_env_configuration_.processenvconfiguration.md#populatevariables)
+* [regexReplace](_process_env_configuration_.processenvconfiguration.md#regexreplace)
+* [renderIIFE](_process_env_configuration_.processenvconfiguration.md#renderiife)
+* [replace](_process_env_configuration_.processenvconfiguration.md#replace)
+* [replaceBaseHref](_process_env_configuration_.processenvconfiguration.md#replacebasehref)
+* [replaceHtmlLang](_process_env_configuration_.processenvconfiguration.md#replacehtmllang)
+* [replaceTagAttribute](_process_env_configuration_.processenvconfiguration.md#replacetagattribute)
+* [searchEnvironmentVariables](_process_env_configuration_.processenvconfiguration.md#searchenvironmentvariables)
+* [setDirectory](_process_env_configuration_.processenvconfiguration.md#setdirectory)
 
 ---
 
@@ -57,20 +50,19 @@ Discover and apply configuration via environment variables.
 
 ###  constructor
 
-⊕ **new EnvironmentVariablesConfiguration**(variables?: *`string`[]*, replacements?: *`Array`<`function`>*): [EnvironmentVariablesConfiguration](_environment_variables_configuration_.environmentvariablesconfiguration.md)
+⊕ **new ProcessEnvConfiguration**(variables?: *`string`[]*): [ProcessEnvConfiguration](_process_env_configuration_.processenvconfiguration.md)
 
-*Overrides [Configuration](_configuration_.configuration.md).[constructor](_configuration_.configuration.md#constructor)*
+*Inherited from [Configuration](_configuration_.configuration.md).[constructor](_configuration_.configuration.md#constructor)*
 
-*Defined in [environment-variables-configuration.ts:16](https://github.com/kyubisation/angular-server-side-configuration/blob/76af84f/src/environment-variables-configuration.ts#L16)*
+*Defined in [configuration.ts:25](https://github.com/kyubisation/angular-server-side-configuration/blob/76af84f/src/configuration.ts#L25)*
 
 **Parameters:**
 
 | Name | Type | Default value | Description |
 | ------ | ------ | ------ | ------ |
-| `Optional` variables | `string`[] | - |  Optional array of environment variable names to populate. |
-| `Default value` replacements | `Array`<`function`> |  [] |  Optional array of replacement functions. |
+| `Default value` variables | `string`[] |  [] |  Optional array of environment variable names to populate. |
 
-**Returns:** [EnvironmentVariablesConfiguration](_environment_variables_configuration_.environmentvariablesconfiguration.md)
+**Returns:** [ProcessEnvConfiguration](_process_env_configuration_.processenvconfiguration.md)
 
 ___
 
@@ -131,36 +123,6 @@ ___
 
 ## Methods
 
-<a id="apply"></a>
-
-###  apply
-
-▸ **apply**(file: *`string`*, options?: *`object`*): `Promise`<`string`>
-
-*Defined in [environment-variables-configuration.ts:131](https://github.com/kyubisation/angular-server-side-configuration/blob/76af84f/src/environment-variables-configuration.ts#L131)*
-
-Inserts the discovered environment variables as an IIFE wrapped in a script tag into the specified file content and applies added replacements without saving the file.
-
-*__deprecated__*: Use insertVariables or insertVariablesIntoHead and applyTo instead.
-
-**Parameters:**
-
-**file: `string`**
-
-The file to be read.
-
-**`Default value` options: `object`**
-
-Optional options for insertion.
-
-| Name | Type | Description |
-| ------ | ------ | ------ |
-| `Optional` insertionRegex | `RegExp` |  The replacement pattern, where the configuration should be inserted (Defaults to /<!--\\s_CONFIG\\s_\-->/). |
-
-**Returns:** `Promise`<`string`>
-A promise, which resolves to the file content with the environment variables inserted.
-
-___
 <a id="applyandsaverecursively"></a>
 
 ###  applyAndSaveRecursively
@@ -241,24 +203,7 @@ ___
 
 *Overrides [Configuration](_configuration_.configuration.md).[discoverVariables](_configuration_.configuration.md#discovervariables)*
 
-*Defined in [environment-variables-configuration.ts:139](https://github.com/kyubisation/angular-server-side-configuration/blob/76af84f/src/environment-variables-configuration.ts#L139)*
-
-**Parameters:**
-
-| Name | Type |
-| ------ | ------ |
-| fileContent | `string` |
-
-**Returns:** `string`[]
-
-___
-<a id="environmentvariablesdiscoveryfunction"></a>
-
-### `<Private>` environmentVariablesDiscoveryFunction
-
-▸ **environmentVariablesDiscoveryFunction**(fileContent: *`string`*): `string`[]
-
-*Defined in [environment-variables-configuration.ts:14](https://github.com/kyubisation/angular-server-side-configuration/blob/76af84f/src/environment-variables-configuration.ts#L14)*
+*Defined in [process-env-configuration.ts:7](https://github.com/kyubisation/angular-server-side-configuration/blob/76af84f/src/process-env-configuration.ts#L7)*
 
 **Parameters:**
 
@@ -282,69 +227,6 @@ ___
 Generates the IIFE which the renders the populated environment variables.
 
 **Returns:** `string`
-
-___
-<a id="insertandsave"></a>
-
-###  insertAndSave
-
-▸ **insertAndSave**(file: *`string`*, options?: *`object`*): `Promise`<`void`>
-
-*Defined in [environment-variables-configuration.ts:114](https://github.com/kyubisation/angular-server-side-configuration/blob/76af84f/src/environment-variables-configuration.ts#L114)*
-
-Inserts the discovered environment variables as an IIFE wrapped in a script tag into the specified file and applies added replacements.
-
-*__deprecated__*: Use insertVariables or insertVariablesIntoHead and applyAndSaveTo instead.
-
-**Parameters:**
-
-**file: `string`**
-
-The file into which the environment variables should be inserted.
-
-**`Default value` options: `object`**
-
-Optional options for insertion.
-
-| Name | Type | Description |
-| ------ | ------ | ------ |
-| `Optional` insertionRegex | `RegExp` |  The replacement pattern, where the configuration should be inserted (Defaults to /<!--\\s_CONFIG\\s_\-->/). |
-
-**Returns:** `Promise`<`void`>
-A promise, which resolves after the enivornment variables have been saved to the
-  given file.
-
-___
-<a id="insertandsaverecursively"></a>
-
-###  insertAndSaveRecursively
-
-▸ **insertAndSaveRecursively**(root: *`string`*, options?: *`object`*): `Promise`<`string`[]>
-
-*Defined in [environment-variables-configuration.ts:94](https://github.com/kyubisation/angular-server-side-configuration/blob/76af84f/src/environment-variables-configuration.ts#L94)*
-
-Inserts the discovered enviornment variables as an IIFE wrapped in a script tag into the matched files and applies added replacements.
-
-*__deprecated__*: Use insertVariables or insertVariablesIntoHead and applyAndSaveRecursively instead.
-
-**Parameters:**
-
-**root: `string`**
-
-The root directory from which to search insertion files.
-
-**`Default value` options: `object`**
-
-Optional options for insertion.
-
-| Name | Type | Description |
-| ------ | ------ | ------ |
-| `Optional` filePattern | `RegExp` |  The file pattern in which the configuration should be inserted (Defaults to /index.html$/). |
-| `Optional` insertionRegex | `RegExp` |  The replacement pattern, where the configuration should be inserted (Defaults to /<!--\\s_CONFIG\\s_\-->/). |
-
-**Returns:** `Promise`<`string`[]>
-A promise, which resolves after the environment variables have been
-  inserted into all matched files. The promise resolves to an array of the matched files.
 
 ___
 <a id="insertvariables"></a>
@@ -431,7 +313,7 @@ ___
 
 *Overrides [Configuration](_configuration_.configuration.md).[renderIIFE](_configuration_.configuration.md#renderiife)*
 
-*Defined in [environment-variables-configuration.ts:143](https://github.com/kyubisation/angular-server-side-configuration/blob/76af84f/src/environment-variables-configuration.ts#L143)*
+*Defined in [process-env-configuration.ts:12](https://github.com/kyubisation/angular-server-side-configuration/blob/76af84f/src/process-env-configuration.ts#L12)*
 
 **Parameters:**
 
@@ -538,9 +420,9 @@ ___
 
 ▸ **searchEnvironmentVariables**(options?: *`object`*): `this`
 
-*Overrides [Configuration](_configuration_.configuration.md).[searchEnvironmentVariables](_configuration_.configuration.md#searchenvironmentvariables)*
+*Inherited from [Configuration](_configuration_.configuration.md).[searchEnvironmentVariables](_configuration_.configuration.md#searchenvironmentvariables)*
 
-*Defined in [environment-variables-configuration.ts:67](https://github.com/kyubisation/angular-server-side-configuration/blob/76af84f/src/environment-variables-configuration.ts#L67)*
+*Defined in [configuration.ts:53](https://github.com/kyubisation/angular-server-side-configuration/blob/76af84f/src/configuration.ts#L53)*
 
 Searches for environment variable declarations in files matched by file pattern, starting from given directory.
 
@@ -553,7 +435,6 @@ Optional options for searching environment variables.
 | Name | Type | Description |
 | ------ | ------ | ------ |
 | `Optional` directory | `undefined` \| `string` |  The root directory from which to search. |
-| `Optional` environmentVariablesDiscovery | `undefined` \| `function` |  The function to discover environment variables in the matched files (Defaults to process.env.VARIABLE => VARIABLE). |
 | `Optional` filePattern | `RegExp` |  The file pattern in which environment variables should be searched (Defaults to /.js$/). |
 
 **Returns:** `this`
@@ -580,36 +461,6 @@ Set the directory, where the files to be configured reside in. Default is curren
 
 **Returns:** `this`
 This instance.
-
-___
-<a id="searchenvironmentvariables-1"></a>
-
-### `<Static>` searchEnvironmentVariables
-
-▸ **searchEnvironmentVariables**(directory: *`string`*, options?: *`object`*): [EnvironmentVariablesConfiguration](_environment_variables_configuration_.environmentvariablesconfiguration.md)
-
-*Defined in [environment-variables-configuration.ts:44](https://github.com/kyubisation/angular-server-side-configuration/blob/76af84f/src/environment-variables-configuration.ts#L44)*
-
-Searches for environment variable declarations in files matched by file pattern, starting from given directory.
-
-*__deprecated__*: Static searchEnvironmentVariables is deprecated. Use the instance method instead.
-
-**Parameters:**
-
-**directory: `string`**
-
-The root directory from which to search.
-
-**`Default value` options: `object`**
-
-Optional options for searching environment variables.
-
-| Name | Type | Description |
-| ------ | ------ | ------ |
-| `Optional` environmentVariablesDiscovery | `undefined` \| `function` |  The function to discover environment variables in the matched files (Defaults to process.env.VARIABLE => VARIABLE). |
-| `Optional` filePattern | `RegExp` |  The file pattern in which environment variables should be searched (Defaults to /.js$/). |
-
-**Returns:** [EnvironmentVariablesConfiguration](_environment_variables_configuration_.environmentvariablesconfiguration.md)
 
 ___
 

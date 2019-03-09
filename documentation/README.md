@@ -160,8 +160,10 @@ Apache License, Version 2.0
 * ["common/deprecated"](modules/_common_deprecated_.md)
 * ["common/index"](modules/_common_index_.md)
 * ["common/walk"](modules/_common_walk_.md)
+* ["configuration"](modules/_configuration_.md)
 * ["environment-variables-configuration"](modules/_environment_variables_configuration_.md)
 * ["index"](modules/_index_.md)
+* ["process-env-configuration"](modules/_process_env_configuration_.md)
 
 ---
 
