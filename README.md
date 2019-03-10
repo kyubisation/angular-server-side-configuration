@@ -55,7 +55,7 @@ and use NG_ENV.NAME in your environment.prod.ts, where NAME is the
 environment variable that should be used.
 
 ```typescript
-import 'angular-server-side-configuration/ng-env';
+import { NG_ENV } from 'angular-server-side-configuration/ng-env';
 
 export const environment = {
   production: NG_ENV.PROD !== 'false',
