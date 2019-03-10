@@ -68,3 +68,33 @@ export const environment = {
   }
 };
 `;
+
+export const environmentProdNgEnvContent = `
+import { NG_ENV } from 'angular-server-side-configuration/ng-env';
+
+/**
+ * How to use angular-server-side-configuration:
+ *
+ * Use NG_ENV.NAME_OF_YOUR_ENVIRONMENT_VARIABLE
+ *
+ * export const environment = {
+ *   stringValue: NG_ENV.STRING_VALUE,
+ *   stringValueWithDefault: NG_ENV.STRING_VALUE || 'defaultValue',
+ *   numberValue: Number(NG_ENV.NUMBER_VALUE),
+ *   numberValueWithDefault: Number(NG_ENV.NUMBER_VALUE || 10),
+ *   booleanValue: Boolean(NG_ENV.BOOLEAN_VALUE),
+ *   booleanValueInverted: NG_ENV.BOOLEAN_VALUE_INVERTED !== 'false',
+ * };
+ */
+
+export const environment = {
+  production: NG_ENV.PROD !== 'false',
+  apiBackend: NG_ENV.API_BACKEND || 'http://example.com',
+  ternary: NG_ENV.TERNARY ? 'asdf' : 'qwer',
+  simpleValue: NG_ENV.SIMPLE_VALUE,
+  something: {
+    asdf: NG_ENV.OMG || 'omg',
+    qwer: parseInt(NG_ENV.NUMBER || ''),
+  }
+};
+`;
