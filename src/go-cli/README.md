@@ -18,7 +18,7 @@ https://github.com/Microsoft/vscode-go/wiki/Debugging-Go-code-using-VS-Code
 
 > Tests do only run on linux!
 
-Run `ng test`
+Run `go test`
 
 # Todo
 
