@@ -43,7 +43,7 @@ describe('cli insert', () => {
   });
 
   it('should initialize correctly', async () => {
-    const directory = join(root, 'tmp10');
+    const directory = join(root, 'tmp1');
     for (const content of ['', environmentTemplate]) {
       await temporaryDirectory(directory, async () => {
         const command = new InitCommand({ directory, environmentFile: 'environment.prod.ts' });
