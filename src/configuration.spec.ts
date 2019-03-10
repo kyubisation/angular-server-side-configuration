@@ -5,6 +5,7 @@ import { Configuration } from './configuration';
 describe('Configuration', () => {
   console.log = () => void 0;
   const root = join(__dirname, '..', 'test', 'environment-variables-configuration');
+  
   class MockConfiguration extends Configuration {
     protected discoverVariables(fileContent: string): string[] {
       throw new Error('Method not implemented.');

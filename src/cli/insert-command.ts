@@ -1,10 +1,17 @@
 import { relative } from 'path';
 import { walk } from '../common/walk';
+import { Configuration } from '../configuration';
+import { NgEnvConfiguration } from '../ng-env-configuration';
 import { ProcessEnvConfiguration } from '../process-env-configuration';
 import { CommandBase } from './command-base';
 
+/**
+ * The insert command to insert environment variables into a file.
+ * 
+ * @public
+ */
 export class InsertCommand extends CommandBase {
-  private _configuration = new ProcessEnvConfiguration();
+  private _configuration: Configuration;
 
   constructor(private _options: {
     search?: boolean,
@@ -13,8 +20,12 @@ export class InsertCommand extends CommandBase {
     env?: string[],
     placeholder?: string,
     head?: boolean,
+    processEnv?: boolean,
+    ngEnv?: boolean,
   }) {
     super('Environment Variables Insertion');
+    this._configuration = this._options.ngEnv
+      ? new NgEnvConfiguration() : new ProcessEnvConfiguration();
   }
 
   protected async _execute() {
@@ -31,6 +42,8 @@ export class InsertCommand extends CommandBase {
   private _validateConfig() {
     if (this._options.placeholder && this._options.head) {
       throw new Error('--placeholder and --head cannot be used at the same time!');
+    } else if (this._options.processEnv && this._options.ngEnv) {
+      throw new Error('--process-env and --ng-env cannot be used at the same time!');
     }
   }
 
