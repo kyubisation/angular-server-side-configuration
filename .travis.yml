@@ -16,5 +16,7 @@ deploy:
   email: "lukas.spirig@gmail.com"
   api_key: "$NPM_TOKEN"
   skip_cleanup: true
+  # TODO: REMOVE FOR STABLE RELEASE
+  tag: next
   on:
     tags: true

@@ -1,8 +1,11 @@
 import { Command } from 'commander';
 import { InitCommand } from './init-command';
 import { InsertCommand } from './insert-command';
-import { WrapAotCommand } from './wrap-aot';
+import { WrapAotCommand } from './wrap-aot-command';
 
+/**
+ * @public
+ */
 export function cli(): { parse(args: string[]): any } {
   const program = new Command();
   [insertCommand, initCommand, wrapAotCommand].forEach(c => c(program));
@@ -28,6 +31,8 @@ function insertCommand(program: Command) {
       'Insert environment variables into the head tag '
       + '(after title tag, if available, otherwise before closing head tag)')
     .option('--dry', 'Perform the insert without actually inserting the variables')
+    .option('--process-env', 'Use process.env for insertion (Default)')
+    .option('--ng-env', 'Use NG_ENV for insertion')
     .action(
       async (directory: string, options: any) =>
         await new InsertCommand({ directory, ...options }).execute());
@@ -45,6 +50,8 @@ function initCommand(program: Command) {
       + '(Defaults to src/environments/environment.prod.ts)')
     .option('--npm', 'Install angular-service-side-configuration via npm (Default)')
     .option('--yarn', 'Install angular-service-side-configuration via yarn')
+    .option('--process-env', 'Initialize with process.env variant (Default)')
+    .option('--ng-env', 'Initialize with NG_ENV variant')
     .action(
       async (directory: string, options: any) =>
         await new InitCommand({ directory, ...options }).execute());
@@ -63,6 +70,8 @@ function wrapAotCommand(program: Command) {
       'The environment file to prepare for aot-compilation '
       + '(Defaults to src/environments/environment.prod.ts)')
     .option('--dist', 'The output path of the ng build (Defaults to dist/**)')
+    .option('--process-env', 'Use process.env variant (Default)')
+    .option('--ng-env', 'Use NG_ENV variant')
     .allowUnknownOption()
     .action(
       async (ngCommands: string[], options: any) =>

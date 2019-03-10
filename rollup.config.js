@@ -1,7 +1,7 @@
-import typescript from 'rollup-plugin-typescript2';
-import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import json from 'rollup-plugin-json';
+import resolve from 'rollup-plugin-node-resolve';
+import typescript from 'rollup-plugin-typescript2';
 
 const config = {
   input: './src/index.ts',
@@ -10,7 +10,7 @@ const config = {
     resolve(),
     json(),
     commonjs(),
-    typescript(),
+    typescript({ useTsconfigDeclarationDir: true }),
   ],
 };
 

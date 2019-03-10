@@ -1,19 +1,23 @@
 {
   "name": "angular-server-side-configuration",
-  "version": "1.3.0",
+  "version": "2.0.0-beta.0",
   "description": "Configure an angular application on the server",
   "main": "./main.js",
   "module": "./index.js",
-  "types": "./index.d.ts",
+  "typings": "./index.d.ts",
+  "tsdoc": {
+    "tsdocFlavor": "AEDoc"
+  },
   "bin": {
     "ngssc": "./bin/ngssc"
   },
   "scripts": {
-    "clean": "rimraf .rpt2_cache coverage index.d.ts index.js main.js",
-    "build:ts": "rollup -c rollup.config.js",
-    "build:dts": "dts-bundle-generator -o index.d.ts ./src/index.ts",
-    "build:docs": "typedoc --theme markdown --out documentation --mode modules --exclude **/*.spec.ts src",
-    "build": "npm run build:ts && npm run build:dts",
+    "clean:build": "rimraf .rpt2_cache dist typings",
+    "clean": "npm run clean:build && rimraf coverage index.d.ts index.js main.js",
+    "build:rollup": "rollup -c rollup.config.js",
+    "build:typings": "api-extractor run",
+    "build:docs": "api-documenter markdown --input-folder dist --output-folder documentation",
+    "build": "npm run clean && npm run build:rollup && npm run build:typings && npm run build:docs && npm run clean:build",
     "pretest": "npm run clean",
     "test": "jest -i",
     "lint": "tslint -p tsconfig.json",
@@ -38,17 +42,15 @@
     "url": "https://github.com/kyubisation/angular-server-side-configuration/issues"
   },
   "homepage": "https://github.com/kyubisation/angular-server-side-configuration#readme",
-  "dependencies": {
-    "esm": "^3.2.14"
-  },
   "devDependencies": {
+    "@microsoft/api-documenter": "^7.0.30",
+    "@microsoft/api-extractor": "^7.0.23",
     "@types/cross-spawn": "^6.0.0",
     "@types/jest": "^24.0.11",
     "@types/node": "^10.12.30",
     "@types/rimraf": "^2.0.2",
     "commander": "^2.19.0",
     "cross-spawn": "^6.0.5",
-    "dts-bundle-generator": "^2.1.0",
     "jest": "^24.3.1",
     "rimraf": "^2.6.3",
     "rollup": "^1.6.0",
@@ -59,8 +61,6 @@
     "ts-jest": "^24.0.0",
     "ts-node": "^8.0.3",
     "tslint": "^5.13.1",
-    "typedoc": "^0.14.2",
-    "typedoc-plugin-markdown": "^1.1.27",
     "typescript": "^3.3.3333"
   },
   "jest": {

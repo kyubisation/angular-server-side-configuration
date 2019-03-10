@@ -32,7 +32,7 @@ describe('cli insert', () => {
 
   it('should be able to configure replacement', async () => {
     const configs = [{ placeholder: 'test' }, { head: true }].map(async config => {
-      const command = new InsertCommand(Object.assign({ dry: true, directory: root }, config));
+      const command = new InsertCommand({ dry: true, directory: root, ...config});
       const envVariables: EnvironmentVariablesConfiguration = (command as any)._configuration;
       await command.execute();
       expect(envVariables.replacements.length).toEqual(1);
@@ -53,6 +53,11 @@ describe('cli insert', () => {
 
   it('should throw, when --placeholder and --head is provided', async () => {
     const command = new InsertCommand({ placeholder: 'test', head: true });
+    await expect(command.execute()).rejects.toBeInstanceOf(Error);
+  });
+
+  it('should fail due to using both process-env and ng-env', async () => {
+    const command = new InsertCommand({ directory: root, processEnv: true, ngEnv: true });
     await expect(command.execute()).rejects.toBeInstanceOf(Error);
   });
 });

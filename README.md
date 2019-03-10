@@ -5,7 +5,6 @@
 ![](https://img.shields.io/npm/v/angular-server-side-configuration.svg)
 ![](https://img.shields.io/npm/l/angular-server-side-configuration.svg)
 
-[Documentation](https://github.com/kyubisation/angular-server-side-configuration/blob/master/documentation/README.md)
 
 Configure an angular application at runtime on the server via environment variables.
 
@@ -24,7 +23,8 @@ on the host serving the bundled angular files.
 By default, this will not work in Module.forRoot or Module.forChild scripts or parameters.
 These are build time only due to AoT restrictions.
 
-With `ngssc wrap-aot ng build ...` it is however possible to retain the configuration, by replacing
+With `ngssc wrap-aot ng build ...` (or `ngssc wrap-aot --ng-env ng build ...` for NG_ENV)
+it is however possible to retain the configuration, by replacing
 the environment variables with tokens during the AoT build and reverting afterwards. (See [CLI wrap-aot](#wrap-aot))
 
 ## Getting Started
@@ -33,6 +33,9 @@ npm install --save angular-server-side-configuration
 ```
 
 ### environment.prod.ts
+angular-server-side-configuration supports two variants for using environment variables: process.env.* or NG_ENV.*  
+
+#### process.env.*
 Use process.env.NAME in your environment.prod.ts, where NAME is the
 environment variable that should be used.
 
@@ -42,6 +45,21 @@ import 'angular-server-side-configuration/process';
 export const environment = {
   production: process.env.PROD !== 'false',
   apiAddress: process.env.API_ADDRESS || 'https://example-api.com'
+};
+```
+
+#### NG_ENV.*
+Import NG_ENV from `angular-server-side-configuration/ng-env` 
+(or `angular-server-side-configuration/ng4-env` for Angular 4 or 5)
+and use NG_ENV.NAME in your environment.prod.ts, where NAME is the
+environment variable that should be used.
+
+```typescript
+import 'angular-server-side-configuration/ng-env';
+
+export const environment = {
+  production: NG_ENV.PROD !== 'false',
+  apiAddress: NG_ENV.API_ADDRESS || 'https://example-api.com'
 };
 ```
 
@@ -74,6 +92,13 @@ npm install -g angular-server-side-configuration
 ngssc insert /path/to/angular/files --search
 ```
 
+Or if NG_ENV was used:
+```bash
+npm install -g angular-server-side-configuration
+ngssc insert /path/to/angular/files --ng-env --search
+```
+
+
 ## CLI
 angular-server-side-configuration provides a CLI.
 
@@ -94,6 +119,8 @@ Search and replace the placeholder with environment variables (Directory default
 | `-p, --placeholder <value>` | Set the placeholder to replace with the environment variables (Defaults to `<!--CONFIG-->`) |
 | `-h, --head`                | Insert environment variables into the head tag (after title tag, if available, otherwise before closing head tag) |
 | `--dry`                     | Perform the insert without actually inserting the variables |
+| `--process-env`             | Use process.env for insertion (Default) |
+| `--ng-env`                  | Use NG_ENV for insertion |
 | `-h, --help`                | output usage information |
 
 ### Init
@@ -106,6 +133,8 @@ Initialize an angular project with angular-server-side-configuration (Directory 
 | `-ef, --environment-file` | The environment file to initialize (environmentFile defaults to src/environments/environment.prod.ts) |
 | `--npm`                   | Install angular-service-side-configuration via npm (Default) |
 | `--yarn`                  | Install angular-service-side-configuration via yarn |
+| `--process-env`           | Initialize with process.env variant (Default) |
+| `--ng-env`                | Initialize with NG_ENV variant |
 | `-h, --help`              | output usage information |
 
 ### Wrap-Aot
@@ -118,26 +147,13 @@ content of the environment file with tokens. After the inner command completes, 
 | --- | --- |
 | `-ef, --environment-file` | The environment file to prepare for aot-compilation (Defaults to src/environments/environment.prod.ts) |
 | `--dist`                  | The output path of the ng build (Defaults to dist/**) |
+| `--process-env`           | Use process.env variant (Default) |
+| `--ng-env`                | Use NG_ENV variant |
 | `-h, --help`              | output usage information |
 
-## Native CLI
-If node.js cannot be used on the target system, it is also possible to compile ngssc to a native CLI with tools like [pkg](https://www.npmjs.com/package/pkg) or [nexe](https://www.npmjs.com/package/nexe).
+## API Documentation
 
-Create a file named ngssc.js:
-```javascript
-require('angular-server-side-configuration').cli().parse(process.argv);
-```
-
-And then use pkg or nexe to build the native ngssc CLI:
-```
-npm install pkg -g
-pkg ngssc.js
-```
-```
-npm install nexe -g
-nexe ngssc.js --target os-of-target-system
-```
-
+[API Documentation](https://github.com/kyubisation/angular-server-side-configuration/blob/master/documentation/angular-server-side-configuration.md)
 
 ## License
 Apache License, Version 2.0

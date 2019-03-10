@@ -1,3 +1,13 @@
+# 2.0.0-beta.0 (2019-03-10)
+
+### Features
+
+* Implemented NG_ENV variant as an alternative for process.env
+
+### Breaking Changes
+
+* Removed deprecated ProcessEnvConfiguration
+
 # 1.3.0 (2019-03-09)
 
 ### Features
@@ -7,7 +17,7 @@
 
 ### Deprecation
 
-* EnvironmentVariablesConfiguration has been deprecated. Use ProcessEnvConfiguration instead.
+* EnvironmentVariablesConfiguration has been deprecated. Use ProcessEnvConfiguration instead
 
 ### Internal Changes
 

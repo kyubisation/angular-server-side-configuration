@@ -1,3 +1,8 @@
+/**
+ * The base command class.
+ * 
+ * @public
+ */
 export abstract class CommandBase {
   constructor(private _name: string) {
   }
