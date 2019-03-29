@@ -19,7 +19,6 @@
 |  Function | Description |
 |  --- | --- |
 |  [cli()](./angular-server-side-configuration.cli.md) |  |
-|  [deprecated(message)](./angular-server-side-configuration.deprecated.md) | Deprecate a method. |
 |  [walk(root, filePattern)](./angular-server-side-configuration.walk.md) | Return all files matching the given pattern. |
 
 ## Interfaces

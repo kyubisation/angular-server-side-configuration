@@ -58,10 +58,10 @@ export class InitCommand extends CommandBase {
     }
 
     const importExpression = this._options.ngEnv
-      ? `{ NG_ENV } from 'angular-server-side-configuration/ng-env'`
-      : `'angular-server-side-configuration/process'`;
+      ? `import { NG_ENV } from 'angular-server-side-configuration/ng-env';`
+      : `import 'angular-server-side-configuration/process';`;
     const variant = this._options.ngEnv ? 'NG_ENV' : 'process.env';
-    const newContent = `import ${importExpression};
+    const newContent = `${importExpression}
 
 /**
  * How to use angular-server-side-configuration:

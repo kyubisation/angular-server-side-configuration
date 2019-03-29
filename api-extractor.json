@@ -15,9 +15,10 @@
   },
   "dtsRollup": {
     "enabled": true,
-    "publishFolder": "."
+    "publishFolder": "dist",
+    "mainDtsRollupPath": "index.d.ts"
   },
   "tsdocMetadata": {
-    "enabled": false
+    "enabled": false    
   }
 }
