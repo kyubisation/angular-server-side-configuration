@@ -1,8 +1,11 @@
 import { join } from 'path';
+
 import { indexHtmlContent, temporaryFile } from '../test/temporary-fs';
+
 import { ProcessEnvConfiguration } from './process-env-configuration';
 
 describe('ProcessEnvConfiguration', () => {
+  // tslint:disable-next-line: no-console
   console.log = () => void 0;
   const root = join(__dirname, '..', 'test', 'environment-variables-configuration');
 

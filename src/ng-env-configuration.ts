@@ -2,7 +2,6 @@ import { Configuration } from './configuration';
 
 /**
  * Discover and apply configuration via environment variables discovered via NG_ENV usage.
- * 
  * @public
  */
 export class NgEnvConfiguration extends Configuration {

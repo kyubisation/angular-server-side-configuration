@@ -5,17 +5,17 @@
   ],
   "jsRules": {},
   "rules": {
-    "quotemark": [
+    "arrow-parens": [
       true,
-      "single"
+      "ban-single-arg-parens"
+    ],
+    "interface-name": [
+      true,
+      "never-prefix"
     ],
     "member-access": [
       true,
       "no-public"
-    ],
-    "arrow-parens": [
-      true,
-      "ban-single-arg-parens"
     ],
     "member-ordering": [
       true,
@@ -28,6 +28,16 @@
           "instance-method"
         ]
       }
+    ],
+    "ordered-imports": [
+      true,
+      {
+        "grouped-imports": true
+      }
+    ],
+    "quotemark": [
+      true,
+      "single"
     ],
     "variable-name": [
       true,

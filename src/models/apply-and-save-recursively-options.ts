@@ -1,6 +1,5 @@
 /**
  * Options for applyAndSaveRecursively
- * 
  * @public
  */
 export interface ApplyAndSaveRecursivelyOptions {

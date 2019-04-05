@@ -1,0 +1,13 @@
+{
+  "environmentVariables": [
+    "SIMPLE_VALUE",
+    "API_BACKEND",
+    "TERNARY",
+    "NUMBER",
+    "PROD",
+    "OMG"
+  ],
+  "variant": "process",
+  "filePattern": "index.html",
+  "recursiveMatching": true
+}

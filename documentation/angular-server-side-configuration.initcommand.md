@@ -7,12 +7,12 @@ The init command to initialize a project with angular-server-side-configuration.
 <b>Signature:</b>
 
 ```typescript
-export declare class InitCommand extends CommandBase 
+export declare class InitCommand 
 ```
 
 ## Methods
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [\_execute()](./angular-server-side-configuration.initcommand._execute.md) |  |  |
+|  [execute()](./angular-server-side-configuration.initcommand.execute.md) |  |  |
 

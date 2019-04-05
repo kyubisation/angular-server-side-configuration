@@ -58,9 +58,8 @@
     // "emitDecoratorMetadata": true,         /* Enables experimental support for emitting type metadata for decorators. */
   },
   "exclude": [
-    "process.d.ts",
-    "ng-env.d.ts",
-    "ng4-env.d.ts",
+    "process",
+    "ng-env",
     "typings"
   ]
 }

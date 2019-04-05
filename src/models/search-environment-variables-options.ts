@@ -1,6 +1,5 @@
 /**
  * Options for searchEnvironmentVariables.
- * 
  * @public
  */
 export interface SearchEnvironmentVariablesOptions {

@@ -1,11 +1,14 @@
 import { join } from 'path';
+
 import { indexHtmlContent, temporaryFile, temporaryFiles } from '../test/temporary-fs';
+
 import { Configuration } from './configuration';
 
 describe('Configuration', () => {
+  // tslint:disable-next-line: no-console
   console.log = () => void 0;
   const root = join(__dirname, '..', 'test', 'environment-variables-configuration');
-  
+
   class MockConfiguration extends Configuration {
     protected discoverVariables(fileContent: string): string[] {
       throw new Error('Method not implemented.');

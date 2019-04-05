@@ -1,14 +1,13 @@
 import { lstatSync, readFile, readFileSync, writeFile } from 'fs';
 import { promisify } from 'util';
-import { ApplyAndSaveRecursivelyOptions } from './apply-and-save-recursively-options';
-import { walk } from './common/index';
-import { SearchEnvironmentVariablesOptions } from './search-environment-variables-options';
+
+import { walk } from './common';
+import { ApplyAndSaveRecursivelyOptions, SearchEnvironmentVariablesOptions } from './models';
 const readFileAsync = promisify(readFile);
 const writeFileAsync = promisify(writeFile);
 
 /**
  * Discover and apply configuration.
- * 
  * @public
  */
 export abstract class Configuration {
@@ -26,7 +25,7 @@ export abstract class Configuration {
   /**
    * An array of replacement functions.
    */
-  readonly replacements: Array<(fileContent: string, fileName: string) => string> = []
+  readonly replacements: Array<(fileContent: string, fileName: string) => string> = [];
 
   /**
    * @param variables - Optional array of environment variable names to populate.

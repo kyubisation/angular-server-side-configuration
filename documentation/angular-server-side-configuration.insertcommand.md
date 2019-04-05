@@ -7,12 +7,12 @@ The insert command to insert environment variables into a file.
 <b>Signature:</b>
 
 ```typescript
-export declare class InsertCommand extends CommandBase 
+export declare class InsertCommand 
 ```
 
 ## Methods
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [\_execute()](./angular-server-side-configuration.insertcommand._execute.md) |  |  |
+|  [execute()](./angular-server-side-configuration.insertcommand.execute.md) |  |  |
 

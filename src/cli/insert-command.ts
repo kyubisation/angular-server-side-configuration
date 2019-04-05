@@ -1,103 +1,146 @@
-import { relative } from 'path';
-import { walk } from '../common/walk';
+import { readFile, statSync } from 'fs';
+import { join, resolve } from 'path';
+import { promisify } from 'util';
+
+import { Logger, walk } from '../common';
 import { Configuration } from '../configuration';
+import { Ngssc } from '../models';
+import { ConfigVariables } from '../models/config-variables';
 import { NgEnvConfiguration } from '../ng-env-configuration';
 import { ProcessEnvConfiguration } from '../process-env-configuration';
-import { CommandBase } from './command-base';
+
+const readFileAsync = promisify(readFile);
 
 /**
  * The insert command to insert environment variables into a file.
- * 
  * @public
  */
-export class InsertCommand extends CommandBase {
-  private _configuration: Configuration;
+export class InsertCommand {
+  private readonly _directory: string;
+  private readonly _ngsscFile: string;
+  private readonly _configInHtml: boolean;
+  private readonly _dry: boolean;
 
-  constructor(private _options: {
-    search?: boolean,
-    dry?: boolean,
-    directory?: string,
-    env?: string[],
-    placeholder?: string,
-    head?: boolean,
-    processEnv?: boolean,
-    ngEnv?: boolean,
-  }) {
-    super('Environment Variables Insertion');
-    this._configuration = this._options.ngEnv
-      ? new NgEnvConfiguration() : new ProcessEnvConfiguration();
+  constructor(
+    options: {
+      directory: string,
+      configInHtml?: boolean,
+      head?: boolean,
+      dry?: boolean,
+    },
+    private _logger = new Logger()) {
+    this._directory = resolve(options.directory);
+    this._ngsscFile = join(this._directory, 'ngssc.json');
+    this._configInHtml = !!options.configInHtml;
+    this._dry = !!options.dry;
   }
 
-  protected async _execute() {
+  async execute() {
+    this._logger.log('ngssc: Environment Variables Insertion');
+    if (this._dry) {
+      this._logger.log('DRY RUN! Files will not be changed!');
+    }
     this._validateConfig();
-    this._dryMessage();
-    this._configureDirectory();
-    this._searchEnvironmentVariables();
-    this._addEnvironmentVariablesFromCommandLine();
-    this._configureReplacement();
-    this._logPopulatedEnvironmentVariables();
-    await this._insertEnvironmentVariables();
+    if (this._configInHtml) {
+      await this._configureHtmlFiles();
+    } else {
+      await this._configureWithNgssc();
+    }
   }
 
   private _validateConfig() {
-    if (this._options.placeholder && this._options.head) {
-      throw new Error('--placeholder and --head cannot be used at the same time!');
-    } else if (this._options.processEnv && this._options.ngEnv) {
-      throw new Error('--process-env and --ng-env cannot be used at the same time!');
+    try {
+      if (!statSync(this._directory).isDirectory()) {
+        throw new Error();
+      }
+    } catch (e) {
+      throw new Error(`${this._directory} is not a valid directory!\n${e}`);
     }
   }
 
-  private _dryMessage() {
-    if (this._options.dry) {
-      this._log('DRY RUN! Files will not be changed!');
+  private async _configureHtmlFiles() {
+    const htmlFiles = walk(this._directory, /\.html$/);
+    if (htmlFiles.length === 0) {
+      this._logger.log(`No html files found in ${this._directory}`);
+      return;
+    }
+
+    for (const htmlFile of walk(this._directory, /\.html$/)) {
+      const htmlContent = await readFileAsync(htmlFile, 'utf8');
+      const match = htmlContent.match(/<!--\s*CONFIG\s*(\{[\w\W]*\})\s*-->/);
+      if (!match || !match[1]) {
+        this._logger.log(`No configuration found in ${htmlFile}`);
+      } else {
+        await this._applyHtmlConfiguration(htmlFile, match[1]);
+      }
     }
   }
 
-  private _configureDirectory() {
-    if (this._options.directory) {
-      this._configuration.setDirectory(this._options.directory);
+  private async _applyHtmlConfiguration(htmlFile: string, configMatch: string) {
+    try {
+      const config: ConfigVariables = JSON.parse(configMatch);
+      const configuration = await this._createConfiguration(config)
+        .insertVariables(/<!--\s*CONFIG\s*(\{[\w\W]*\})\s*-->/);
+      this._logPopulatedEnvironmentVariables(htmlFile, config.variant, configuration);
+      if (!this._dry) {
+        await configuration.applyAndSaveTo(htmlFile);
+      }
+    } catch (e) {
+      this._logger.log(`ERROR: Invalid configuration in ${htmlFile}!\n${e}`);
     }
   }
 
-  private _searchEnvironmentVariables() {
-    if (this._options.search) {
-      this._log(`Searching for environment variables in ${this._configuration.directory}`);
-      this._configuration.searchEnvironmentVariables();
-      this._log(`Found ${this._configuration.variables.join(', ')}`);
-    }
-  }
-
-  private _addEnvironmentVariablesFromCommandLine() {
-    if (Array.isArray(this._options.env)) {
-      this._log(`Adding environment variables from command line: ${this._options.env.join(', ')}`);
-      this._configuration.variables.push(...this._options.env);
-    }
-  }
-
-  private _configureReplacement() {
-    if (this._options.placeholder) {
-      this._log(`Using placeholder ${this._options.placeholder}`);
-      this._configuration.insertVariables(this._options.placeholder);
-    } else if (this._options.head) {
-      this._log('Inserting environment variables into <head>');
-      this._configuration.insertVariablesIntoHead();
+  private async _configureWithNgssc() {
+    const config = await this._resolveNgsscConfiguration();
+    const recursive = config.recursiveMatching === undefined || config.recursiveMatching;
+    const filePattern = config.filePattern ? new RegExp(config.filePattern) : /index\.html$/;
+    const configuration = this._createConfiguration(config);
+    this._logPopulatedEnvironmentVariables(this._ngsscFile, config.variant, configuration);
+    if (config.insertInHead) {
+      configuration.insertVariablesIntoHead();
     } else {
-      this._log('Using placeholder <!--CONFIG-->');
-      this._configuration.insertVariables();
+      configuration.insertVariables();
+    }
+
+    const files = recursive
+      ? walk(this._directory, filePattern)
+      : [join(this._directory, config.filePattern || 'index.html')];
+    this._logger.log(`Configuration will be inserted into ${files.join(', ')}`);
+    if (this._dry) {
+      this._logger.log(`Dry run. Nothing will be inserted.`);
+    } else if (recursive) {
+      await configuration.applyAndSaveRecursively({ filePattern });
+    } else {
+      await configuration.applyAndSaveTo(join(this._directory, config.filePattern || 'index.html'));
     }
   }
 
-  private _logPopulatedEnvironmentVariables() {
-    this._logValue('Populated environment variables:', this._configuration.populateVariables());
+  private async _resolveNgsscConfiguration() {
+    try {
+      const ngsscContent = await readFileAsync(this._ngsscFile, 'utf8');
+      return JSON.parse(ngsscContent) as Ngssc;
+    } catch (e) {
+      throw new Error(`Either missing or invalid ngssc.json in ${this._directory}\n${e}`);
+    }
   }
 
-  private async _insertEnvironmentVariables() {
-    const files = this._options.dry
-      ? walk(this._configuration.directory, this._configuration.defaultInsertionFilePattern)
-      : await this._configuration.applyAndSaveRecursively();
-    this._log(`\n${this._options.dry ? 'Insertion targets' : 'Inserted into'}:`);
-    files
-      .map(f => relative(this._configuration.directory, f))
-      .forEach(f => this._log(f));
+  private _createConfiguration(config: ConfigVariables) {
+    if (config.variant === 'process' || !config.variant) {
+      return new ProcessEnvConfiguration(config.environmentVariables)
+        .setDirectory(this._directory);
+    } else if (config.variant === 'NG_ENV') {
+      return new NgEnvConfiguration(config.environmentVariables)
+        .setDirectory(this._directory);
+    } else {
+      throw new Error(`Invalid variant ${config.variant}`);
+    }
+  }
+
+  private _logPopulatedEnvironmentVariables(source: string, variant: string, configuration: Configuration) {
+    this._logger.log(`${source} (Variant: ${variant})`);
+    const variables = configuration.populateVariables();
+    Object
+      .keys(variables)
+      .forEach(v => this._logger.log(`  ${v}: ${variables[v]}`));
   }
 }

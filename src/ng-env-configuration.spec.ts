@@ -1,5 +1,7 @@
 import { join } from 'path';
+
 import { indexHtmlContent, temporaryFile } from '../test/temporary-fs';
+
 import { NgEnvConfiguration } from './ng-env-configuration';
 
 describe('NgEnvConfiguration', () => {

@@ -1,6 +1,6 @@
 {
   "name": "angular-server-side-configuration",
-  "version": "2.0.0-beta.0",
+  "version": "2.0.0-beta.1",
   "description": "Configure an angular application on the server",
   "main": "./main.js",
   "module": "./index.js",
@@ -12,7 +12,7 @@
     "ngssc": "./bin/ngssc"
   },
   "scripts": {
-    "postinstall": "run-s install:*",
+    "installngc": "run-s install:*",
     "install:ngc4": "cd ng-env/ngc4 && npm ci",
     "install:ngc7": "cd ng-env/ngc7 && npm ci",
     "clean:build": "rimraf .rpt2_cache typings",
@@ -23,10 +23,10 @@
     "build:ngc7": "cd ng-env/ngc7 && npm run build",
     "build:docs": "api-documenter markdown --input-folder dist --output-folder documentation",
     "build": "npm run clean && run-s build:* && npm run clean:build",
+    "buildpack": "npm run build && cd dist && npm pack",
     "pretest": "npm run clean",
     "test": "jest -i",
-    "lint": "tslint -p tsconfig.json",
-    "prepack": "npm run build"
+    "lint": "tslint -p tsconfig.json"
   },
   "repository": {
     "type": "git",
@@ -77,7 +77,8 @@
     "collectCoverageFrom": [
       "src/**/*.ts",
       "!src/**/*.spec.ts",
-      "!src/**/index.ts"
+      "!src/**/index.ts",
+      "!src/cli/cli.ts"
     ],
     "coverageDirectory": "coverage",
     "coverageThreshold": {
@@ -87,6 +88,10 @@
         "lines": 100,
         "statements": 100
       }
-    }
+    },
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/cli/cli.ts"
+    ]
   }
 }
