@@ -1,5 +1,8 @@
-import { readFileSync, statSync, unlinkSync } from 'fs';
+import { randomBytes } from 'crypto';
+import { mkdirSync, readFileSync, statSync, unlinkSync } from 'fs';
+import { tmpdir } from 'os';
 import { join } from 'path';
+import rimraf from 'rimraf';
 
 import { MockLogger } from '../../test/mock-logger';
 import {
@@ -17,12 +20,26 @@ import {
 import { DetectorCommand } from './detector-command';
 
 describe('cli detector', () => {
-  const root = join(__dirname, '..', '..', 'test', 'detector');
-  const dist = join(root, 'dist');
-  const environmentFile = join(root, 'environment.prod.ts');
-  const ngsscFile = join(dist, 'ngssc.json');
-  const indexHtmlFile = join(dist, 'index.html');
   const logger = new MockLogger();
+  let root: string;
+  let dist: string;
+  let environmentFile: string;
+  let ngsscFile: string;
+  let indexHtmlFile: string;
+
+  beforeEach(() => {
+    root = join(tmpdir(), randomBytes(20).toString('hex'));
+    mkdirSync(root);
+    dist = join(root, 'dist');
+    mkdirSync(dist);
+    environmentFile = join(root, 'environment.prod.ts');
+    ngsscFile = join(dist, 'ngssc.json');
+    indexHtmlFile = join(dist, 'index.html');
+  });
+
+  afterEach(() => {
+    rimraf.sync(root);
+  });
 
   it('should instantiate', () => {
     // tslint:disable-next-line: no-unused-expression

@@ -1,5 +1,4 @@
-import { mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
-import rimraf from 'rimraf';
+import { readFileSync, unlinkSync, writeFileSync } from 'fs';
 
 export async function temporaryFile(
   file: { file: string, content: string }, action: () => Promise<any>): Promise<string> {
@@ -13,12 +12,6 @@ export async function temporaryFiles(
   const contents = files.map(f => readFileSync(f.file, 'utf8'));
   files.forEach(f => unlinkSync(f.file));
   return contents;
-}
-
-export async function temporaryDirectory(directory: string, action: () => Promise<any>): Promise<void> {
-  mkdirSync(directory);
-  await action();
-  await new Promise((resolve, reject) => rimraf(directory, e => e ? reject(e) : resolve()));
 }
 
 export const indexHtmlContent = `<!doctype html>

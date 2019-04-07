@@ -1,5 +1,8 @@
-import { readFile } from 'fs';
+import { randomBytes } from 'crypto';
+import { mkdirSync, readFile } from 'fs';
+import { tmpdir } from 'os';
 import { join } from 'path';
+import rimraf from 'rimraf';
 import { promisify } from 'util';
 
 import { envContent, envContentNg4Env, envContentNgEnv, temporaryFile } from '../test/temporary-fs';
@@ -9,9 +12,20 @@ import { VariableTokenizer } from './variable-tokenizer';
 const readFileAsync = promisify(readFile);
 
 describe('VariableTokenizer', () => {
-  const root = join(__dirname, '..', 'test', 'variable-tokenizer');
-  const environmentFilePath = join(root, 'environment.prod.ts');
-  const bundlePath = join(root, 'main.js');
+  let root: string;
+  let environmentFilePath: string;
+  let bundlePath: string;
+
+  beforeEach(() => {
+    root = join(tmpdir(), randomBytes(20).toString('hex'));
+    mkdirSync(root);
+    environmentFilePath = join(root, 'environment.prod.ts');
+    bundlePath = join(root, 'main.js');
+  });
+
+  afterEach(() => {
+    rimraf.sync(root);
+  });
 
   it('should tokenize environment file with process.env variables', async () => {
     await testTokenization(envContent, /process\./g);
@@ -45,7 +59,7 @@ describe('VariableTokenizer', () => {
       variant: 'process-env',
     };
     const tokenizer = new VariableTokenizer();
-    const finalContent = await temporaryFile({file: bundlePath, content: minifiedTokenizedFile}, async () => {
+    const finalContent = await temporaryFile({ file: bundlePath, content: minifiedTokenizedFile }, async () => {
       await tokenizer.untokenize(root, variables);
     });
     expect(finalContent).not.toContain('ngssc-token-');
@@ -72,7 +86,8 @@ describe('VariableTokenizer', () => {
   }
 });
 
-const minifiedTokenizedFile = `(window.webpackJsonp=window.webpackJsonp||[]).push([[1],{0:function(l,n,u){l.exports=u("zUnb")},crnd`
+const minifiedTokenizedFile =
+  `(window.webpackJsonp=window.webpackJsonp||[]).push([[1],{0:function(l,n,u){l.exports=u("zUnb")},crnd`
   + `:function(l,n){function u(l){return Promise.resolve().then(function(){var n=new Error("Cannot find m`
   + `odule '"+l+"'");throw n.code="MODULE_NOT_FOUND",n})}u.keys=function(){return[]},u.resolve=u,l.export`
   + `s=u,u.id="crnd"},zUnb:function(l,n,u){"use strict";u.r(n);var t=u("CcnG");try{window}catch(A){}var e`

@@ -35,7 +35,7 @@ describe('VariableDetector', () => {
 
   function setupDetectorWithTypeScriptVersion(version: string) {
     const detector = new VariableDetector();
-    (detector as any)._typescript = import(`../test/detector/ts-versions/typescript-${version}/typescript`);
+    (detector as any)._typescript = import(`../test/ts-versions/typescript-${version}/typescript`);
     return detector;
   }
 
