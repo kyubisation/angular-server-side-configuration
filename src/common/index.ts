@@ -1,2 +1,2 @@
-export * from './deprecated';
+export * from './logger';
 export * from './walk';

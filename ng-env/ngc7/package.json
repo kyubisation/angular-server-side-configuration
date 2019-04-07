@@ -1,0 +1,15 @@
+{
+  "name": "ngc7",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "node_modules/.bin/ngc -p tsconfig-aot.json"
+  },
+  "devDependencies": {
+    "@angular/core": "^7.0.0",
+    "@angular/compiler": "^7.0.0",
+    "@angular/compiler-cli": "^7.0.0",
+    "rxjs": "^6.0.0",
+    "typescript": "~3.1.1",
+    "zone.js": "~0.8.26"
+  }
+}

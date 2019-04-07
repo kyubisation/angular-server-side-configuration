@@ -11,10 +11,15 @@ before_script:
   - ./cc-test-reporter before-build
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+  - npm run build
+before_deployment:
+  - cd dist
 deploy:
   provider: npm
   email: "lukas.spirig@gmail.com"
   api_key: "$NPM_TOKEN"
   skip_cleanup: true
+  # TODO: REMOVE FOR STABLE RELEASE
+  tag: next
   on:
     tags: true
