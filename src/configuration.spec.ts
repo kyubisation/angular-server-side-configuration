@@ -18,24 +18,6 @@ describe('Configuration', () => {
     }
   }
 
-  it('should throw on missing directory', () => {
-    const missingDirectory = join(root, 'missing-directory');
-    const config = new MockConfiguration()
-      .setDirectory(missingDirectory);
-    expect(() => config.searchEnvironmentVariables())
-      .toThrow(/no such file or directory/);
-  });
-
-  it('should throw on invalid directory', async () => {
-    const invalidDirectory = join(root, 'index.html');
-    const config = new MockConfiguration()
-      .setDirectory(invalidDirectory);
-    await temporaryFile({ file: invalidDirectory, content: indexHtmlContent }, async () => {
-      expect(() => config.searchEnvironmentVariables())
-        .toThrow(/is not a valid directory!/);
-    });
-  });
-
   it('should populate variables from process.env', () => {
     const expected = {
       TEST: 'test',

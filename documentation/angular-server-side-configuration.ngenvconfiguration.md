@@ -14,6 +14,5 @@ export declare class NgEnvConfiguration extends Configuration
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [discoverVariables(fileContent)](./angular-server-side-configuration.ngenvconfiguration.discovervariables.md) |  |  |
 |  [renderIIFE(environmentVariables)](./angular-server-side-configuration.ngenvconfiguration.renderiife.md) |  |  |
 

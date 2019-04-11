@@ -14,6 +14,6 @@ export interface ApplyAndSaveRecursivelyOptions
 
 |  Property | Type | Description |
 |  --- | --- | --- |
-|  [directory](./angular-server-side-configuration.applyandsaverecursivelyoptions.directory.md) | `string` | The root directory from which to search files. (Defaults to instance directory.) |
-|  [filePattern](./angular-server-side-configuration.applyandsaverecursivelyoptions.filepattern.md) | `RegExp` | The file pattern in which the configuration should be inserted (Defaults to /index.html$/). |
+|  [directory](./angular-server-side-configuration.applyandsaverecursivelyoptions.directory.md) | `string` | The root directory from which to search files. Defaults to instance directory. |
+|  [filePattern](./angular-server-side-configuration.applyandsaverecursivelyoptions.filepattern.md) | `string` | The file pattern in which the configuration should be inserted. Defaults to \*\*<!-- -->/<!-- -->index.html. |
 

@@ -134,21 +134,20 @@ Detect used environment variables and either generates ngssc.json in given dist 
 
 | Options | Description |
 | --- | --- |
-| `-ef, --environment-file`  | The environment file in which to detect environment variables and optionally tokenize when using --wrap-aot (Defaults to src/environments/environment.prod.ts) |
-| `-a, --wrap-aot`           | Tokenize variables to to retain during AoT compilation |
-| `--dist`                   | The output path of the ng build (Defaults to dist/) |
-| `--html-file-pattern`      | The file pattern where the environment variables should be inserted (Defaults to index.html) |
-| `-r, --recursive-matching` | Whether the file pattern for the insertion should be recursively matched (Default) |
-| `--no-recursive-matching`  | Whether the file pattern for the insertion should not be recursively matched |
-| `-h, --insert-in-head`     | Whether to configure to try to insert the environment variables in the head tag (Defaults to configure replacing <!--CONFIG--> |
-| `-e, --embed-in-html`      | Whether to embed the ngssc information into the html file found by --html-file-pattern in --dist instead of generating ngssc.json in --dist |
-| `-h, --help`               | output usage information |
+| `-ef, --environment-file`   | The environment file in which to detect environment variables and optionally tokenize when using --wrap-aot. Defaults to src/environments/environment.prod.ts |
+| `-a, --wrap-aot`            | Tokenize variables to to retain during AoT compilation |
+| `--dist`                    | The output path of the ng build. Defaults to dist/ |
+| `--html-file-pattern`       | The file pattern where the environment variables should be inserted. Defaults to **/index.html |
+| `-h, --insert-in-head`      | Whether to configure to try to insert the environment variables in the head tag. Defaults to configuring replacing <!--CONFIG--> |
+| `-e, --embed-in-html`       | Whether to embed the ngssc information into the html file found by --html-file-pattern in --dist instead of generating ngssc.json in --dist |
+| `-c, --config <ngssc.json>` | Use an existing ngssc.json file as base configuration |
+| `-h, --help`                | output usage information |
 
 ### Insert
 Usage: ngssc insert [options] [directory]
 
 Insert environment variables. Looks for an ngssc.json file inside the current or given directory.
-Alternatively use the --config-in-html flag. (Directory defaults to current working directory)
+Alternatively use the --config-in-html flag. Directory defaults to current working directory
 
 | Options | Description |
 | --- | --- |
@@ -163,10 +162,10 @@ Initialize an angular project with angular-server-side-configuration (Directory 
 
 | Options | Description |
 | --- | --- |
-| `-ef, --environment-file` | The environment file to initialize (environmentFile defaults to src/environments/environment.prod.ts) |
-| `--npm`                   | Install angular-service-side-configuration via npm (Default) |
+| `-ef, --environment-file` | The environment file to initialize. environmentFile defaults to src/environments/environment.prod.ts |
+| `--npm`                   | Install angular-service-side-configuration via npm. Default |
 | `--yarn`                  | Install angular-service-side-configuration via yarn |
-| `--process-env`           | Initialize with process.env variant (Default) |
+| `--process-env`           | Initialize with process.env variant. Default |
 | `--ng-env`                | Initialize with NG_ENV variant |
 | `-h, --help`              | output usage information |
 

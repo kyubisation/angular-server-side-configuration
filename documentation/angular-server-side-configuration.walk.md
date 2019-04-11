@@ -7,7 +7,7 @@ Return all files matching the given pattern.
 <b>Signature:</b>
 
 ```typescript
-export declare function walk(root: string, filePattern: RegExp): string[];
+export declare function walk(root: string, filePattern: RegExp | string): string[];
 ```
 
 ## Parameters
@@ -15,7 +15,7 @@ export declare function walk(root: string, filePattern: RegExp): string[];
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  root | `string` | The root directory. |
-|  filePattern | `RegExp` | The file pattern to match files against. |
+|  filePattern | `RegExp | string` | The file pattern to match files against. |
 
 <b>Returns:</b>
 

@@ -2,10 +2,10 @@
 
 ## ApplyAndSaveRecursivelyOptions.filePattern property
 
-The file pattern in which the configuration should be inserted (Defaults to /index.html$/).
+The file pattern in which the configuration should be inserted. Defaults to \*\*<!-- -->/<!-- -->index.html.
 
 <b>Signature:</b>
 
 ```typescript
-filePattern?: RegExp;
+filePattern?: string;
 ```

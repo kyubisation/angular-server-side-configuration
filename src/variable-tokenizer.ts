@@ -4,6 +4,7 @@ import { promisify } from 'util';
 import { walk } from './common';
 import { DetectedVariables, TokenizedVariables } from './models';
 import { VariableDetector } from './variable-detector';
+
 const readFileAsync = promisify(readFile);
 const writeFileAsync = promisify(writeFile);
 
@@ -33,7 +34,8 @@ export class VariableTokenizer {
   }
 
   async untokenize(directory: string, variables: TokenizedVariables) {
-    for (const file of walk(directory, /.js$/)) {
+    const files = walk(directory, /\.js$/);
+    for (const file of files) {
       const fileContent = await readFileAsync(file, 'utf8');
       if (variables.variables.some(v => fileContent.includes(v.token))) {
         const newFileContent = variables.variables.reduce(

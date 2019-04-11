@@ -1,5 +1,5 @@
 import { lstatSync, readdirSync } from 'fs';
-import { join } from 'path';
+import globToRegExp from 'glob-to-regexp';
 
 /**
  * Return all files matching the given pattern.
@@ -7,14 +7,17 @@ import { join } from 'path';
  * @param filePattern - The file pattern to match files against.
  * @public
  */
-export function walk(root: string, filePattern: RegExp): string[] {
-  return readdirSync(root)
-    .map(f => join(root, f))
+export function walk(root: string, filePattern: RegExp | string): string[] {
+  const fileRegex = typeof filePattern === 'string'
+    ? globToRegExp(filePattern, { extended: true, globstar: true, flags: 'ig' }) : filePattern;
+  const directory = root.replace(/\\/g, '/');
+  return readdirSync(directory)
+    .map(f => `${directory}/${f}`)
     .map(f => {
       const stat = lstatSync(f);
       if (stat.isDirectory()) {
         return walk(f, filePattern);
-      } else if (stat.isFile() && filePattern.test(f)) {
+      } else if (stat.isFile() && fileRegex.test(f)) {
         return [f];
       } else {
         return [];

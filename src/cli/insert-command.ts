@@ -65,7 +65,7 @@ export class InsertCommand {
       return;
     }
 
-    for (const htmlFile of walk(this._directory, /\.html$/)) {
+    for (const htmlFile of htmlFiles) {
       const htmlContent = await readFileAsync(htmlFile, 'utf8');
       const match = htmlContent.match(/<!--\s*CONFIG\s*(\{[\w\W]*\})\s*-->/);
       if (!match || !match[1]) {
@@ -92,8 +92,6 @@ export class InsertCommand {
 
   private async _configureWithNgssc() {
     const config = await this._resolveNgsscConfiguration();
-    const recursive = config.recursiveMatching === undefined || config.recursiveMatching;
-    const filePattern = config.filePattern ? new RegExp(config.filePattern) : /index\.html$/;
     const configuration = this._createConfiguration(config);
     this._logPopulatedEnvironmentVariables(this._ngsscFile, config.variant, configuration);
     if (config.insertInHead) {
@@ -102,16 +100,14 @@ export class InsertCommand {
       configuration.insertVariables();
     }
 
-    const files = recursive
-      ? walk(this._directory, filePattern)
-      : [join(this._directory, config.filePattern || 'index.html')];
+    const files = walk(this._directory, config.filePattern || '**/index.html');
     this._logger.log(`Configuration will be inserted into ${files.join(', ')}`);
     if (this._dry) {
       this._logger.log(`Dry run. Nothing will be inserted.`);
-    } else if (recursive) {
-      await configuration.applyAndSaveRecursively({ filePattern });
     } else {
-      await configuration.applyAndSaveTo(join(this._directory, config.filePattern || 'index.html'));
+      for (const file of files) {
+        await configuration.applyAndSaveTo(file);
+      }
     }
   }
 
@@ -120,7 +116,7 @@ export class InsertCommand {
       const ngsscContent = await readFileAsync(this._ngsscFile, 'utf8');
       return JSON.parse(ngsscContent) as Ngssc;
     } catch (e) {
-      throw new Error(`Either missing or invalid ngssc.json in ${this._directory}\n${e}`);
+      throw new Error(`Missing or invalid ngssc.json in ${this._directory}\n${e}`);
     }
   }
 
@@ -137,7 +133,7 @@ export class InsertCommand {
   }
 
   private _logPopulatedEnvironmentVariables(source: string, variant: string, configuration: Configuration) {
-    this._logger.log(`${source} (Variant: ${variant})`);
+    this._logger.log(`Populated environment variables (Variant: ${variant}, ${source})`);
     const variables = configuration.populateVariables();
     Object
       .keys(variables)

@@ -2,7 +2,7 @@
 
 ## ApplyAndSaveRecursivelyOptions.directory property
 
-The root directory from which to search files. (Defaults to instance directory.)
+The root directory from which to search files. Defaults to instance directory.
 
 <b>Signature:</b>
 

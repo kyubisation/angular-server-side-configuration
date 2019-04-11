@@ -1,5 +1,5 @@
 import spawn from 'cross-spawn';
-import { readFile, writeFile } from 'fs';
+import { readFile, readFileSync, writeFile } from 'fs';
 import { join, resolve } from 'path';
 import { promisify } from 'util';
 
@@ -8,7 +8,6 @@ import { Ngssc } from '../models';
 import { ConfigVariables } from '../models/config-variables';
 import { VariableDetector } from '../variable-detector';
 import { VariableTokenizer } from '../variable-tokenizer';
-
 const readFileAsync = promisify(readFile);
 const writeFileAsync = promisify(writeFile);
 
@@ -20,8 +19,8 @@ export class DetectorCommand {
   private readonly _ngCommand: string[];
   private readonly _dist: string;
   private readonly _environmentFile: string;
+  private readonly _config: Ngssc;
   private readonly _htmlFilePattern: string;
-  private readonly _recursiveMatching: boolean;
   private readonly _insertInHead: boolean;
   private readonly _embedInHtml: boolean;
   private readonly _wrapAot: boolean;
@@ -32,19 +31,20 @@ export class DetectorCommand {
       dist?: string,
       environmentFile?: string,
       htmlFilePattern?: string,
-      recursiveMatching?: boolean,
-      noRecursiveMatching?: boolean,
       insertInHead?: boolean,
       embedInHtml?: boolean,
+      config?: string,
       wrapAot?: boolean,
     },
     private _logger = new Logger()) {
     this._ngCommand = options.ngCommand;
     this._dist = resolve(options.dist || 'dist');
     this._environmentFile = resolve(options.environmentFile || 'src/environments/environment.prod.ts');
-    this._htmlFilePattern = options.htmlFilePattern || 'index.html';
-    this._recursiveMatching = options.noRecursiveMatching ? false : options.recursiveMatching !== false;
-    this._insertInHead = !!options.insertInHead;
+    this._config = options.config
+      ? JSON.parse(readFileSync(resolve(options.config), 'utf8'))
+      : { variant: 'process', environmentVariables: [] };
+    this._htmlFilePattern = options.htmlFilePattern || this._config.filePattern || '**/index.html';
+    this._insertInHead = options.insertInHead !== undefined ? options.insertInHead : !!this._config.insertInHead;
     this._embedInHtml = !!options.embedInHtml;
     this._wrapAot = !!options.wrapAot;
   }
@@ -104,9 +104,9 @@ export class DetectorCommand {
       spawnedCommand.on('close', () => r());
       spawnedCommand.on('error', () => reject());
     })
-    .catch(() => {
-      throw new Error(`Command '${this._ngCommand.join(' ')}' failed`);
-    });
+      .catch(() => {
+        throw new Error(`Command '${this._ngCommand.join(' ')}' failed`);
+      });
   }
 
   private async _createNgsscJsonOrEmbedVariables(configVariables: ConfigVariables) {
@@ -118,11 +118,9 @@ export class DetectorCommand {
   }
 
   private async _embedVariables(configVariables: ConfigVariables) {
-    const htmlFiles = this._recursiveMatching
-      ? walk(this._dist, new RegExp(`${this._htmlFilePattern.replace('.', '\\.')}$`))
-      : [join(this._dist, this._htmlFilePattern)];
+    const htmlFiles = walk(this._dist, this._htmlFilePattern);
     if (!htmlFiles.length) {
-      throw new Error(`No files with name ${this._htmlFilePattern} found`);
+      throw new Error(`No files found with pattern ${this._htmlFilePattern} in ${this._dist}`);
     }
 
     this._logger.log(['Embedding config into:', ...htmlFiles].join('\n'));
@@ -155,10 +153,11 @@ export class DetectorCommand {
   private async _createNgsscJson(config: ConfigVariables) {
     const file = join(this._dist, 'ngssc.json');
     const ngssc: Ngssc = {
-      ...config,
+      ...this._config,
+      environmentVariables: [...this._config.environmentVariables, ...config.environmentVariables],
       filePattern: this._htmlFilePattern,
       insertInHead: this._insertInHead,
-      recursiveMatching: this._recursiveMatching,
+      variant: config.variant,
     };
     await writeFileAsync(file, JSON.stringify(ngssc, null, 2), 'utf8');
   }

@@ -22,26 +22,22 @@ function baseCommand(program: Command) {
     .option(
       '--environment-file',
       'The environment file in which to detect environment variables and optionally'
-      + ' tokenize when using --wrap-aot (Defaults to src/environments/environment.prod.ts)')
+      + ' tokenize when using --wrap-aot. Defaults to src/environments/environment.prod.ts')
     .option('-a, --wrap-aot', 'Tokenize variables to to retain during AoT compilation')
-    .option('--dist', 'The output path of the ng build (Defaults to dist/)')
+    .option('--dist', 'The output path of the ng build. Defaults to dist/')
     .option(
       '--html-file-pattern',
-      'The file pattern where the environment variables should be inserted (Defaults to index.html)')
-    .option(
-      '-r, --recursive-matching',
-      'Whether the file pattern for the insertion should be recursively matched (Default)')
-    .option(
-      '--no-recursive-matching',
-      'Whether the file pattern for the insertion should not be recursively matched')
+      'The file pattern where the environment variables should be inserted.'
+      + ' Supports glob patterns. Defaults to **/index.html')
     .option(
       '-h, --insert-in-head',
-      'Whether to configure to try to insert the environment variables in the head tag '
-      + '(Defaults to configure replacing <!--CONFIG-->')
+      'Whether to configure to try to insert the environment variables in the head tag. '
+      + 'Defaults to configuring replacing <!--CONFIG-->')
     .option(
       '-e, --embed-in-html',
-      'Whether to embed the ngssc information into the html file found by --html-file-pattern '
+      'Whether to embed the ngssc information into the html file(s) found by --html-file-pattern '
       + 'in --dist instead of generating ngssc.json in --dist')
+    .option('-c, --config <ngssc.json>', 'Use an existing ngssc.json file as base configuration')
     .allowUnknownOption()
     .action(
       async (...args) =>
@@ -58,7 +54,7 @@ function insertCommand(program: Command) {
     .description(
       'Insert environment variables. Looks for an ngssc.json file '
       + 'inside the current or given directory. Alternatively use the --config-in-html flag. '
-      + '(Directory defaults to current working directory)')
+      + 'Directory defaults to current working directory')
     .option(
       '-i, --config-in-html',
       'Recursively searches for html files and applies the configuration found inside')
@@ -72,15 +68,14 @@ function initCommand(program: Command) {
   program
     .command('init [directory]')
     .description(
-      'Initialize an angular project with angular-server-side-configuration '
-      + '(Directory defaults to current working directory)')
+      'Initialize an angular project with angular-server-side-configuration. '
+      + 'Directory defaults to current working directory')
     .option(
       '-ef, --environment-file',
-      'The environment file to initialize '
-      + '(Defaults to src/environments/environment.prod.ts)')
-    .option('--npm', 'Install angular-service-side-configuration via npm (Default)')
+      'The environment file to initialize. Defaults to src/environments/environment.prod.ts')
+    .option('--npm', 'Install angular-service-side-configuration via npm. Default')
     .option('--yarn', 'Install angular-service-side-configuration via yarn')
-    .option('--process-env', 'Initialize with process.env variant (Default)')
+    .option('--process-env', 'Initialize with process.env variant. Default')
     .option('--ng-env', 'Initialize with NG_ENV variant')
     .action(
       async (directory: string, options: any) =>

@@ -7,8 +7,8 @@ services:
     user: "${UID}"
     entrypoint: ["start"]
     volumes:
-      - "./pkg:/go/pkg"
-      - "./:/go/src/app"
+      - "./src/go-cli/pkg:/go/pkg"
+      - "./src/go-cli/:/go/src/app"
   test:
     image: zephinzer/golang-dev:latest
     # ports:
@@ -16,5 +16,12 @@ services:
     user: "${UID}"
     entrypoint: ["test"]
     volumes:
-      - "./pkg:/go/pkg"
-      - "./:/go/src/app"
+      - "./src/go-cli/pkg:/go/pkg"
+      - "./src/go-cli/:/go/src/app"
+  build-go:
+    image: golang
+    volumes:
+      - "./src/go-cli:/src"
+    environment:
+      - VERSION=${TRAVIS_TAG}
+    command: ["/src/build-go.sh"]

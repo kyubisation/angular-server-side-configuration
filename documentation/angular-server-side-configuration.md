@@ -31,7 +31,6 @@
 |  [ConfigVariables](./angular-server-side-configuration.configvariables.md) | Configuration variables for writing to ngssc.json or into html. |
 |  [DetectedVariables](./angular-server-side-configuration.detectedvariables.md) | Variable detection result. |
 |  [Ngssc](./angular-server-side-configuration.ngssc.md) | Model for ngssc.json. |
-|  [SearchEnvironmentVariablesOptions](./angular-server-side-configuration.searchenvironmentvariablesoptions.md) | Options for searchEnvironmentVariables. |
 |  [TokenizedVariables](./angular-server-side-configuration.tokenizedvariables.md) | Variable tokenization result. |
 
 ## Type Aliases

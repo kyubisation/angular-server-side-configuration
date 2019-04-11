@@ -39,7 +39,7 @@ describe('cli insert', () => {
 
   it('should fail due to missing ngssc.json', async () => {
     const command = new InsertCommand({ directory: root }, logger);
-    await expect(command.execute()).rejects.toThrowError(/^Either missing or invalid ngssc.json in /);
+    await expect(command.execute()).rejects.toThrowError(/^Missing or invalid ngssc.json in /);
   });
 
   it('should fail due to invalid directory', async () => {
@@ -127,7 +127,6 @@ describe('cli insert', () => {
           environmentVariables: ['VALUE'],
           filePattern: 'main.html',
           insertInHead: true,
-          recursiveMatching: false,
           variant: 'NG_ENV',
         }),
         file: join(root, 'ngssc.json'),

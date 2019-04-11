@@ -14,6 +14,5 @@ export declare class ProcessEnvConfiguration extends Configuration
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [discoverVariables(fileContent)](./angular-server-side-configuration.processenvconfiguration.discovervariables.md) |  |  |
 |  [renderIIFE(environmentVariables)](./angular-server-side-configuration.processenvconfiguration.renderiife.md) |  |  |
 

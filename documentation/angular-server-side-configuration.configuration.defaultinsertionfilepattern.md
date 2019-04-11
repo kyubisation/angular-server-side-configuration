@@ -7,5 +7,5 @@ The default pattern for files to have the environment variables inserted into.
 <b>Signature:</b>
 
 ```typescript
-readonly defaultInsertionFilePattern: RegExp;
+readonly defaultInsertionFilePattern = "**/index.html";
 ```

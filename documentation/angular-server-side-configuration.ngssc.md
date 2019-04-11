@@ -16,5 +16,4 @@ export interface Ngssc extends ConfigVariables
 |  --- | --- | --- |
 |  [filePattern](./angular-server-side-configuration.ngssc.filepattern.md) | `string` | Pattern for files that should have variables inserted. |
 |  [insertInHead](./angular-server-side-configuration.ngssc.insertinhead.md) | `boolean` | Whether to insert the variables in the head tag or try to replace &lt;<!-- -->!--CONFIG--<!-- -->&gt; |
-|  [recursiveMatching](./angular-server-side-configuration.ngssc.recursivematching.md) | `boolean` | Whether to recursively look for files matching filePattern. |
 
