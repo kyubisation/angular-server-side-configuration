@@ -17,25 +17,30 @@ steps:
 
 - script: npm i -g yarn
   displayName: Install yarn
+
 - script: npm ci
   displayName: npm ci
+
 - script: npm test -- --ci
   displayName: Jest
-- script: npm run lint
-  displayName: Linting
-- script: npm run build:node
-  displayName: Build package
-- script: npm run build:go
-  displayName: Build go cli
-
+  
 - task: PublishTestResults@2
   condition: succeededOrFailed()
   inputs:
     testRunner: JUnit
-    testResultsFiles: 'junit.xml'
+    testResultsFiles: '**/junit.xml'
 
 - task: PublishCodeCoverageResults@1
   inputs: 
     codeCoverageTool: Cobertura
     summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/*coverage.xml'
     reportDirectory: '$(System.DefaultWorkingDirectory)/**/coverage'
+    
+- script: npm run lint
+  displayName: Linting
+
+- script: npm run build:node
+  displayName: Build package
+
+- script: npm run build:go
+  displayName: Build go cli
