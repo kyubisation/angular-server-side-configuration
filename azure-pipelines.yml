@@ -44,3 +44,27 @@ steps:
 - script: npm run build:go
   displayName: Build go cli
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
+
+- script: npm pack
+  displayName: npm pack dist
+  workingDirectory: '$(System.DefaultWorkingDirectory)/dist'
+  displayName: Npm pack
+  condition: and(succeeded(), not(startsWith(variables['Build.SourceBranch'], 'refs/tags/v')))
+
+- task: Npm@1
+  displayName: Publish dist to npm
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
+  inputs:
+    command: 'publish'
+    workingDir: '$(System.DefaultWorkingDirectory)/dist'
+    publishEndpoint: 'NPM-kyubisation'
+
+– task: GitHubRelease@0
+  displayName: ‘Add go cli to GitHub release assets’
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
+  inputs: 
+    gitHubConnection: GitHub-kyubisation
+    repositoryName: kyubisation/angular-server-side-configuration
+    action: edit
+    tag: $(Build.SourceBranchName)
+    assets: $(Build.DefaultWorkingDirectory)/dist-go/* 
