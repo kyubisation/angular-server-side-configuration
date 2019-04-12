@@ -34,7 +34,6 @@ steps:
   inputs: 
     codeCoverageTool: Cobertura
     summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/*coverage.xml'
-    reportDirectory: '$(System.DefaultWorkingDirectory)/**/coverage'
     
 - script: npm run lint
   displayName: Linting
@@ -44,3 +43,4 @@ steps:
 
 - script: npm run build:go
   displayName: Build go cli
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
