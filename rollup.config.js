@@ -11,6 +11,7 @@ function copyRessources() {
     name: 'copy-ressources',
     writeBundle() {
       const packageJson = require('./package.json');
+      delete packageJson.private;
       delete packageJson.scripts;
       delete packageJson.devDependencies;
       delete packageJson.jest;

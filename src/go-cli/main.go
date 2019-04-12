@@ -13,11 +13,14 @@ import (
 	"github.com/urfave/cli"
 )
 
+// CliVersion will be injected during build
+var CliVersion string
+
 func main() {
 	ngssc := cli.NewApp()
 	ngssc.Name = "ngssc"
 	ngssc.Usage = "Angular Server Side Configuration"
-	ngssc.Version = "2.0.0-beta.1"
+	ngssc.Version = CliVersion
 
 	ngssc.Commands = []cli.Command{
 		{

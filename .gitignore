@@ -65,5 +65,9 @@ typings/
 !test/**/*.js
 *.d.ts
 .rpt2_cache
+
+# Others
 .vscode
 dist
+dist-go
+junit.xml

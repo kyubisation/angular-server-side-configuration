@@ -1,11 +1,6 @@
-FROM zephinzer/golang-dev:latest as development
-COPY . /go/src/app
-ENTRYPOINT [ "start" ]
+FROM golang:alpine
+COPY . /src
+RUN apk add upx
+RUN apk add git
 
-FROM development as build
-RUN build
-ENTRYPOINT [ "/go/src/app/app" ]
-
-FROM scratch as production
-COPY --from=build /go/src/app/app /
-ENTRYPOINT [ "/app" ]
+ENTRYPOINT [ "/src/build.sh" ]

@@ -19,9 +19,10 @@ services:
       - "./src/go-cli/pkg:/go/pkg"
       - "./src/go-cli/:/go/src/app"
   build-go:
-    image: golang
+    build: ./src/go-cli
     volumes:
       - "./src/go-cli:/src"
+      - "./dist-go:/dist"
     environment:
-      - VERSION=${TRAVIS_TAG}
-    command: ["/src/build-go.sh"]
+      - VERSION=${npm_package_version}
+    command: ["/src/build.sh"]
