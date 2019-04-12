@@ -12,7 +12,7 @@
     "ngssc": "./bin/ngssc"
   },
   "scripts": {
-    "installngc": "run-s install:*",
+    "postinstall": "run-s install:*",
     "install:ngc4": "cd ng-env/ngc4 && npm ci",
     "install:ngc7": "cd ng-env/ngc7 && npm ci",
     "clean:build": "rimraf .rpt2_cache typings",

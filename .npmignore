@@ -1,9 +1,0 @@
-.editorconfig
-.travis.yml
-rollup.config.js
-tsconfig.json
-.nyc_output
-.rpt2_cache
-coverage
-src
-test
