@@ -19,7 +19,8 @@ steps:
 - script: npm ci
 - script: npm test -- --ci
 - script: npm run lint
-- script: npm run build
+- script: npm run build:node
+- script: npm run build:go
 
 - task: PublishTestResults@2
   condition: succeededOrFailed()
