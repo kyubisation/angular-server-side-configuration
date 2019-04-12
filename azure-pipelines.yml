@@ -48,7 +48,6 @@ steps:
 - script: npm pack
   displayName: npm pack dist
   workingDirectory: '$(System.DefaultWorkingDirectory)/dist'
-  displayName: Npm pack
   condition: and(succeeded(), not(startsWith(variables['Build.SourceBranch'], 'refs/tags/v')))
 
 - task: Npm@1
@@ -59,7 +58,7 @@ steps:
     workingDir: '$(System.DefaultWorkingDirectory)/dist'
     publishEndpoint: 'NPM-kyubisation'
 
-– task: GitHubRelease@0
+- task: GitHubRelease@0
   displayName: ‘Add go cli to GitHub release assets’
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
   inputs: 
