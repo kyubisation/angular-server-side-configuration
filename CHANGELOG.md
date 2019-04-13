@@ -1,3 +1,9 @@
+# 2.0.0 (2019-04-14)
+
+### Features
+
+* Added documentation for the native cli
+
 # 2.0.0-beta.1 (2019-04-13)
 
 The detection and insertion of environment variables has been separated.
