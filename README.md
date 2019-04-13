@@ -1,7 +1,7 @@
 # angular-server-side-configuration
 
-![](https://img.shields.io/travis/kyubisation/angular-server-side-configuration/master.svg)
-![](https://img.shields.io/codeclimate/coverage/kyubisation/angular-server-side-configuration.svg)
+![](https://img.shields.io/azure-devops/build/kyubisation/894749fe-3edd-41f8-818f-ba14e6a3cc22/1/master.svg)
+![](https://img.shields.io/azure-devops/coverage/kyubisation/angular-server-side-configuration/1/master.svg)
 ![](https://img.shields.io/npm/v/angular-server-side-configuration.svg)
 ![](https://img.shields.io/npm/l/angular-server-side-configuration.svg)
 
@@ -19,10 +19,6 @@ environment variables into index.html file(s) into the head tag or by replacing 
 (Missing environment variables will be represented by null). This should be done
 on the host serving the bundled angular files.
 
-### AoT
-If you use environment variables in Module.forRoot or Module.forChild (or other AoT code sections)
-the `--wrap-aot` flag must be used with the `ngssc` command (e.g. `ngssc --wrap-aot ng build --prod`).
-
 ## Getting Started
 ```
 npm install --save angular-server-side-configuration
@@ -31,7 +27,7 @@ npm install --save angular-server-side-configuration
 ### Wrap ng build
 Wrap the `ng build` command with `ngssc` (e.g. `ngssc ng build` or `ngssc --wrap-aot ng build` 
 if AoT retention is needed). This will generate a ngssc.json file in dist (or configurable via `--dist`),
-which contains the configurations needed for `ngssc insert`. (See [ngssc](#ngssc))
+which contains the configurations needed for `ngssc insert`. (See [ngssc](#ngssc) and [ngssc.json](#ngssc.json))
 
 `package.json`
 ```json
@@ -58,6 +54,15 @@ wrap the different `ng build` scripts.
   }
 ...
 ```
+
+This will create an ngssc.json in you dist directory (configurable via --dist, e.g. `ngssc --dist ng build --prod`)
+or embed the configuration in the html files in the dist directory. You can pass an existing ngssc.json file
+to the command via --config (e.g. `ngssc --config ngssc.json`).
+
+
+#### AoT
+If you use environment variables in Module.forRoot or Module.forChild (or other AoT code sections)
+the `--wrap-aot` flag must be used with the `ngssc` command (e.g. `ngssc --wrap-aot ng build --prod`).
 
 ### environment.prod.ts
 angular-server-side-configuration supports two variants for using environment variables: process.env.* or NG_ENV.*  
@@ -168,6 +173,20 @@ Initialize an angular project with angular-server-side-configuration (Directory 
 | `--process-env`           | Initialize with process.env variant. Default |
 | `--ng-env`                | Initialize with NG_ENV variant |
 | `-h, --help`              | output usage information |
+
+### ngssc.json
+
+```json
+{
+  "variant": "process",           // Either "process" or "NG_ENV".
+  "environmentVariables": [],     // Detected environment variables. Will be appended if used with an existing ngssc.json.
+  "filePattern": "**/index.html", // File pattern in which environment variables should be inserted. Can be configured
+                                  // via --html-file-pattern. Also used if --embed-in-html is used.
+  "insertInHead": false           // By default the CLI replaces <!--CONFIG--> in your html files during the insert command.
+                                  // If insertInHead is set to true, the insert command tries to insert the environment
+                                  // variables in the head tag, by looking for </title> or </head>.
+}
+```
 
 ## API Documentation
 
