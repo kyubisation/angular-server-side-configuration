@@ -179,12 +179,15 @@ Initialize an angular project with angular-server-side-configuration (Directory 
 ```javascript
 {
   "variant": "process",           // Either "process" or "NG_ENV".
-  "environmentVariables": [],     // Detected environment variables. Will be appended if used with an existing ngssc.json.
-  "filePattern": "**/index.html", // File pattern in which environment variables should be inserted. Can be configured
-                                  // via --html-file-pattern. Also used if --embed-in-html is used.
-  "insertInHead": false           // By default the CLI replaces <!--CONFIG--> in your html files during the insert command.
-                                  // If insertInHead is set to true, the insert command tries to insert the environment
-                                  // variables in the head tag, by looking for </title> or </head>.
+  "environmentVariables": [],     // Detected environment variables.
+                                  // Will be merged if used with an existing ngssc.json.
+  "filePattern": "**/index.html", // File pattern in which environment variables should be inserted.
+                                  // Can be configured via --html-file-pattern. Also used if
+                                  // --embed-in-html is used.
+  "insertInHead": false           // By default the CLI replaces <!--CONFIG--> in your html files during
+                                  // the insert command. If insertInHead is set to true, the insert
+                                  // command tries to insert the environment variables in the head tag,
+                                  // by looking for </title> or </head>.
 }
 ```
 
