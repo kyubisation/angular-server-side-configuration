@@ -124,6 +124,35 @@ npm install -g angular-server-side-configuration
 ngssc insert /path/to/ngssc.json/file
 ```
 
+#### Native CLI
+This library provides a native implementation for the `insert` command of the CLI. Go to
+[Releases](https://github.com/kyubisation/angular-server-side-configuration/releases) and download the appropriate
+executable for your server environment.
+(See [build.sh](https://github.com/kyubisation/angular-server-side-configuration/blob/master/src/go-cli/build.sh) for
+build details of the native CLI. Please open an [Issue](https://github.com/kyubisation/angular-server-side-configuration/issues/new)
+if you need an additional environment.)
+
+Thanks to [DanielHabenicht](https://github.com/DanielHabenicht) for the input and contribution.
+
+##### Minimal Example
+Dockerfile
+```Dockerfile
+FROM nginx:alpine
+ADD https://github.com/kyubisation/angular-server-side-configuration/releases/download/v2.0.0/ngssc_64bit /usr/sbin/ngssc
+RUN chmod +x /usr/sbin/ngssc
+COPY dist /usr/share/nginx/html
+COPY start.sh start.sh
+RUN chmod +x ./start.sh
+CMD ["./start.sh"]
+```
+
+start.sh
+```bash
+#!/bin/sh
+ngssc insert /usr/share/nginx/html
+nginx -g 'daemon off;'
+```
+
 ## CLI
 angular-server-side-configuration provides a CLI.
 

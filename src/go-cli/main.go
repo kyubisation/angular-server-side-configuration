@@ -77,7 +77,7 @@ func insertCommand(c *cli.Context) error {
 	// Change working directory if an argument has been passed
 	if c.NArg() > 0 {
 		workingDirectory := c.Args()[0]
-		fmt.Printf("Changing working directory to %v", workingDirectory)
+		fmt.Printf("Changing working directory to %v\n", workingDirectory)
 		err := os.Chdir(workingDirectory)
 		if err != nil {
 			return cli.NewExitError(err, 1)
@@ -108,7 +108,7 @@ func configureHTMLFiles(dryRun bool) error {
 		if err != nil {
 			return err
 		}
-		fmt.Printf("No html files found in %v", cwd)
+		fmt.Printf("No html files found in %v\n", cwd)
 		return nil
 	}
 
@@ -124,7 +124,7 @@ func configureHTMLFiles(dryRun bool) error {
 			if matches != nil && len(matches) > 1 {
 				applyHTMLConfiguration(htmlFile, matches[1], dryRun)
 			} else {
-				fmt.Printf("No configuration found in %v", htmlFile)
+				fmt.Printf("No configuration found in %v\n", htmlFile)
 			}
 		}
 	}
@@ -136,14 +136,14 @@ func applyHTMLConfiguration(htmlFile string, match string, dryRun bool) {
 	var ngssc NgsscHTML
 	err := json.Unmarshal([]byte(match), &ngssc)
 	if err != nil {
-		fmt.Printf("Invalid configuration in %v", htmlFile)
+		fmt.Printf("Invalid configuration in %v\n", htmlFile)
 		return
 	}
 
 	iifeScript := generateIifeScript(ngssc, htmlFile)
 	err = insertIifeIntoHTML(htmlFile, iifeScript, false)
 	if err != nil {
-		fmt.Printf("Failed to update %v", htmlFile)
+		fmt.Printf("Failed to update %v\n", htmlFile)
 		return
 	}
 }
@@ -163,11 +163,11 @@ func configureWithNgssc(dryRun bool) error {
 	if err != nil {
 		return err
 	} else if files == nil {
-		fmt.Printf("No files found with pattern %v", ngssc.FilePattern)
+		fmt.Printf("No files found with pattern %v\n", ngssc.FilePattern)
 		return nil
 	}
 
-	fmt.Printf("Configuration will be inserted into %v", strings.Join(files[:], ", "))
+	fmt.Printf("Configuration will be inserted into %v\n", strings.Join(files[:], ", "))
 	if dryRun {
 		fmt.Println("Dry run. Nothing will be inserted.")
 	} else {
@@ -182,13 +182,13 @@ func configureWithNgssc(dryRun bool) error {
 func readNgsscJSON(path string) (ngssc *NgsscJSON, err error) {
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
-		fmt.Printf("Failed to read %v", path)
+		fmt.Printf("Failed to read %v\n", path)
 		return nil, err
 	}
 
 	err = json.Unmarshal(data, &ngssc)
 	if err != nil {
-		fmt.Printf("Failed to parse %v", path)
+		fmt.Printf("Failed to parse %v\n", path)
 		return nil, err
 	} else if ngssc == nil || ngssc.EnvironmentVariables == nil || (ngssc.Variant != "process" && ngssc.Variant != "NG_ENV") {
 		return nil, fmt.Errorf("Invalid ngssc.json at %v", path)
@@ -243,7 +243,7 @@ func logPopulatedEnvironmentVariables(source string, variant string, envMap map[
 	fmt.Printf("Populated environment variables (Variant: %v, %v)\n", variant, source)
 	for key, value := range envMap {
 		if value != nil {
-			fmt.Printf("  %v: %v\n", key, value)
+			fmt.Printf("  %v: %v\n", key, *value)
 		} else {
 			fmt.Printf("  %v: %v\n", key, "null")
 		}
@@ -253,7 +253,7 @@ func logPopulatedEnvironmentVariables(source string, variant string, envMap map[
 func insertIifeIntoHTML(htmlFile string, iifeScript string, insertInHead bool) error {
 	htmlBytes, err := ioutil.ReadFile(htmlFile)
 	if err != nil {
-		fmt.Printf("Failed to read %v", htmlFile)
+		fmt.Printf("Failed to read %v\n", htmlFile)
 		return err
 	}
 
@@ -270,7 +270,7 @@ func insertIifeIntoHTML(htmlFile string, iifeScript string, insertInHead bool) e
 
 	err = ioutil.WriteFile(htmlFile, []byte(newHTML), 0644)
 	if err != nil {
-		fmt.Printf("Failed to update %v", htmlFile)
+		fmt.Printf("Failed to update %v\n", htmlFile)
 		return err
 	}
 
