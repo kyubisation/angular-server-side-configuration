@@ -27,7 +27,7 @@ npm install --save angular-server-side-configuration
 ### Wrap ng build
 Wrap the `ng build` command with `ngssc` (e.g. `ngssc ng build` or `ngssc --wrap-aot ng build` 
 if AoT retention is needed). This will generate a ngssc.json file in dist (or configurable via `--dist`),
-which contains the configurations needed for `ngssc insert`. (See [ngssc](#ngssc) and [ngssc.json](#ngssc.json))
+which contains the configurations needed for `ngssc insert`. (See [ngssc](#ngssc) and [ngssc.json](#ngsscjson))
 
 `package.json`
 ```json
@@ -176,7 +176,7 @@ Initialize an angular project with angular-server-side-configuration (Directory 
 
 ### ngssc.json
 
-```json
+```javascript
 {
   "variant": "process",           // Either "process" or "NG_ENV".
   "environmentVariables": [],     // Detected environment variables. Will be appended if used with an existing ngssc.json.
