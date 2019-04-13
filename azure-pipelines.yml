@@ -58,12 +58,18 @@ steps:
     workingDir: '$(System.DefaultWorkingDirectory)/dist'
     publishEndpoint: 'NPM-kyubisation'
 
+- task: CopyFiles@2
+  displayName: Prepare go cli files
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
+  inputs:
+    sourceFolder: $(Build.DefaultWorkingDirectory)/dist-go
+    targetFolder: $(Build.ArtifactStagingDirectory)
+
 - task: GitHubRelease@0
-  displayName: ‘Add go cli to GitHub release assets’
+  displayName: Add go cli to GitHub release assets
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
   inputs: 
     gitHubConnection: GitHub-kyubisation
     repositoryName: kyubisation/angular-server-side-configuration
     action: edit
     tag: $(Build.SourceBranchName)
-    assets: $(Build.DefaultWorkingDirectory)/dist-go/* 
