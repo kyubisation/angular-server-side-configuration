@@ -26,7 +26,7 @@
     "build:go": "docker-compose run build-go",
     "build": "run-p build:*",
     "pretest": "npm run clean",
-    "test:node": "jest -i",
+    "test:node": "jest -i --ci",
     "test:go": "cd src/go-cli && go build && go test",
     "test": "run-s test:*",
     "lint": "tslint -p tsconfig.json"
