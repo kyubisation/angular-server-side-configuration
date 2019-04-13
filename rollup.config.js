@@ -33,7 +33,7 @@ export default {
     commonjs(),
     typescript({ useTsconfigDeclarationDir: true }),
     copy([
-      { files: ['README.md', 'process/*'], dest: 'dist' },
+      { files: ['README.md', 'LICENSE', 'ngssc.schema.json', 'process/*'], dest: 'dist' },
       { files: ['bin/ngssc'], dest: 'dist/bin' },
     ]),
     copyRessources(),

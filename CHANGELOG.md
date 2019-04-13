@@ -1,3 +1,19 @@
+# 2.0.0-beta.1 (2019-04-13)
+
+The detection and insertion of environment variables has been separated.
+Detection is now executed at build time by wrapping the ng build command (e.g. `ngssc ng build`).
+This will generate an ngssc.json file, which can be used by the `ngssc insert` command.
+See the README for more information.
+
+### Features
+
+* New command `ngssc` for detecting environment variable usage
+
+### Breaking Changes
+
+* The `ngssc wrap-aot` has been merged into the `ngssc` command as an optional flag `--wrap-aot`.
+* The `ngssc insert` command requires an ngssc.json file or embedded configuration in the html files.
+
 # 2.0.0-beta.0 (2019-03-10)
 
 ### Features

@@ -176,8 +176,11 @@ Initialize an angular project with angular-server-side-configuration (Directory 
 
 ### ngssc.json
 
+The package provides a JSON schema: `ngssc.schema.json",`
+
 ```javascript
 {
+  "$schema": "./node_modules/angular-server-side-configuration/ngssc.schema.json", // Optional
   "variant": "process",           // Either "process" or "NG_ENV".
   "environmentVariables": [],     // Detected environment variables.
                                   // Will be merged if used with an existing ngssc.json.
