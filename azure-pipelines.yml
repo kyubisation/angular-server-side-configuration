@@ -64,7 +64,7 @@ steps:
   displayName: Prepare go cli files
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
   inputs:
-    sourceFolder: $(Build.DefaultWorkingDirectory)/dist-go
+    sourceFolder: dist-go
     targetFolder: $(Build.ArtifactStagingDirectory)
 
 - task: GitHubRelease@0

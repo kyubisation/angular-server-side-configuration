@@ -1,6 +1,6 @@
 {
   "name": "angular-server-side-configuration",
-  "version": "2.0.0-beta.2",
+  "version": "2.0.0-beta.3",
   "description": "Configure an angular application on the server",
   "main": "./main.js",
   "module": "./index.js",
