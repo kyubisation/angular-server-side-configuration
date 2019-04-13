@@ -1,6 +1,6 @@
 {
   "name": "angular-server-side-configuration",
-  "version": "2.0.0-beta.0",
+  "version": "2.0.0-beta.1",
   "description": "Configure an angular application on the server",
   "main": "./main.js",
   "module": "./index.js",
@@ -12,17 +12,26 @@
     "ngssc": "./bin/ngssc"
   },
   "scripts": {
-    "clean:build": "rimraf .rpt2_cache dist typings",
-    "clean": "npm run clean:build && rimraf coverage index.d.ts index.js main.js",
-    "build:rollup": "rollup -c rollup.config.js",
-    "build:typings": "api-extractor run",
-    "build:docs": "api-documenter markdown --input-folder dist --output-folder documentation",
-    "build": "npm run clean && npm run build:rollup && npm run build:typings && npm run build:docs && npm run clean:build",
+    "postinstall": "run-s install:*",
+    "install:ngc4": "cd ng-env/ngc4 && npm ci",
+    "install:ngc7": "cd ng-env/ngc7 && npm ci",
+    "clean:build": "rimraf .rpt2_cache typings",
+    "clean": "npm run clean:build && rimraf coverage dist junit.xml",
+    "build:node:rollup": "rollup -c rollup.config.js",
+    "build:node:typings": "api-extractor run",
+    "build:node:ngc4": "cd ng-env/ngc4 && npm run build",
+    "build:node:ngc7": "cd ng-env/ngc7 && npm run build",
+    "build:node:docs": "api-documenter markdown --input-folder dist --output-folder documentation",
+    "build:node": "npm run clean && run-s build:node:* && npm run clean:build",
+    "build:go": "docker-compose run build-go",
+    "build": "run-p build:*",
     "pretest": "npm run clean",
-    "test": "jest -i",
-    "lint": "tslint -p tsconfig.json",
-    "prepack": "npm run build"
+    "test:node": "jest -i --ci",
+    "test:go": "cd src/go-cli && go build && go test",
+    "test": "run-s test:*",
+    "lint": "tslint -p tsconfig.json"
   },
+  "private": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kyubisation/angular-server-side-configuration.git"
@@ -43,34 +52,48 @@
   },
   "homepage": "https://github.com/kyubisation/angular-server-side-configuration#readme",
   "devDependencies": {
-    "@microsoft/api-documenter": "^7.0.30",
-    "@microsoft/api-extractor": "^7.0.23",
+    "@microsoft/api-documenter": "^7.0.51",
+    "@microsoft/api-extractor": "^7.0.42",
     "@types/cross-spawn": "^6.0.0",
+    "@types/glob-to-regexp": "^0.4.0",
     "@types/jest": "^24.0.11",
-    "@types/node": "^10.12.30",
+    "@types/node": "^10.14.4",
     "@types/rimraf": "^2.0.2",
-    "commander": "^2.19.0",
+    "commander": "^2.20.0",
     "cross-spawn": "^6.0.5",
-    "jest": "^24.3.1",
+    "glob-to-regexp": "^0.4.1",
+    "jest": "^24.7.1",
+    "jest-junit": "^6.3.0",
+    "npm-run-all": "^4.1.5",
     "rimraf": "^2.6.3",
-    "rollup": "^1.6.0",
-    "rollup-plugin-commonjs": "^9.2.1",
-    "rollup-plugin-json": "^3.1.0",
-    "rollup-plugin-node-resolve": "^4.0.1",
-    "rollup-plugin-typescript2": "^0.19.3",
-    "ts-jest": "^24.0.0",
+    "rollup": "^1.10.0",
+    "rollup-plugin-commonjs": "^9.3.4",
+    "rollup-plugin-cpy": "^1.1.0",
+    "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-node-resolve": "^4.2.3",
+    "rollup-plugin-typescript2": "^0.20.1",
+    "ts-jest": "^24.0.2",
     "ts-node": "^8.0.3",
-    "tslint": "^5.13.1",
-    "typescript": "^3.3.3333"
+    "tslint": "^5.15.0",
+    "typescript": "^3.4.3"
   },
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node",
+    "reporters": [
+      "default",
+      "jest-junit"
+    ],
     "collectCoverage": true,
     "collectCoverageFrom": [
       "src/**/*.ts",
       "!src/**/*.spec.ts",
-      "!src/**/index.ts"
+      "!src/**/index.ts",
+      "!src/cli/cli.ts"
+    ],
+    "coverageReporters": [
+      "cobertura",
+      "html"
     ],
     "coverageDirectory": "coverage",
     "coverageThreshold": {
@@ -80,6 +103,10 @@
         "lines": 100,
         "statements": 100
       }
-    }
+    },
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/cli/cli.ts"
+    ]
   }
 }

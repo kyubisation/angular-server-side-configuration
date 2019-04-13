@@ -2,27 +2,28 @@ import { execSync } from 'child_process';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { EOL } from 'os';
 import { join, relative, resolve } from 'path';
-import { CommandBase } from './command-base';
+
+import { Logger } from '../common';
 
 /**
  * The init command to initialize a project with angular-server-side-configuration.
- * 
  * @public
  */
-export class InitCommand extends CommandBase {
+export class InitCommand {
   private _packagePath: string;
   private _environmentFile: string;
   private _directory: string;
 
-  constructor(private _options: {
-    directory?: string,
-    environmentFile?: string,
-    npm?: boolean,
-    yarn?: boolean,
-    processEnv?: boolean,
-    ngEnv?: boolean,
-  }) {
-    super('Initialize Configuration');
+  constructor(
+    private _options: {
+      directory?: string,
+      environmentFile?: string,
+      npm?: boolean,
+      yarn?: boolean,
+      processEnv?: boolean,
+      ngEnv?: boolean,
+    },
+    private _logger = new Logger()) {
     this._directory = this._options.directory ? resolve(this._options.directory) : process.cwd();
     this._packagePath = join(this._directory, 'package.json');
     this._environmentFile = this._options.environmentFile
@@ -30,7 +31,8 @@ export class InitCommand extends CommandBase {
       : join(this._directory, 'src', 'environments', 'environment.prod.ts');
   }
 
-  protected async _execute() {
+  async execute() {
+    this._logger.log('ngssc: Initialize Configuration');
     this._validateOptions();
     this._initEnvironmentFile();
     this._installPackage();
@@ -51,17 +53,17 @@ export class InitCommand extends CommandBase {
   private _initEnvironmentFile() {
     const content = readFileSync(this._environmentFile, 'utf8');
     if (content.includes('angular-server-side-configuration')) {
-      this._log(
+      this._logger.log(
         `Skipping initialization of ${relative(this._directory, this._environmentFile)}, since `
         + '\'angular-server-side-configuration\' is already being imported');
       return;
     }
 
     const importExpression = this._options.ngEnv
-      ? `{ NG_ENV } from 'angular-server-side-configuration/ng-env'`
-      : `'angular-server-side-configuration/process'`;
+      ? `import { NG_ENV } from 'angular-server-side-configuration/ng-env';`
+      : `import 'angular-server-side-configuration/process';`;
     const variant = this._options.ngEnv ? 'NG_ENV' : 'process.env';
-    const newContent = `import ${importExpression};
+    const newContent = `${importExpression}
 
 /**
  * How to use angular-server-side-configuration:
@@ -81,15 +83,15 @@ export class InitCommand extends CommandBase {
 ${content}`
       .replace(/\r\n|\r|\n/g, EOL);
     writeFileSync(this._environmentFile, newContent, 'utf8');
-    this._log(`Initialized ${relative(this._directory, this._environmentFile)}`);
+    this._logger.log(`Initialized ${relative(this._directory, this._environmentFile)}`);
   }
 
   private _installPackage() {
     const command = this._options.yarn
       ? 'yarn add angular-server-side-configuration@latest'
       : 'npm install angular-server-side-configuration@latest --save';
-    this._log(command);
+    this._logger.log(command);
     execSync(command, { cwd: this._directory });
-    this._log('Finished installing package');
+    this._logger.log('Finished installing package');
   }
 }

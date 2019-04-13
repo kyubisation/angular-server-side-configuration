@@ -1,11 +1,14 @@
 import { join } from 'path';
+
 import { indexHtmlContent, temporaryFile, temporaryFiles } from '../test/temporary-fs';
+
 import { Configuration } from './configuration';
 
 describe('Configuration', () => {
+  // tslint:disable-next-line: no-console
   console.log = () => void 0;
   const root = join(__dirname, '..', 'test', 'environment-variables-configuration');
-  
+
   class MockConfiguration extends Configuration {
     protected discoverVariables(fileContent: string): string[] {
       throw new Error('Method not implemented.');
@@ -14,24 +17,6 @@ describe('Configuration', () => {
       return '1dZ5dzWGBV7Z0bdRpBUcQlrij0PqdC3lYBqY90ZZWacLIztxUV';
     }
   }
-
-  it('should throw on missing directory', () => {
-    const missingDirectory = join(root, 'missing-directory');
-    const config = new MockConfiguration()
-      .setDirectory(missingDirectory);
-    expect(() => config.searchEnvironmentVariables())
-      .toThrow(/no such file or directory/);
-  });
-
-  it('should throw on invalid directory', async () => {
-    const invalidDirectory = join(root, 'index.html');
-    const config = new MockConfiguration()
-      .setDirectory(invalidDirectory);
-    await temporaryFile({ file: invalidDirectory, content: indexHtmlContent }, async () => {
-      expect(() => config.searchEnvironmentVariables())
-        .toThrow(/is not a valid directory!/);
-    });
-  });
 
   it('should populate variables from process.env', () => {
     const expected = {

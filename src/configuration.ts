@@ -1,14 +1,14 @@
-import { lstatSync, readFile, readFileSync, writeFile } from 'fs';
+import { readFile, writeFile } from 'fs';
 import { promisify } from 'util';
-import { ApplyAndSaveRecursivelyOptions } from './apply-and-save-recursively-options';
-import { walk } from './common/index';
-import { SearchEnvironmentVariablesOptions } from './search-environment-variables-options';
+
+import { walk } from './common';
+import { ApplyAndSaveRecursivelyOptions } from './models';
+
 const readFileAsync = promisify(readFile);
 const writeFileAsync = promisify(writeFile);
 
 /**
  * Discover and apply configuration.
- * 
  * @public
  */
 export abstract class Configuration {
@@ -21,12 +21,12 @@ export abstract class Configuration {
   /**
    * The default pattern for files to have the environment variables inserted into.
    */
-  readonly defaultInsertionFilePattern = /index.html$/;
+  readonly defaultInsertionFilePattern = '**/index.html';
 
   /**
    * An array of replacement functions.
    */
-  readonly replacements: Array<(fileContent: string, fileName: string) => string> = []
+  readonly replacements: Array<(fileContent: string, fileName: string) => string> = [];
 
   /**
    * @param variables - Optional array of environment variable names to populate.
@@ -41,30 +41,6 @@ export abstract class Configuration {
    */
   setDirectory(directory: string) {
     this.directory = directory;
-    return this;
-  }
-
-  /**
-   * Searches for environment variable declarations in
-   * files matched by file pattern, starting from given directory.
-   *
-   * @param options - Options for searching environment variables.
-   * @returns This instance.
-   */
-  searchEnvironmentVariables(options: SearchEnvironmentVariablesOptions = {}) {
-    const directory = options.directory || this.directory;
-    const filePattern = options.filePattern || /.js$/;
-    const stat = lstatSync(directory);
-    if (!stat.isDirectory()) {
-      throw new Error(`${directory} is not a valid directory!`);
-    }
-
-    walk(directory, filePattern)
-      .map(f => readFileSync(f, 'utf8'))
-      .map(f => this.discoverVariables(f))
-      .reduce((current, next) => current.concat(next), [])
-      .filter((v, i, a) => a.indexOf(v) === i)
-      .forEach(e => this.variables.push(e));
     return this;
   }
 
@@ -208,13 +184,6 @@ export abstract class Configuration {
         (current, next) => ({ ...current, [next]: resolveEnvironmentVariable(next) }),
         {} as { [variable: string]: any });
   }
-
-  /**
-   * Search for variables in the received file content. Should return an array of found
-   * variable names.
-   * @param fileContent - The file content that should be searched.
-   */
-  protected abstract discoverVariables(fileContent: string): string[];
 
   /**
    * Render the IIFE

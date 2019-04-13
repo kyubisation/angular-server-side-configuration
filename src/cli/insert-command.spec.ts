@@ -1,63 +1,154 @@
 
+import { randomBytes } from 'crypto';
+import { mkdirSync } from 'fs';
+import { tmpdir } from 'os';
 import { join } from 'path';
-import { indexHtmlContent, temporaryFile } from '../../test/temporary-fs';
-import { Configuration } from '../configuration';
+import rimraf from 'rimraf';
+
+import { MockLogger } from '../../test/mock-logger';
+import {
+  indexHtmlContent,
+  indexHtmlContentWithInlineConfig,
+  indexHtmlContentWithInvalidInlineConfig,
+  indexHtmlContentWithoutConfig,
+  temporaryFile,
+  temporaryFiles,
+} from '../../test/temporary-fs';
+import { NgEnvConfiguration } from '../ng-env-configuration';
+import { ProcessEnvConfiguration } from '../process-env-configuration';
+
 import { InsertCommand } from './insert-command';
 
 describe('cli insert', () => {
-  console.log = () => void 0;
-  const root = join(__dirname, '..', '..', 'test', 'environment-variables-configuration');
+  const logger = new MockLogger();
+  let root: string;
 
-  it('should have no variables, when nothing is provided and search is disabled', async () => {
-    const command = new InsertCommand({ dry: true, directory: root });
-    const envVariables: Configuration = (command as any)._configuration;
-    await command.execute();
-    expect(envVariables.variables.length).toEqual(0);
+  beforeEach(() => {
+    root = join(tmpdir(), randomBytes(20).toString('hex'));
+    mkdirSync(root);
   });
 
-  it('should have environment variables from command line', async () => {
-    const env = ['ASDF', 'QWER'];
-    const command = new InsertCommand({ dry: true, directory: root, env });
-    const envVariables: Configuration = (command as any)._configuration;
-    await command.execute();
-    expect(envVariables.variables).toEqual(env);
+  afterEach(() => {
+    rimraf.sync(root);
   });
 
-  it('should find environment variables, when searching', async () => {
-    const command = new InsertCommand({ dry: true, directory: root, search: true });
-    const envVariables: Configuration = (command as any)._configuration;
-    await command.execute();
-    expect(envVariables.variables).toEqual(['TEST', 'TEST2']);
+  it('should instantiate', () => {
+    // tslint:disable-next-line: no-unused-expression
+    new InsertCommand({ directory: root });
   });
 
-  it('should be able to configure replacement', async () => {
-    const configs = [{ placeholder: 'test' }, { head: true }].map(async config => {
-      const command = new InsertCommand({ dry: true, directory: root, ...config});
-      const envVariables: Configuration = (command as any)._configuration;
-      await command.execute();
-      expect(envVariables.replacements.length).toEqual(1);
-    });
-    await Promise.all(configs);
+  it('should fail due to missing ngssc.json', async () => {
+    const command = new InsertCommand({ directory: root }, logger);
+    await expect(command.execute()).rejects.toThrowError(/^Missing or invalid ngssc.json in /);
   });
 
-  it('should insert environment variables', async () => {
-    const command = new InsertCommand({ directory: root, search: true });
-    const envVariables: Configuration = (command as any)._configuration;
-    const fileContent = await temporaryFile(
-      { file: join(root, 'index.html'), content: indexHtmlContent },
+  it('should fail due to invalid directory', async () => {
+    for (const directory of [join(root, 'directory-does-not-exist'), __filename]) {
+      const command = new InsertCommand({ directory }, logger);
+      await expect(command.execute()).rejects.toThrowError(/ is not a valid directory!/);
+    }
+  });
+
+  it('should fail due to invalid variant', async () => {
+    await temporaryFile(
+      { content: JSON.stringify({ variant: 'FAILED' }), file: join(root, 'ngssc.json') },
       async () => {
+        const command = new InsertCommand({ directory: root }, logger);
+        await expect(command.execute()).rejects.toThrowError(/^Invalid variant /);
+      });
+  });
+
+  it('should do nothing on no html files with --config-in-html', async () => {
+    const command = new InsertCommand({ directory: root, configInHtml: true }, logger);
+    await command.execute();
+  });
+
+  it('should do nothing with html files with missing or invalid configuration with --config-in-html', async () => {
+    const [htmlContent, htmlContent2] = await temporaryFiles([
+      { file: join(root, 'index.html'), content: indexHtmlContent },
+      { file: join(root, 'index2.html'), content: indexHtmlContentWithInvalidInlineConfig },
+    ],
+      async () => {
+        const command = new InsertCommand({ directory: root, configInHtml: true }, logger);
         await command.execute();
       });
-    expect(fileContent).toContain(envVariables.generateIIFE());
+    expect(htmlContent).toContain('<!--CONFIG-->');
+    expect(htmlContent2).toContain('<!--CONFIG {"broken json","environmentVariables":["VALUE"]}-->');
   });
 
-  it('should throw, when --placeholder and --head is provided', async () => {
-    const command = new InsertCommand({ placeholder: 'test', head: true });
-    await expect(command.execute()).rejects.toBeInstanceOf(Error);
+  it('should configure html with --config-in-html', async () => {
+    const htmlContent = await temporaryFile(
+      { file: join(root, 'index.html'), content: indexHtmlContentWithInlineConfig },
+      async () => {
+        const command = new InsertCommand({ directory: root, configInHtml: true }, logger);
+        await command.execute();
+      });
+    expect(htmlContent).toContain(new ProcessEnvConfiguration(['VALUE']).generateIIFE());
   });
 
-  it('should fail due to using both process-env and ng-env', async () => {
-    const command = new InsertCommand({ directory: root, processEnv: true, ngEnv: true });
-    await expect(command.execute()).rejects.toBeInstanceOf(Error);
+  it('should configure files with ngssc.json', async () => {
+    const [htmlContent] = await temporaryFiles([
+      { file: join(root, 'index.html'), content: indexHtmlContent },
+      {
+        content: JSON.stringify({ variant: 'NG_ENV', environmentVariables: ['VALUE'] }),
+        file: join(root, 'ngssc.json'),
+      },
+    ], async () => {
+      const command = new InsertCommand({ directory: root }, logger);
+      await command.execute();
+    });
+    expect(htmlContent).toContain(new NgEnvConfiguration(['VALUE']).generateIIFE());
+  });
+
+  it('should configure non-recursively with ngssc.json', async () => {
+    const [htmlContent] = await temporaryFiles([
+      { file: join(root, 'index.html'), content: indexHtmlContentWithoutConfig },
+      {
+        content: JSON.stringify({
+          environmentVariables: ['VALUE'],
+          insertInHead: true,
+          recursiveMatching: false,
+          variant: 'NG_ENV',
+        }),
+        file: join(root, 'ngssc.json'),
+      },
+    ], async () => {
+      const command = new InsertCommand({ directory: root }, logger);
+      await command.execute();
+    });
+    expect(htmlContent).toContain(new NgEnvConfiguration(['VALUE']).generateIIFE());
+  });
+
+  it('should configure non-recursively with ngssc.json with file pattern', async () => {
+    const [htmlContent] = await temporaryFiles([
+      { file: join(root, 'main.html'), content: indexHtmlContentWithoutConfig },
+      {
+        content: JSON.stringify({
+          environmentVariables: ['VALUE'],
+          filePattern: 'main.html',
+          insertInHead: true,
+          variant: 'NG_ENV',
+        }),
+        file: join(root, 'ngssc.json'),
+      },
+    ], async () => {
+      const command = new InsertCommand({ directory: root }, logger);
+      await command.execute();
+    });
+    expect(htmlContent).toContain(new NgEnvConfiguration(['VALUE']).generateIIFE());
+  });
+
+  it('should do nothing with dry run and with ngssc.json', async () => {
+    const [htmlContent] = await temporaryFiles([
+      { file: join(root, 'index.html'), content: indexHtmlContent },
+      {
+        content: JSON.stringify({ variant: 'NG_ENV', environmentVariables: ['VALUE'] }),
+        file: join(root, 'ngssc.json'),
+      },
+    ], async () => {
+      const command = new InsertCommand({ directory: root, dry: true }, logger);
+      await command.execute();
+    });
+    expect(htmlContent).toBe(indexHtmlContent);
   });
 });

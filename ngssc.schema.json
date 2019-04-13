@@ -1,0 +1,57 @@
+{
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/kyubisation/angular-server-side-configuration/blob/master/ngssc.schema.json",
+  "type": "object",
+  "title": "The Ngssc Schema",
+  "required": [
+    "variant",
+    "environmentVariables"
+  ],
+  "properties": {
+    "variant": {
+      "$id": "#/properties/variant",
+      "type": "string",
+      "title": "The Variant Schema",
+      "default": "",
+      "examples": [
+        "process"
+      ],
+      "pattern": "^(process|NG_ENV)$"
+    },
+    "environmentVariables": {
+      "$id": "#/properties/environmentVariables",
+      "type": "array",
+      "title": "The Environmentvariables Schema",
+      "items": {
+        "$id": "#/properties/environmentVariables/items",
+        "type": "string",
+        "title": "The Items Schema",
+        "default": "",
+        "examples": [
+          "TEST_VALUE"
+        ],
+        "pattern": "^([\\w_]*)$"
+      }
+    },
+    "filePattern": {
+      "$id": "#/properties/filePattern",
+      "type": "string",
+      "title": "The Filepattern Schema",
+      "default": "",
+      "examples": [
+        "**/index.html"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "insertInHead": {
+      "$id": "#/properties/insertInHead",
+      "type": "boolean",
+      "title": "The Insertinhead Schema",
+      "default": false,
+      "examples": [
+        false
+      ]
+    }
+  }
+}

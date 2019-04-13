@@ -1,0 +1,26 @@
+version: "3.5"
+services:
+  start:
+    image: zephinzer/golang-dev:latest
+    ports:
+      - "2345:2345"
+    user: "${UID}"
+    entrypoint: ["start"]
+    volumes:
+      - "./src/go-cli/pkg:/go/pkg"
+      - "./src/go-cli/:/go/src/app"
+  test:
+    image: zephinzer/golang-dev:latest
+    user: "${UID}"
+    entrypoint: ["test"]
+    volumes:
+      - "./src/go-cli/pkg:/go/pkg"
+      - "./src/go-cli/:/go/src/app"
+  build-go:
+    build: ./src/go-cli
+    volumes:
+      - "./src/go-cli:/src"
+      - "./dist-go:/dist"
+    environment:
+      - VERSION=${npm_package_version}
+    command: ["/src/build.sh"]
