@@ -10,6 +10,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/bmatcuk/doublestar"
 	"github.com/urfave/cli"
 )
 
@@ -73,19 +74,23 @@ func insertCommand(c *cli.Context) error {
 		fmt.Println("DRY RUN! Files will not be changed!")
 	}
 
-	// Use Root if not Path is set for Searching Files
-	root := "./"
+	// Change working directory if an argument has been passed
 	if c.NArg() > 0 {
-		root = c.Args()[0]
+		workingDirectory := c.Args()[0]
+		fmt.Printf("Changing working directory to %v", workingDirectory)
+		err := os.Chdir(workingDirectory)
+		if err != nil {
+			return cli.NewExitError(err, 1)
+		}
 	}
 
 	if configInHTML == true {
-		err := configureHTMLFiles(root, dryRunFlag)
+		err := configureHTMLFiles(dryRunFlag)
 		if err != nil {
 			return cli.NewExitError(err, 1)
 		}
 	} else {
-		err := configureWithNgssc(root, dryRunFlag)
+		err := configureWithNgssc(dryRunFlag)
 		if err != nil {
 			return cli.NewExitError(err, 1)
 		}
@@ -94,12 +99,16 @@ func insertCommand(c *cli.Context) error {
 	return nil
 }
 
-func configureHTMLFiles(root string, dryRun bool) error {
-	files, err := filepath.Glob(filepath.Join(root, "**/*.html"))
+func configureHTMLFiles(dryRun bool) error {
+	files, err := doublestar.Glob("**/*.html")
 	if err != nil {
 		return err
 	} else if len(files) == 0 {
-		fmt.Printf("No html files found in %v", root)
+		cwd, err := os.Getwd()
+		if err != nil {
+			return err
+		}
+		fmt.Printf("No html files found in %v", cwd)
 		return nil
 	}
 
@@ -139,19 +148,22 @@ func applyHTMLConfiguration(htmlFile string, match string, dryRun bool) {
 	}
 }
 
-func configureWithNgssc(root string, dryRun bool) error {
-	ngsscPath := filepath.Join(root, "ngssc.json")
+func configureWithNgssc(dryRun bool) error {
+	ngsscPath, err := filepath.Abs("./ngssc.json")
+	if err != nil {
+		return err
+	}
 	ngssc, err := readNgsscJSON(ngsscPath)
 	if err != nil {
 		return err
 	}
 
 	iifeScript := generateIifeScript(ngssc.NgsscHTML, ngsscPath)
-	files, err := filepath.Glob(filepath.Join(root, *ngssc.FilePattern))
+	files, err := doublestar.Glob(*ngssc.FilePattern)
 	if err != nil {
 		return err
 	} else if files == nil {
-		fmt.Printf("No files found with pattern %v in %v", ngssc.FilePattern, root)
+		fmt.Printf("No files found with pattern %v", ngssc.FilePattern)
 		return nil
 	}
 
@@ -183,7 +195,7 @@ func readNgsscJSON(path string) (ngssc *NgsscJSON, err error) {
 	}
 
 	if ngssc.FilePattern == nil {
-		filePatternDefault := "index.html"
+		filePatternDefault := "**/index.html"
 		ngssc.FilePattern = &filePatternDefault
 	}
 	if ngssc.InsertInHead == nil {
@@ -205,7 +217,7 @@ func generateIifeScript(ngssc NgsscHTML, source string) string {
 	envMapJSON := string(jsonBytes)
 	var iife string
 	if ngssc.Variant == "process" {
-		iife = fmt.Sprintf("self.process={env:%v}", envMapJSON)
+		iife = fmt.Sprintf(`self.process={"env":%v}`, envMapJSON)
 	} else {
 		iife = fmt.Sprintf("self.NG_ENV=%v", envMapJSON)
 	}
@@ -230,7 +242,11 @@ func populateEnvironmentVariables(environmentVariables []string) map[string]*str
 func logPopulatedEnvironmentVariables(source string, variant string, envMap map[string]*string) {
 	fmt.Printf("Populated environment variables (Variant: %v, %v)\n", variant, source)
 	for key, value := range envMap {
-		fmt.Printf("  %v: %v\n", key, value)
+		if value != nil {
+			fmt.Printf("  %v: %v\n", key, value)
+		} else {
+			fmt.Printf("  %v: %v\n", key, "null")
+		}
 	}
 }
 
@@ -244,7 +260,7 @@ func insertIifeIntoHTML(htmlFile string, iifeScript string, insertInHead bool) e
 	var newHTML string
 	html := string(htmlBytes)
 	if !insertInHead {
-		var re = regexp.MustCompile("<!--\\s*CONFIG\\s*(\\{[\\w\\W]*\\})\\s*-->")
+		var re = regexp.MustCompile("<!--\\s*CONFIG\\s*(\\{[\\w\\W]*\\})?\\s*-->")
 		newHTML = re.ReplaceAllString(html, iifeScript)
 	} else if strings.Contains(html, "</title>") {
 		newHTML = strings.Replace(html, "</title>", "</title>"+iifeScript, 1)

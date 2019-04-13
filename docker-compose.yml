@@ -11,8 +11,6 @@ services:
       - "./src/go-cli/:/go/src/app"
   test:
     image: zephinzer/golang-dev:latest
-    # ports:
-    #   - "3000:3000"
     user: "${UID}"
     entrypoint: ["test"]
     volumes:

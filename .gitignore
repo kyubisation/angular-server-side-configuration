@@ -71,3 +71,5 @@ typings/
 dist
 dist-go
 junit.xml
+src/go-cli/app
+src/go-cli/app.exe
