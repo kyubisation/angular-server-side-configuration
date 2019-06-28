@@ -1,37 +1,26 @@
 {
   "name": "angular-server-side-configuration",
-  "version": "2.0.0",
+  "version": "8.0.0-beta.0",
   "description": "Configure an angular application on the server",
-  "main": "./main.js",
-  "module": "./index.js",
-  "typings": "./index.d.ts",
-  "tsdoc": {
-    "tsdocFlavor": "AEDoc"
-  },
-  "bin": {
-    "ngssc": "./bin/ngssc"
-  },
+  "builders": "./builders/builders.json",
+  "schematics": "./schematics/collection.json",
   "scripts": {
-    "postinstall": "run-s install:*",
-    "install:ngc4": "cd ng-env/ngc4 && npm ci",
-    "install:ngc7": "cd ng-env/ngc7 && npm ci",
-    "clean:build": "rimraf .rpt2_cache typings",
-    "clean": "npm run clean:build && rimraf coverage dist junit.xml",
-    "build:node:rollup": "rollup -c rollup.config.js",
-    "build:node:typings": "api-extractor run",
-    "build:node:ngc4": "cd ng-env/ngc4 && npm run build",
-    "build:node:ngc7": "cd ng-env/ngc7 && npm run build",
-    "build:node:docs": "api-documenter markdown --input-folder dist --output-folder documentation",
-    "build:node": "npm run clean && run-s build:node:* && npm run clean:build",
+    "clean": "rimraf coverage dist {builders,models,schematics}/**/*.{d.ts,js} test/*.{d.ts,js} junit.xml",
+    "build:node": "npm run clean && tsc",
     "build:go": "docker-compose run build-go",
     "build": "run-p build:*",
     "pretest": "npm run clean",
-    "test:node": "jest -i --ci",
-    "test:go": "cd src/go-cli && go build && go test",
+    "test:node": "jest --ci",
+    "test:go": "cd cli && go build && go test",
     "test": "run-s test:*",
     "lint": "tslint -p tsconfig.json"
   },
-  "private": true,
+  "files": [
+    "**/*.{js,d.ts,json}",
+    "!*.spec.{d.ts,ts,js}",
+    "!{test,cli,.git,.vscode}",
+    "!{tsconfig,tslint,package-lock}.json"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kyubisation/angular-server-side-configuration.git"
@@ -52,44 +41,34 @@
   },
   "homepage": "https://github.com/kyubisation/angular-server-side-configuration#readme",
   "devDependencies": {
-    "@microsoft/api-documenter": "^7.0.51",
-    "@microsoft/api-extractor": "^7.0.42",
-    "@types/cross-spawn": "^6.0.0",
-    "@types/glob-to-regexp": "^0.4.0",
+    "@angular-devkit/architect": "^0.800.0",
+    "@angular-devkit/core": "^8.0.0",
+    "@angular-devkit/schematics": "^8.0.0",
+    "@schematics/angular": "^8.0.0",
     "@types/jest": "^24.0.11",
     "@types/node": "^10.14.4",
     "@types/rimraf": "^2.0.2",
-    "commander": "^2.20.0",
-    "cross-spawn": "^6.0.5",
-    "glob-to-regexp": "^0.4.1",
     "jest": "^24.7.1",
     "jest-junit": "^6.3.0",
     "npm-run-all": "^4.1.5",
     "rimraf": "^2.6.3",
-    "rollup": "^1.10.0",
-    "rollup-plugin-commonjs": "^9.3.4",
-    "rollup-plugin-cpy": "^1.1.0",
-    "rollup-plugin-json": "^4.0.0",
-    "rollup-plugin-node-resolve": "^4.2.3",
-    "rollup-plugin-typescript2": "^0.20.1",
     "ts-jest": "^24.0.2",
     "ts-node": "^8.0.3",
     "tslint": "^5.15.0",
-    "typescript": "^3.4.3"
+    "typescript": "~3.4.3"
   },
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node",
+    "testRegex": "\\.spec\\.ts$",
     "reporters": [
       "default",
       "jest-junit"
     ],
     "collectCoverage": true,
     "collectCoverageFrom": [
-      "src/**/*.ts",
-      "!src/**/*.spec.ts",
-      "!src/**/index.ts",
-      "!src/cli/cli.ts"
+      "**/*.ts",
+      "!**/*.spec.ts"
     ],
     "coverageReporters": [
       "cobertura",
@@ -98,15 +77,11 @@
     "coverageDirectory": "coverage",
     "coverageThreshold": {
       "global": {
-        "branches": 100,
-        "functions": 100,
-        "lines": 100,
-        "statements": 100
+        "branches": 90,
+        "functions": 90,
+        "lines": 90,
+        "statements": 90
       }
-    },
-    "testPathIgnorePatterns": [
-      "/node_modules/",
-      "/cli/cli.ts"
-    ]
+    }
   }
 }

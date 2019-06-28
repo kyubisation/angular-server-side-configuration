@@ -1,0 +1,9 @@
+{
+  "builders": {
+    "ngsscbuild": {
+      "implementation": "./ngsscbuild",
+      "schema": "./ngsscbuild/schema.json",
+      "description": "Build angular with defined builder and generates ngssc.json."
+    }
+  }
+}

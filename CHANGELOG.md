@@ -1,3 +1,15 @@
+# 8.0.0-beta.0 (2019-06-30)
+
+### Features
+
+* Rewrote the library to use Angular schematics and builders
+* Added --recursive flag to the native CLI
+
+### Breaking Changes
+
+* Removed the npm CLI and most of the existing internal implementation
+* Dropped support for configuration embedded in html
+
 # 2.0.0 (2019-04-14)
 
 ### Features

@@ -17,14 +17,11 @@ steps:
     versionSpec: '10.x'
   displayName: 'Install Node.js'
 
-- script: npm i -g yarn
-  displayName: Install yarn
-
 - script: npm ci
   displayName: npm ci
 
 - script: npm test
-  displayName: Jest
+  displayName: Jest & Go Test
   
 - task: PublishTestResults@2
   condition: succeededOrFailed()
@@ -48,23 +45,22 @@ steps:
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
 
 - script: npm pack
-  displayName: npm pack dist
-  workingDirectory: '$(System.DefaultWorkingDirectory)/dist'
+  displayName: npm pack
   condition: and(succeeded(), not(startsWith(variables['Build.SourceBranch'], 'refs/tags/v')))
 
 - task: Npm@1
-  displayName: Publish dist to npm
+  displayName: Publish to npm
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
   inputs:
     command: 'publish'
-    workingDir: '$(System.DefaultWorkingDirectory)/dist'
+    workingDir: '$(System.DefaultWorkingDirectory)'
     publishEndpoint: 'NPM-kyubisation'
 
 - task: CopyFiles@2
   displayName: Prepare go cli files
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
   inputs:
-    sourceFolder: dist-go
+    sourceFolder: dist
     targetFolder: $(Build.ArtifactStagingDirectory)
 
 - task: GitHubRelease@0
