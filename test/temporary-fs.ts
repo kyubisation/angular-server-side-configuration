@@ -1,19 +1,3 @@
-import { readFileSync, unlinkSync, writeFileSync } from 'fs';
-
-export async function temporaryFile(
-  file: { file: string, content: string }, action: () => Promise<any>): Promise<string> {
-  return (await temporaryFiles([file], action))[0];
-}
-
-export async function temporaryFiles(
-  files: Array<{ file: string, content: string }>, action: () => Promise<any>): Promise<string[]> {
-  files.forEach(f => writeFileSync(f.file, f.content, 'utf8'));
-  await action();
-  const contents = files.map(f => readFileSync(f.file, 'utf8'));
-  files.forEach(f => unlinkSync(f.file));
-  return contents;
-}
-
 export const indexHtmlContent = `<!doctype html>
 <html lang="en">
 <head>
@@ -147,36 +131,6 @@ export const environment = {
 
 export const envContentNgEnv = `
 import { NG_ENV } from 'angular-server-side-configuration/ng-env';
-
-/**
- * How to use angular-server-side-configuration:
- *
- * Use NG_ENV.NAME_OF_YOUR_ENVIRONMENT_VARIABLE
- *
- * export const environment = {
- *   stringValue: NG_ENV.STRING_VALUE,
- *   stringValueWithDefault: NG_ENV.STRING_VALUE || 'defaultValue',
- *   numberValue: Number(NG_ENV.NUMBER_VALUE),
- *   numberValueWithDefault: Number(NG_ENV.NUMBER_VALUE || 10),
- *   booleanValue: Boolean(NG_ENV.BOOLEAN_VALUE),
- *   booleanValueInverted: NG_ENV.BOOLEAN_VALUE_INVERTED !== 'false',
- * };
- */
-
-export const environment = {
-  production: NG_ENV.PROD !== 'false',
-  apiBackend: NG_ENV.API_BACKEND || 'http://example.com',
-  ternary: NG_ENV.TERNARY ? 'asdf' : 'qwer',
-  simpleValue: NG_ENV.SIMPLE_VALUE,
-  something: {
-    asdf: NG_ENV.OMG || 'omg',
-    qwer: parseInt(NG_ENV.NUMBER || ''),
-  }
-};
-`;
-
-export const envContentNg4Env = `
-import { NG_ENV } from 'angular-server-side-configuration/ng4-env';
 
 /**
  * How to use angular-server-side-configuration:

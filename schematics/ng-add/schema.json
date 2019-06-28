@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "id": "angular-server-side-configuration-ng-add",
+  "title": "angular-server-side-configuration ng-add schematic",
+  "type": "object",
+  "properties": {
+    "project": {
+      "type": "string",
+      "description": "Name of the project.",
+      "$default": {
+        "$source": "projectName"
+      }
+    },
+    "variant": {
+      "description": "The ngssc variant",
+      "type": "string",
+      "default": "process",
+      "x-prompt": {
+        "message": "Choose the ngssc variant:",
+        "type": "list",
+        "items": [
+          {
+            "value": "process",
+            "label": "process.env.*"
+          },
+          {
+            "value": "NG_ENV",
+            "label": "NG_ENV.*"
+          }
+        ]
+      }
+    },
+    "ngsscConfigurationFile": {
+      "description": "The ngssc configuration file (usually src/environments/environment.prod.ts)",
+      "type": "string",
+      "default": "src/environments/environment.prod.ts",
+      "x-prompt": "Configure the ngssc configuration file:"
+    },
+    "aotSupport": {
+      "description": "Whether variables are going to be used in AoT contexts (like forRoot(...) or forChild(...))",
+      "type": "boolean",
+      "default": true,
+      "x-prompt": "Are variables going to be used in AoT contexts (like forRoot(...) or forChild(...)):"
+    }
+  }
+}
