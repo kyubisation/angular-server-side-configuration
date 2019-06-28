@@ -19,8 +19,8 @@ export class NgsscBuilder {
   private _detector = new VariableDetector();
   private _tokenizer = new VariableTokenizer();
   private _browserTarget: Target;
-  private _ngsscConfigurationFile: string;
-  private _tmpNgsscConfigurationFile: string;
+  private _ngsscEnvironmentFile: string;
+  private _tmpNgsscEnvironmentFile: string;
   private _tokenizeResult?: TokenizeResult;
 
   constructor(
@@ -28,8 +28,8 @@ export class NgsscBuilder {
     private _context: BuilderContext,
   ) {
     this._browserTarget = targetFromTargetString(_options.browserTarget);
-    this._ngsscConfigurationFile = join(_context.workspaceRoot, _options.ngsscConfigurationFile);
-    this._tmpNgsscConfigurationFile = `${_options.ngsscConfigurationFile}_${randomBytes(10).toString('hex')}.tmp`;
+    this._ngsscEnvironmentFile = join(_context.workspaceRoot, _options.ngsscEnvironmentFile);
+    this._tmpNgsscEnvironmentFile = `${_options.ngsscEnvironmentFile}_${randomBytes(10).toString('hex')}.tmp`;
   }
 
   static async build(options: Options, context: BuilderContext): Promise<BuilderOutput> {
@@ -37,6 +37,15 @@ export class NgsscBuilder {
   }
 
   async run() {
+    try {
+      return await this._safeRun();
+    } catch (e) {
+      this._context.logger.error(e.toString());
+      return process.exit(2);
+    }
+  }
+
+  private async _safeRun() {
     const ngsscContext = await this._detectVariables();
     const rawOptions = await this._prepareBrowserOptions(ngsscContext);
     const browserTarget = targetFromTargetString(this._options.browserTarget);
@@ -46,12 +55,12 @@ export class NgsscBuilder {
     const result = await scheduledTarget.result;
     await this._buildNgsscJson(ngsscContext, browserOptions);
     await this._untokenize(browserOptions);
-    await this._removeTmpNgsscConfigurationFile();
+    await this._removeTmpNgsscEnvironmentFile();
     return result;
   }
 
   private async _detectVariables() {
-    const fileContent = await readFileAsync(this._ngsscConfigurationFile, 'utf8');
+    const fileContent = await readFileAsync(this._ngsscEnvironmentFile, 'utf8');
     const ngsscContext = await this._detector.detect(fileContent);
     this._context.logger.info(
       `ngssc: Detected variant '${ngsscContext.variant}' with variables ` +
@@ -65,10 +74,10 @@ export class NgsscBuilder {
       return rawBrowserOptions;
     }
 
-    const tmpNgsscConfigurationFilePath = join(this._context.workspaceRoot, this._tmpNgsscConfigurationFile);
-    const ngsscConfigurationFileContent = await readFileAsync(this._ngsscConfigurationFile, 'utf8');
-    this._tokenizeResult = this._tokenizer.tokenize(ngsscConfigurationFileContent, ngsscContext);
-    await writeFileAsync(tmpNgsscConfigurationFilePath, this._tokenizeResult.content, 'utf8');
+    const tmpNgsscEnvironmentFilePath = join(this._context.workspaceRoot, this._tmpNgsscEnvironmentFile);
+    const ngsscEnvironmentFileContent = await readFileAsync(this._ngsscEnvironmentFile, 'utf8');
+    this._tokenizeResult = this._tokenizer.tokenize(ngsscEnvironmentFileContent, ngsscContext);
+    await writeFileAsync(tmpNgsscEnvironmentFilePath, this._tokenizeResult.content, 'utf8');
     return { ...rawBrowserOptions, fileReplacements: this._buildFileReplacements(rawBrowserOptions) };
   }
 
@@ -76,13 +85,13 @@ export class NgsscBuilder {
     const fileReplacements: any[] =
       (rawBrowserOptions.fileReplacements as unknown as FileReplacements || [])
         .map(f => 'with' in f ? { ...f } : { replace: f.src, with: f.replaceWith })
-        .filter(f => f.with === this._options.ngsscConfigurationFile)
-        .map(f => ({ replace: f.replace, with: this._tmpNgsscConfigurationFile }));
+        .filter(f => f.with === this._options.ngsscEnvironmentFile)
+        .map(f => ({ replace: f.replace, with: this._tmpNgsscEnvironmentFile }));
     if (!fileReplacements.length) {
       throw new Error(
         `Expected a fileReplacements entry in the referenced browserTarget '${this._options.browserTarget}'` +
-        `, which uses ${this._options.ngsscConfigurationFile} as a replacement! (e.g. "fileReplacements": ` +
-        `[{ "replace": "src/environments/environment.ts", "with": "${this._options.ngsscConfigurationFile}" }])`);
+        `, which uses ${this._options.ngsscEnvironmentFile} as a replacement! (e.g. "fileReplacements": ` +
+        `[{ "replace": "src/environments/environment.ts", "with": "${this._options.ngsscEnvironmentFile}" }])`);
     }
 
     return fileReplacements;
@@ -116,10 +125,10 @@ export class NgsscBuilder {
     }
   }
 
-  private async _removeTmpNgsscConfigurationFile() {
-    const tmpNgsscConfigurationFilePath = join(this._context.workspaceRoot, this._tmpNgsscConfigurationFile);
-    if (existsSync(tmpNgsscConfigurationFilePath)) {
-      await unlinkAsync(tmpNgsscConfigurationFilePath);
+  private async _removeTmpNgsscEnvironmentFile() {
+    const tmpNgsscEnvironmentFilePath = join(this._context.workspaceRoot, this._tmpNgsscEnvironmentFile);
+    if (existsSync(tmpNgsscEnvironmentFilePath)) {
+      await unlinkAsync(tmpNgsscEnvironmentFilePath);
     }
   }
 }

@@ -30,11 +30,11 @@
         ]
       }
     },
-    "ngsscConfigurationFile": {
-      "description": "The ngssc configuration file (usually src/environments/environment.prod.ts)",
+    "ngsscEnvironmentFile": {
+      "description": "The ngssc environment file (usually src/environments/environment.prod.ts)",
       "type": "string",
       "default": "src/environments/environment.prod.ts",
-      "x-prompt": "Configure the ngssc configuration file:"
+      "x-prompt": "Configure the ngssc environment file:"
     },
     "aotSupport": {
       "description": "Whether variables are going to be used in AoT contexts (like forRoot(...) or forChild(...))",

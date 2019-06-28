@@ -1,3 +1,4 @@
+import { join, normalize } from '@angular-devkit/core';
 import { chain, noop, Rule, SchematicContext, SchematicsException, Tree } from '@angular-devkit/schematics';
 import { InsertChange } from '@schematics/angular/utility/change';
 import { getWorkspace, updateWorkspace } from '@schematics/angular/utility/config';
@@ -17,18 +18,18 @@ export default function(options: Schema): Rule {
 function addNgsscTargetToWorkspace(options: Schema) {
   return (host: Tree, context: SchematicContext) => {
     const { workspace, projectName, architect } = resolveWorkspace(options, host);
-    if ('build-ngssc' in architect) {
+    if ('ngsscbuild' in architect) {
       context.logger.info(
-        `Skipping adding build-ngssc target to angular.json, as it already exists in project ${projectName}.`);
+        `Skipping adding ngsscbuild target to angular.json, as it already exists in project ${projectName}.`);
       return noop();
     }
 
-    architect['build-ngssc'] = {
-      builder: 'angular-server-side-configuration:build-angular',
+    architect.ngsscbuild = {
+      builder: 'angular-server-side-configuration:ngsscbuild',
       options: {
         aotSupport: options.aotSupport,
         browserTarget: `${projectName}:build`,
-        ngsscConfigurationFile: options.ngsscConfigurationFile,
+        ngsscEnvironmentFile: options.ngsscEnvironmentFile,
       },
       // tslint:disable-next-line: object-literal-sort-keys
       configurations: {
@@ -43,12 +44,14 @@ function addNgsscTargetToWorkspace(options: Schema) {
 
 function addImportAndDescriptionToEnvironmentFile(options: Schema) {
   return (host: Tree, context: SchematicContext) => {
-    const file = host.get(options.ngsscConfigurationFile);
+    const { projectRoot } = resolveWorkspace(options, host);
+    const normalizedPath = join(normalize(projectRoot), options.ngsscEnvironmentFile);
+    const file = host.get(normalizedPath);
     if (!file) {
-      throw new SchematicsException(`${options.ngsscConfigurationFile} does not exist!`);
+      throw new SchematicsException(`${normalizedPath} does not exist!`);
     } else if (file.content.includes('angular-server-side-configuration')) {
       context.logger.info(
-        `Skipping adding import to ${options.ngsscConfigurationFile}, since import was already detected.`);
+        `Skipping adding import to ${file.path}, since import was already detected.`);
       return;
     }
 
@@ -75,8 +78,8 @@ function addImportAndDescriptionToEnvironmentFile(options: Schema) {
 
 `;
 
-    const insertion = new InsertChange(options.ngsscConfigurationFile, 0, insertContent);
-    const recorder = host.beginUpdate(options.ngsscConfigurationFile);
+    const insertion = new InsertChange(file.path, 0, insertContent);
+    const recorder = host.beginUpdate(file.path);
     recorder.insertLeft(insertion.pos, insertion.toAdd);
     host.commitUpdate(recorder);
   };
@@ -97,7 +100,7 @@ function addNgsscToPackageScripts(options: Schema) {
       return;
     }
 
-    pkg.scripts['build:ngssc'] = `ng run ${projectName}:build-ngssc:production`;
+    pkg.scripts['build:ngssc'] = `ng run ${projectName}:ngsscbuild:production`;
     host.overwrite(pkgPath, JSON.stringify(pkg, null, 2));
   };
 }
@@ -110,9 +113,10 @@ function addPlaceholderToIndexHtml(options: Schema) {
       throw new SchematicsException(`Expected a build target in project ${projectName}!`);
     }
 
-    const indexHtml = host.get(build.options.index || 'src/index.html');
+    const indexPath = build.options.index || 'src/index.html';
+    const indexHtml = host.get(indexPath);
     if (!indexHtml) {
-      throw new SchematicsException(`Expected index html ${indexHtml} to exist!`);
+      throw new SchematicsException(`Expected index html ${indexPath} to exist!`);
     }
 
     const indexHtmlContent = indexHtml.content.toString();
@@ -123,7 +127,7 @@ function addPlaceholderToIndexHtml(options: Schema) {
 
     const insertIndex = indexHtmlContent.includes('</title>')
       ? indexHtmlContent.indexOf('</title>') + 9 : indexHtmlContent.indexOf('</head>');
-    const insertion = new InsertChange(options.ngsscConfigurationFile, insertIndex, '  <!--CONFIG-->\n');
+    const insertion = new InsertChange(indexHtml.path, insertIndex, '  <!--CONFIG-->\n');
     const recorder = host.beginUpdate(indexHtml.path);
     recorder.insertLeft(insertion.pos, insertion.toAdd);
     host.commitUpdate(recorder);
@@ -133,10 +137,10 @@ function addPlaceholderToIndexHtml(options: Schema) {
 function resolveWorkspace(options: Schema, host: Tree) {
   const workspace = getWorkspace(host);
   const projectName = options.project || workspace.defaultProject || Object.keys(workspace.projects)[0];
-  const { architect } = workspace.projects[projectName] as WorkspaceProject<ProjectType.Application>;
+  const { architect, root } = workspace.projects[projectName] as WorkspaceProject<ProjectType.Application>;
   if (!architect) {
     throw new SchematicsException(`Expected project ${projectName} to have an architect section!`);
   }
 
-  return { workspace, projectName, architect };
+  return { workspace, projectName, architect, projectRoot: root };
 }
