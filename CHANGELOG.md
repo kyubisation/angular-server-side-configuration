@@ -8,6 +8,7 @@
 ### Breaking Changes
 
 * Removed the npm CLI and most of the existing internal implementation
+* Dropped support for configuration embedded in html
 
 # 2.0.0 (2019-04-14)
 

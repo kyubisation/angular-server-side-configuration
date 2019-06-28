@@ -36,28 +36,6 @@ var configHTMLTemplate = `<!DOCTYPE html>
  </html>
  `
 
-var configInHTMLTemplate = `<!DOCTYPE html>
- <html lang="en">
- 
- <head>
-	 <meta charset="utf-8" />
-	 <title>Docker - Angular Runtime Variables Demo</title>
-	 <base href="/" />
- 
-	 <!--CONFIG {"variant":"process","environmentVariables":["TEST_VALUE"]}-->
- 
-	 <link href="https://fonts.googleapis.com/css?family=Major+Mono+Display" rel="stylesheet" />
-	 <meta name="viewport" content="width=device-width, initial-scale=1" />
-	 <link rel="icon" type="image/x-icon" href="favicon.ico" />
- </head>
- 
- <body>
-	 <app-root></app-root>
- </body>
- 
- </html>
- `
-
 var htmlTemplate = strings.Replace(configHTMLTemplate, "<!--CONFIG-->", "", 1)
 
 func TestNgsscProcessWithNotSetEnvironmentVariable(t *testing.T) {
@@ -155,18 +133,6 @@ func TestNgsscProcessWithInsertInHead(t *testing.T) {
 	ioutil.WriteFile(filepath.Join(dir, "ngssc.json"), []byte(`{"variant":"process","environmentVariables":["TEST_VALUE"],"insertInHead":true}`), 0644)
 	ioutil.WriteFile(htmlPath, []byte(htmlTemplate), 0644)
 	testcli.Run("./app", "insert", dir)
-	if !testcli.Success() {
-		t.Fatalf("Expected to succeed, but failed: %s %s", testcli.Stdout(), testcli.Error())
-	} else if !strings.Contains(readFile(htmlPath), `<script>(function(self){self.process={"env":{"TEST_VALUE":null}};})(window)</script>`) {
-		t.Fatalf("Expected html to contain iife. Got:\n" + readFile(htmlPath))
-	}
-}
-
-func TestConfigInHtml(t *testing.T) {
-	dir := createTempDir()
-	htmlPath := filepath.Join(dir, "index.html")
-	ioutil.WriteFile(htmlPath, []byte(configInHTMLTemplate), 0644)
-	testcli.Run("./app", "insert", dir, "--config-in-html")
 	if !testcli.Success() {
 		t.Fatalf("Expected to succeed, but failed: %s %s", testcli.Stdout(), testcli.Error())
 	} else if !strings.Contains(readFile(htmlPath), `<script>(function(self){self.process={"env":{"TEST_VALUE":null}};})(window)</script>`) {
