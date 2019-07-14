@@ -1,4 +1,3 @@
-import { Tree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { Schema as ApplicationOptions, Style } from '@schematics/angular/application/schema';
 import { Schema as WorkspaceOptions } from '@schematics/angular/workspace/schema';
@@ -89,6 +88,17 @@ describe('ng-add', () => {
       .runSchematicAsync('ng-add', {}, appTree)
       .toPromise();
     assertAppliedConfig(tree);
+  });
+
+  it('should add ngssc content to correct files and split additional environment variables', async () => {
+    const expected = 'OTHER_VARIABLES,OTHER_VARIABLES2';
+    const tree = await runner
+      .runSchematicAsync('ng-add', { additionalEnvironmentVariables: expected }, appTree)
+      .toPromise();
+    assertAppliedConfig(tree);
+    const angularJson = JSON.parse(tree.readContent('angular.json'));
+    expect(angularJson.projects.dummy.architect.ngsscbuild.options.additionalEnvironmentVariables)
+      .toEqual(expected.split(','));
   });
 
   it('should add ngssc content to correct files, with missing title tag', async () => {

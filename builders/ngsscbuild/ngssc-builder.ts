@@ -48,7 +48,7 @@ export class NgsscBuilder {
   private async _safeRun() {
     const ngsscContext = await this._detectVariables();
     const rawOptions = await this._prepareBrowserOptions(ngsscContext);
-    const browserTarget = targetFromTargetString(this._options.browserTarget);
+    const browserTarget = this._browserTarget;
     const browserName = await this._context.getBuilderNameForTarget(browserTarget);
     const browserOptions = await this._context.validateOptions<BrowserOptions>(rawOptions, browserName);
     const scheduledTarget = await this._context.scheduleTarget(browserTarget, browserOptions);
@@ -100,7 +100,10 @@ export class NgsscBuilder {
   private async _buildNgsscJson(ngsscContext: NgsscContext, browserOptions: BrowserOptions) {
     const outputPath = join(this._context.workspaceRoot, browserOptions.outputPath);
     const ngssc: Ngssc = {
-      environmentVariables: ngsscContext.variables.map(m => m.variable),
+      environmentVariables: [
+        ...ngsscContext.variables.map(m => m.variable),
+        ...(this._options.additionalEnvironmentVariables || []),
+      ],
       filePattern: basename(browserOptions.index),
       variant: ngsscContext.variant,
     };

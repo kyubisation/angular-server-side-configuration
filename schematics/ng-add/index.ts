@@ -27,6 +27,8 @@ function addNgsscTargetToWorkspace(options: Schema) {
     architect.ngsscbuild = {
       builder: 'angular-server-side-configuration:ngsscbuild',
       options: {
+        additionalEnvironmentVariables: options.additionalEnvironmentVariables
+          ? options.additionalEnvironmentVariables.split(',').map(e => e.trim()) : [],
         aotSupport: options.aotSupport,
         browserTarget: `${projectName}:build`,
         ngsscEnvironmentFile: options.ngsscEnvironmentFile,
@@ -94,7 +96,7 @@ function addNgsscToPackageScripts(options: Schema) {
       throw new SchematicsException('Could not find package.json');
     }
 
-    const pkg = JSON.parse(buffer.toString());
+    const pkg = { scripts: {}, ...JSON.parse(buffer.toString()) };
     if ('build:ngssc' in pkg.scripts) {
       context.logger.info(`Skipping adding script to package.json, as it already exists.`);
       return;

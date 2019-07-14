@@ -2,14 +2,21 @@
   "$schema": "http://json-schema.org/schema",
   "type": "object",
   "properties": {
-    "command": {
-      "type": "string"
-    },
-    "args": {
+    "additionalEnvironmentVariables": {
       "type": "array",
-      "items": {
-        "type": "string"
-      }
+      "description": "Additional environment variables that should be added to ngssc.json"
+    },
+    "aotSupport": {
+      "type": "boolean",
+      "description": "Whether variables are going to be used in AoT contexts (like forRoot(...) or forChild(...))"
+    },
+    "browserTarget": {
+      "type": "string",
+      "description": "The build target to execute"
+    },
+    "ngsscEnvironmentFile": {
+      "type": "string",
+      "description": "The ngssc environment file (usually src/environments/environment.prod.ts)"
     }
   }
 }

@@ -1,3 +1,10 @@
+# 8.0.0-beta.1 (2019-07-14)
+
+### Features
+
+* Added additionalEnvironmentVariables to builder options
+* Implemented ng update migration
+
 # 8.0.0-beta.0 (2019-06-30)
 
 ### Features

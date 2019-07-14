@@ -1,7 +1,7 @@
 # angular-server-side-configuration
 
-![](https://img.shields.io/azure-devops/build/kyubisation/894749fe-3edd-41f8-818f-ba14e6a3cc22/1/master.svg)
-![](https://img.shields.io/azure-devops/coverage/kyubisation/angular-server-side-configuration/1/master.svg)
+![](https://img.shields.io/azure-devops/build/kyubisation/894749fe-3edd-41f8-818f-ba14e6a3cc22/2/master.svg)
+![](https://img.shields.io/azure-devops/coverage/kyubisation/angular-server-side-configuration/2/master.svg)
 ![](https://img.shields.io/npm/v/angular-server-side-configuration.svg)
 ![](https://img.shields.io/npm/l/angular-server-side-configuration.svg)
 
@@ -29,6 +29,10 @@ of this library can be used, as it is Angular version agnostic.
 ## Getting Started
 ```
 ng add angular-server-side-configuration
+```
+or, if you have a previous version of this library installed
+```
+ng update angular-server-side-configuration@latest
 ```
 This will configure the appropriate files.
 
@@ -58,6 +62,7 @@ used environment variables and generate an [ngssc.json](#ngsscjson) in the defin
         "ngsscbuild": {
           "builder": "angular-server-side-configuration:ngsscbuild",
           "options": {
+            "additionalEnvironmentVariables": ["MANUAL_ENTRIES"],
             "aotSupport": true, // Set this to true, if you need to use
                                 // environment variables inside AoT contexts
                                 // (e.g. forRoot(...) or forChild(...))
@@ -78,6 +83,8 @@ used environment variables and generate an [ngssc.json](#ngsscjson) in the defin
   }
 ...
 ```
+
+To run the ngssc build, run the command `ng run your-project-name:ngsscbuild:production`.
 
 ### environment.prod.ts
 angular-server-side-configuration supports two variants for using environment variables:

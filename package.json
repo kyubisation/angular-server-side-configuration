@@ -7,6 +7,9 @@
   },
   "builders": "./builders/builders.json",
   "schematics": "./schematics/collection.json",
+  "ng-update": {
+    "migrations": "./schematics/migration.json"
+  },
   "scripts": {
     "clean": "rimraf coverage dist {builders,models,schematics}/**/*.{d.ts,js} test/*.{d.ts,js} junit.xml",
     "build:node": "npm run clean && tsc",
@@ -80,10 +83,10 @@
     "coverageDirectory": "coverage",
     "coverageThreshold": {
       "global": {
-        "branches": 90,
-        "functions": 90,
-        "lines": 90,
-        "statements": 90
+        "branches": 85,
+        "functions": 95,
+        "lines": 95,
+        "statements": 95
       }
     }
   }

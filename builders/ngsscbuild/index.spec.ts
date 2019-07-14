@@ -69,6 +69,7 @@ describe('Ngssc Builder', () => {
     addDummyBuildTarget({});
     try {
       await runNgsscbuild({
+        additionalEnvironmentVariables: [],
         aotSupport: true,
         browserTarget: 'dummy:build',
         ngsscEnvironmentFile: 'environment.prod.ts',
@@ -82,6 +83,7 @@ describe('Ngssc Builder', () => {
   it('should build with process variant', async () => {
     addDummyBuildTarget();
     const output = await runNgsscbuild({
+      additionalEnvironmentVariables: [],
       aotSupport: false,
       browserTarget: 'dummy:build',
       ngsscEnvironmentFile: 'environment.prod.ts',
@@ -94,9 +96,26 @@ describe('Ngssc Builder', () => {
     expect(ngssc.filePattern).toEqual('index.html');
   });
 
+  it('should aggregate environment variables', async () => {
+    const expected = 'OTHER_VARIABLE';
+    addDummyBuildTarget();
+    const output = await runNgsscbuild({
+      additionalEnvironmentVariables: [expected],
+      aotSupport: false,
+      browserTarget: 'dummy:build',
+      ngsscEnvironmentFile: 'environment.prod.ts',
+    });
+
+    expect(output.success).toBe(true);
+    expect(logger.includes('ngssc')).toBeTruthy();
+    const ngssc: Ngssc = JSON.parse(readFileSync(join(distDir, 'ngssc.json'), 'utf8'));
+    expect(ngssc.environmentVariables).toContain(expected);
+  });
+
   it('should build with aotSupport and process variant', async () => {
     addDummyBuildTarget();
     const output = await runNgsscbuild({
+      additionalEnvironmentVariables: [],
       aotSupport: true,
       browserTarget: 'dummy:build',
       ngsscEnvironmentFile: 'environment.prod.ts',

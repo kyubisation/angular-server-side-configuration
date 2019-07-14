@@ -41,6 +41,11 @@
       "type": "boolean",
       "default": true,
       "x-prompt": "Are variables going to be used in AoT contexts (like forRoot(...) or forChild(...)):"
+    },
+    "additionalEnvironmentVariables": {
+      "description": "Additional environment variables that should be added to ngssc.json",
+      "type": "string",
+      "x-prompt": "Add additional environment variables (comma-separated):"
     }
   }
 }
