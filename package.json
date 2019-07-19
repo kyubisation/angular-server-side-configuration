@@ -12,7 +12,7 @@
   },
   "scripts": {
     "clean": "rimraf coverage dist {builders,models,schematics}/**/*.{d.ts,js} test/*.{d.ts,js} junit.xml",
-    "build:node": "npm run clean && tsc",
+    "build:node": "npm run clean && tsc && rollup -c rollup.config.js",
     "build:go": "docker-compose run build-go",
     "build": "run-p build:*",
     "pretest": "npm run clean",
@@ -21,6 +21,9 @@
     "test": "run-s test:*",
     "lint": "tslint -p tsconfig.json"
   },
+  "main": "./src/main.js",
+  "module": "./src/module.js",
+  "typings": "./src/index.d.ts",
   "files": [
     "**/*.{js,d.ts,json}",
     "!*.spec.{d.ts,ts,js}",
@@ -51,13 +54,17 @@
     "@angular-devkit/core": "^8.0.0",
     "@angular-devkit/schematics": "^8.0.0",
     "@schematics/angular": "^8.0.0",
+    "@types/glob-to-regexp": "^0.4.0",
     "@types/jest": "^24.0.15",
     "@types/node": "^10.14.4",
     "@types/rimraf": "^2.0.2",
+    "glob-to-regexp": "^0.4.1",
     "jest": "^24.8.0",
     "jest-junit": "^6.4.0",
     "npm-run-all": "^4.1.5",
     "rimraf": "^2.6.3",
+    "rollup": "^1.17.0",
+    "rollup-plugin-typescript2": "^0.22.0",
     "ts-jest": "^24.0.2",
     "ts-node": "^8.3.0",
     "tslint": "^5.18.0",
@@ -74,6 +81,7 @@
     "collectCoverage": true,
     "collectCoverageFrom": [
       "**/*.ts",
+      "!src/index.ts",
       "!**/*.spec.ts"
     ],
     "coverageReporters": [

@@ -1,3 +1,13 @@
+# 8.0.0-beta.2 (2019-07-19)
+
+### Features
+
+* Implemented insert function (`import { insert } from 'angular-server-side-configuration';`)
+
+### Bugfix
+
+* Fixed issue in native cli
+
 # 8.0.0-beta.1 (2019-07-14)
 
 ### Features

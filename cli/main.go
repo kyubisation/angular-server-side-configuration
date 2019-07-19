@@ -55,7 +55,6 @@ type NgsscJSON struct {
 	Variant 							string
 	EnvironmentVariables 	[]string
 	FilePattern  					*string
-	InsertInHead 					*bool
 }
 
 // InsertCommand is the ngssc CLI command to insert environment variables
@@ -139,7 +138,7 @@ func configureWithNgssc(ngsscPath string, dryRun bool) error {
 		fmt.Println("Dry run. Nothing will be inserted.")
 	} else {
 		for _, htmlFile := range files {
-			insertIifeIntoHTML(htmlFile, iifeScript, *ngssc.InsertInHead)
+			insertIifeIntoHTML(htmlFile, iifeScript)
 		}
 	}
 
@@ -164,10 +163,6 @@ func readNgsscJSON(path string) (ngssc *NgsscJSON, err error) {
 	if ngssc.FilePattern == nil {
 		filePatternDefault := "**/index.html"
 		ngssc.FilePattern = &filePatternDefault
-	}
-	if ngssc.InsertInHead == nil {
-		insertInHeadDefault := false
-		ngssc.InsertInHead = &insertInHeadDefault
 	}
 
 	return ngssc, nil
@@ -217,7 +212,7 @@ func logPopulatedEnvironmentVariables(source string, variant string, envMap map[
 	}
 }
 
-func insertIifeIntoHTML(htmlFile string, iifeScript string, insertInHead bool) error {
+func insertIifeIntoHTML(htmlFile string, iifeScript string) error {
 	htmlBytes, err := ioutil.ReadFile(htmlFile)
 	if err != nil {
 		fmt.Printf("Failed to read %v\n", htmlFile)
@@ -226,8 +221,8 @@ func insertIifeIntoHTML(htmlFile string, iifeScript string, insertInHead bool) e
 
 	var newHTML string
 	html := string(htmlBytes)
-	if !insertInHead {
-		var re = regexp.MustCompile("<!--\\s*CONFIG\\s*(\\{[\\w\\W]*\\})?\\s*-->")
+	var re = regexp.MustCompile("<!--\\s*CONFIG\\s*-->")
+	if re.Match(htmlBytes) {
 		newHTML = re.ReplaceAllString(html, iifeScript)
 	} else if strings.Contains(html, "</title>") {
 		newHTML = strings.Replace(html, "</title>", "</title>"+iifeScript, 1)

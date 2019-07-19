@@ -1,6 +1,6 @@
+import { NgsscContext } from '../../models/ngssc-context';
 import { envContent, envContentNgEnv } from '../../test/temporary-fs';
 
-import { NgsscContext } from './models/ngssc-context';
 import { VariableDetector } from './variable-detector';
 
 describe('VariableDetector', () => {

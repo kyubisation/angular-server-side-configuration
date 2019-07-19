@@ -5,9 +5,8 @@ import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
 
+import { Ngssc, Options } from '../../models';
 import { envContent } from '../../test/temporary-fs';
-
-import { Ngssc, Options } from './models';
 
 describe('Ngssc Builder', () => {
   let tmpDir: string;

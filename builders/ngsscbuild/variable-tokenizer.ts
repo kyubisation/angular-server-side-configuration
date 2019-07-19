@@ -1,4 +1,5 @@
-import { NgsscContext } from './models';
+import { NgsscContext } from '../../models';
+
 import { TokenizeResult } from './tokenize-result';
 
 /**

@@ -1,6 +1,6 @@
 import { createSourceFile, ImportDeclaration, Node, ScriptTarget, SyntaxKind } from 'typescript';
 
-import { NgsscContext, Variant } from './models';
+import { NgsscContext, Variant } from '../../models';
 
 /**
  * Detect environment variables in given file.

@@ -28,17 +28,17 @@ of this library can be used, as it is Angular version agnostic.
 
 ## Getting Started
 ```
-ng add angular-server-side-configuration
+ng add angular-server-side-configuration@next
 ```
 or, if you have a previous version of this library installed
 ```
-ng update angular-server-side-configuration@latest
+ng update angular-server-side-configuration@next
 ```
 This will configure the appropriate files.
 
 Alternatively, if you want to configure the files yourself:
 ```
-npm install --save angular-server-side-configuration
+npm install --save angular-server-side-configuration@next
 ```
 
 ### angular.json
@@ -141,8 +141,10 @@ It is however the safest option.
 ```
 
 ### On host server or in Dockerfile
-This library provides a native implementation for the `insert` command of the CLI. Go to
-[Releases](https://github.com/kyubisation/angular-server-side-configuration/releases)
+This library provides a Node.js and a native implementation for inserting the environment variables into your html.
+Either the `insert` function from the package (`import { insert } from 'angular-server-side-configuration';`)
+or the `insert` command of the CLI.
+For the native CLI, go to [Releases](https://github.com/kyubisation/angular-server-side-configuration/releases)
 and download the appropriate executable for your server environment.
 (See [build.sh](https://github.com/kyubisation/angular-server-side-configuration/blob/master/cli/build.sh) for
 build details of the native CLI. Please open an [Issue](https://github.com/kyubisation/angular-server-side-configuration/issues/new)

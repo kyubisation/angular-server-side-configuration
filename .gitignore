@@ -62,7 +62,7 @@ typings/
 
 # TypeScript
 *.js
-!test/**/*.js
+!rollup.config.js
 *.d.ts
 
 # Others

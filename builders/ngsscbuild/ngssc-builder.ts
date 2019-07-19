@@ -5,7 +5,8 @@ import { existsSync, readdir, readFile, unlink, writeFile } from 'fs';
 import { basename, join } from 'path';
 import { promisify } from 'util';
 
-import { BrowserOptions, FileReplacements, Ngssc, NgsscContext, Options } from './models';
+import { BrowserOptions, FileReplacements, Ngssc, NgsscContext, Options } from '../../models';
+
 import { TokenizeResult } from './tokenize-result';
 import { VariableDetector } from './variable-detector';
 import { VariableTokenizer } from './variable-tokenizer';
@@ -30,6 +31,7 @@ export class NgsscBuilder {
     this._browserTarget = targetFromTargetString(_options.browserTarget);
     this._ngsscEnvironmentFile = join(_context.workspaceRoot, _options.ngsscEnvironmentFile);
     this._tmpNgsscEnvironmentFile = `${_options.ngsscEnvironmentFile}_${randomBytes(10).toString('hex')}.tmp`;
+    this._context.addTeardown(() => this._removeTmpNgsscEnvironmentFile());
   }
 
   static async build(options: Options, context: BuilderContext): Promise<BuilderOutput> {

@@ -2,7 +2,7 @@ import { Path } from '@angular-devkit/core';
 import { chain, FileEntry, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { getWorkspace } from '@schematics/angular/utility/config';
 
-import { Ngssc, Variant } from '../../builders/ngsscbuild/models';
+import { Ngssc, Variant } from '../../models';
 import ngAdd from '../ng-add/index';
 
 const NGSSC_JSON_PATH = '/ngssc.json';
