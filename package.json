@@ -1,6 +1,6 @@
 {
   "name": "angular-server-side-configuration",
-  "version": "8.0.0-beta.2",
+  "version": "8.0.0-beta.3",
   "description": "Configure an angular application on the server",
   "publishConfig": {
     "tag": "next"
