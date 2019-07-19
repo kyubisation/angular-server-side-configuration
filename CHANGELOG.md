@@ -1,3 +1,9 @@
+# 8.0.0-beta.3 (2019-07-19)
+
+### Bugfix
+
+* Fixed dependency issue with glob-to-regexp
+
 # 8.0.0-beta.2 (2019-07-19)
 
 ### Features
