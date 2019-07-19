@@ -48,9 +48,10 @@ function populateVariables(variables: string[]) {
 }
 
 function generateIife(variant: Variant, populatedVariables: { [key: string]: string | null }) {
-  return variant === 'NG_ENV' ?
+  const iife = variant === 'NG_ENV' ?
     `(function(self){self.NG_ENV=${JSON.stringify(populatedVariables)};})(window)` :
     `(function(self){self.process=${JSON.stringify({ env: populatedVariables })};})(window)`;
+  return `<script>${iife}</script>`;
 }
 
 function insertIntoHtml(file: string, iife: string) {

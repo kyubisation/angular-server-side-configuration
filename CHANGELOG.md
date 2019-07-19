@@ -1,3 +1,9 @@
+# 8.0.0-beta.4 (2019-07-19)
+
+### Bugfix
+
+* Fixed iife insertion
+
 # 8.0.0-beta.3 (2019-07-19)
 
 ### Bugfix

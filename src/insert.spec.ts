@@ -13,9 +13,10 @@ describe('insert', () => {
   const ngssc: Ngssc = { environmentVariables: ['TEST', 'TEST2'], filePattern: 'index.html', variant: 'process' };
   const envTestContent = 'TESTCONTENT';
   const iife =
-    `(function(self){self.process=${JSON.stringify({ env: { TEST: envTestContent, TEST2: null } })};})(window)`;
+    // tslint:disable-next-line: max-line-length
+    `<script>(function(self){self.process=${JSON.stringify({ env: { TEST: envTestContent, TEST2: null } })};})(window)</script>`;
   const ngEnvIife =
-    `(function(self){self.NG_ENV=${JSON.stringify({ TEST: envTestContent, TEST2: null })};})(window)`;
+    `<script>(function(self){self.NG_ENV=${JSON.stringify({ TEST: envTestContent, TEST2: null })};})(window)</script>`;
 
   function createFiles(variant: Variant = 'process') {
     const innerNgssc: Ngssc = { ...ngssc, variant };

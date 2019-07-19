@@ -1,6 +1,6 @@
 {
   "name": "angular-server-side-configuration",
-  "version": "8.0.0-beta.3",
+  "version": "8.0.0-beta.4",
   "description": "Configure an angular application on the server",
   "publishConfig": {
     "tag": "next"
@@ -11,7 +11,7 @@
     "migrations": "./schematics/migration.json"
   },
   "scripts": {
-    "clean": "rimraf coverage dist {builders,models,schematics}/**/*.{d.ts,js} test/*.{d.ts,js} junit.xml",
+    "clean": "rimraf coverage dist {builders,models,schematics,src}/**/*.{d.ts,js} test/*.{d.ts,js} junit.xml",
     "build:node": "npm run clean && tsc && rollup -c rollup.config.js",
     "build:go": "docker-compose run build-go",
     "build": "run-p build:*",
