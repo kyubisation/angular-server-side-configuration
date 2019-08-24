@@ -28,17 +28,17 @@ of this library can be used, as it is Angular version agnostic.
 
 ## Getting Started
 ```
-ng add angular-server-side-configuration@next
+ng add angular-server-side-configuration
 ```
 or, if you have a previous version of this library installed
 ```
-ng update angular-server-side-configuration@next
+ng update angular-server-side-configuration@latest
 ```
 This will configure the appropriate files.
 
 Alternatively, if you want to configure the files yourself:
 ```
-npm install --save angular-server-side-configuration@next
+npm install --save angular-server-side-configuration
 ```
 
 ### angular.json
@@ -164,7 +164,7 @@ Usage: ngssc insert [options] [directory]
 Dockerfile
 ```Dockerfile
 FROM nginx:alpine
-ADD https://github.com/kyubisation/angular-server-side-configuration/releases/download/v2.0.0/ngssc_64bit /usr/sbin/ngssc
+ADD https://github.com/kyubisation/angular-server-side-configuration/releases/download/v8.0.0/ngssc_64bit /usr/sbin/ngssc
 RUN chmod +x /usr/sbin/ngssc
 COPY dist /usr/share/nginx/html
 COPY start.sh start.sh

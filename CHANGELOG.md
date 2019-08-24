@@ -1,3 +1,9 @@
+# 8.0.0 (2019-08-25)
+
+### Bugfix
+
+* Fixed issue with native cli --recursive
+
 # 8.0.0-beta.4 (2019-07-19)
 
 ### Bugfix

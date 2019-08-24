@@ -84,11 +84,11 @@ func insertCommand(c *cli.Context) error {
 			return cli.NewExitError(err, 1)
 		}
 	} else {
-		ngsscPath, err := filepath.Abs("./ngssc.json")
+		ngsscFile, err := filepath.Abs("./ngssc.json")
 		if err != nil {
 			return cli.NewExitError(err, 1)
 		}
-		err = configureWithNgssc(ngsscPath, dryRunFlag)
+		err = configureWithNgssc(ngsscFile, dryRunFlag)
 		if err != nil {
 			return cli.NewExitError(err, 1)
 		}
@@ -112,24 +112,29 @@ func configureWithNgsscRecursively(dryRun bool) error {
 	
 	for _, ngsscFile := range files {
 		err = configureWithNgssc(ngsscFile, dryRun)
-		return err
 	}
 
 	return nil
 }
 
-func configureWithNgssc(ngsscPath string, dryRun bool) error {
-	ngssc, err := readNgsscJSON(ngsscPath)
+func configureWithNgssc(ngsscFile string, dryRun bool) error {
+	ngssc, err := readNgsscJSON(ngsscFile)
 	if err != nil {
 		return err
 	}
 
-	iifeScript := generateIifeScript(*ngssc, ngsscPath)
+	err = os.Chdir(filepath.Dir(ngsscFile))
+	if err != nil {
+		fmt.Printf("Failed to change to directory of %v\n", ngsscFile)
+		return nil
+	}
+
+	iifeScript := generateIifeScript(*ngssc, ngsscFile)
 	files, err := doublestar.Glob(*ngssc.FilePattern)
 	if err != nil {
 		return err
 	} else if files == nil {
-		fmt.Printf("No files found with pattern %v\n", ngssc.FilePattern)
+		fmt.Printf("No files found with pattern %v\n", *ngssc.FilePattern)
 		return nil
 	}
 
