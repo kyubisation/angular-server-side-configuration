@@ -71,3 +71,4 @@ steps:
     repositoryName: kyubisation/angular-server-side-configuration
     action: edit
     tag: $(Build.SourceBranchName)
+    addChangeLog: false
