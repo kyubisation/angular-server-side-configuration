@@ -1,5 +1,11 @@
 # 8.1.0 (2019-10-23)
 
+### Refactor
+
+* No longer changing working directory in the cli
+
+# 8.1.0 (2019-10-23)
+
 ### Features
 
 * Add uncompressed binaries
