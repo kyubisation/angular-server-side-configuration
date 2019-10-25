@@ -93,6 +93,7 @@ func TestNgsscNgEnvWithSetEnvironmentVariable(t *testing.T) {
 		t.Fatalf("Expected html to contain iife. Got:\n" + readFile(htmlPath))
 	}
 }
+
 func TestNgsscNgEnvWithMultipleHtmlFiles(t *testing.T) {
 	dir := createTempDir()
 	createDir(filepath.Join(dir, "de"))
@@ -137,6 +138,28 @@ func TestNgsscProcessWithInsertInHead(t *testing.T) {
 		t.Fatalf("Expected to succeed, but failed: %s %s", testcli.Stdout(), testcli.Error())
 	} else if !strings.Contains(readFile(htmlPath), `<script>(function(self){self.process={"env":{"TEST_VALUE":null}};})(window)</script>`) {
 		t.Fatalf("Expected html to contain iife. Got:\n" + readFile(htmlPath))
+	}
+}
+
+func TestNgsscRecursive(t *testing.T) {
+	dir := createTempDir()
+	createDir(filepath.Join(dir, "de"))
+	createDir(filepath.Join(dir, "en"))
+	deHTML := filepath.Join(dir, "de", "index.html")
+	enHTML := filepath.Join(dir, "en", "index.html")
+	deNgssc := filepath.Join(dir, "de", "ngssc.json")
+	enNgssc := filepath.Join(dir, "en", "ngssc.json")
+	ioutil.WriteFile(deHTML, []byte(configHTMLTemplate), 0644)
+	ioutil.WriteFile(enHTML, []byte(configHTMLTemplate), 0644)
+	ioutil.WriteFile(deNgssc, []byte(`{"variant":"process","environmentVariables":["TEST_VALUE"],"filePattern":"index.html"}`), 0644)
+	ioutil.WriteFile(enNgssc, []byte(`{"variant":"process","environmentVariables":["TEST_VALUE"],"filePattern":"index.html"}`), 0644)
+	testcli.Run("./app", "insert", dir, "--recursive")
+	if !testcli.Success() {
+		t.Fatalf("Expected to succeed, but failed: %s %s", testcli.Stdout(), testcli.Error())
+	} else if !strings.Contains(readFile(deHTML), `<script>(function(self){self.process={"env":{"TEST_VALUE":null}};})(window)</script>`) {
+		t.Fatalf("Expected html to contain iife. Got:\n" + readFile(deHTML))
+	} else if !strings.Contains(readFile(enHTML), `<script>(function(self){self.process={"env":{"TEST_VALUE":null}};})(window)</script>`) {
+		t.Fatalf("Expected html to contain iife. Got:\n" + readFile(enHTML))
 	}
 }
 

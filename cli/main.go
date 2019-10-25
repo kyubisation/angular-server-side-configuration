@@ -68,27 +68,39 @@ func insertCommand(c *cli.Context) error {
 		fmt.Println("DRY RUN! Files will not be changed!")
 	}
 
-	// Change working directory if an argument has been passed
+	// Resolve target directory
+	var workingDirectory string
 	if c.NArg() > 0 {
-		workingDirectory := c.Args()[0]
-		fmt.Printf("Changing working directory to %v\n", workingDirectory)
-		err := os.Chdir(workingDirectory)
+		var err error
+		workingDirectory, err = filepath.Abs(c.Args()[0])
 		if err != nil {
+			fmt.Printf("Unable to resolve the absolute path of %v\n", c.Args()[0])
+			return cli.NewExitError(err, 1)
+		}
+	} else {
+		var err error
+		workingDirectory, err = os.Getwd()
+		if err != nil {
+			fmt.Println("Unable to resolve the current working directory. " +
+				"Please specify the directory as a CLI parameter. (e.g. ngssc insert /path/to/directory)")
 			return cli.NewExitError(err, 1)
 		}
 	}
 
+	fmt.Printf("Working directory: %v\n", workingDirectory)
+	if _, err := os.Stat(workingDirectory); os.IsNotExist(err) {
+		fmt.Println("Working directory does not exist")
+		return cli.NewExitError(err, 1)
+	}
+
 	if recursive {
-		err := configureWithNgsscRecursively(dryRunFlag)
+		err := configureWithNgsscRecursively(workingDirectory, dryRunFlag)
 		if err != nil {
 			return cli.NewExitError(err, 1)
 		}
 	} else {
-		ngsscFile, err := filepath.Abs("./ngssc.json")
-		if err != nil {
-			return cli.NewExitError(err, 1)
-		}
-		err = configureWithNgssc(ngsscFile, dryRunFlag)
+		ngsscFile := filepath.Join(workingDirectory, "ngssc.json")
+		err := configureWithNgssc(ngsscFile, dryRunFlag)
 		if err != nil {
 			return cli.NewExitError(err, 1)
 		}
@@ -97,16 +109,14 @@ func insertCommand(c *cli.Context) error {
 	return nil
 }
 
-func configureWithNgsscRecursively(dryRun bool) error {
-	files, err := doublestar.Glob("**/ngssc.json")
+func configureWithNgsscRecursively(directory string, dryRun bool) error {
+	pattern := filepath.Join(directory, "**", "ngssc.json")
+	files, err := doublestar.Glob(pattern)
 	if err != nil {
+		fmt.Printf("Unable to resolve pattern: %v\n", pattern)
 		return err
 	} else if len(files) == 0 {
-		cwd, err := os.Getwd()
-		if err != nil {
-			return err
-		}
-		fmt.Printf("No ngssc.json files found in %v\n", cwd)
+		fmt.Printf("No ngssc.json files found in %v\n", directory)
 		return nil
 	}
 	
@@ -123,18 +133,15 @@ func configureWithNgssc(ngsscFile string, dryRun bool) error {
 		return err
 	}
 
-	err = os.Chdir(filepath.Dir(ngsscFile))
-	if err != nil {
-		fmt.Printf("Failed to change to directory of %v\n", ngsscFile)
-		return nil
-	}
-
+	directory := filepath.Dir(ngsscFile)
 	iifeScript := generateIifeScript(*ngssc, ngsscFile)
-	files, err := doublestar.Glob(*ngssc.FilePattern)
+	pattern := filepath.Join(directory, *ngssc.FilePattern)
+	files, err := doublestar.Glob(pattern)
 	if err != nil {
+		fmt.Printf("Unable to resolve pattern: %v\n", pattern)
 		return err
 	} else if files == nil {
-		fmt.Printf("No files found with pattern %v\n", *ngssc.FilePattern)
+		fmt.Printf("No files found with pattern: %v\n", *ngssc.FilePattern)
 		return nil
 	}
 
@@ -161,8 +168,12 @@ func readNgsscJSON(path string) (ngssc *NgsscJSON, err error) {
 	if err != nil {
 		fmt.Printf("Failed to parse %v\n", path)
 		return nil, err
-	} else if ngssc == nil || ngssc.EnvironmentVariables == nil || (ngssc.Variant != "process" && ngssc.Variant != "NG_ENV") {
-		return nil, fmt.Errorf("Invalid ngssc.json at %v", path)
+	} else if ngssc == nil {
+		return nil, fmt.Errorf("Invalid ngssc.json at %v (Must not be empty)", path)
+	} else if ngssc.EnvironmentVariables == nil {
+		return nil, fmt.Errorf("Invalid ngssc.json at %v (environmentVariables must be defined)", path)
+	} else if (ngssc.Variant != "process" && ngssc.Variant != "NG_ENV") {
+		return nil, fmt.Errorf("Invalid ngssc.json at %v (variant must either be process or NG_ENV)", path)
 	}
 
 	if ngssc.FilePattern == nil {
