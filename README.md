@@ -47,7 +47,7 @@ To use the builder run `ng run your-project-name:ngsscbuild:production`.
 You can add additional configurations in angular.json, which can be executed
 by replacing `production` with your configuration name in the previous command.
 
-The builder will analyze the configured `ngsscConfigurationFile` to detect
+The builder will analyze the configured `ngsscEnvironmentFile` to detect
 used environment variables and generate an [ngssc.json](#ngsscjson) in the defined
 `outputPath` in the referenced `browserTarget`.
 
@@ -67,7 +67,7 @@ used environment variables and generate an [ngssc.json](#ngsscjson) in the defin
                                 // environment variables inside AoT contexts
                                 // (e.g. forRoot(...) or forChild(...))
             "browserTarget": "your-project-name:build",
-            "ngsscConfigurationFile": "src/environments/environment.prod.ts"
+            "ngsscEnvironmentFile": "src/environments/environment.prod.ts"
           },
           "configurations": {
             "production": {
