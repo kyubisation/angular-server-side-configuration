@@ -72,3 +72,4 @@ steps:
     action: edit
     tag: $(Build.SourceBranchName)
     addChangeLog: false
+    isDraft: true
