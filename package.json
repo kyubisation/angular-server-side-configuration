@@ -1,6 +1,6 @@
 {
   "name": "angular-server-side-configuration",
-  "version": "8.1.1",
+  "version": "8.1.2",
   "description": "Configure an angular application on the server",
   "builders": "./builders/builders.json",
   "schematics": "./schematics/collection.json",
@@ -16,7 +16,8 @@
     "test:node": "jest --ci",
     "test:go": "cd cli && go build && go test",
     "test": "run-s test:*",
-    "lint": "tslint -p tsconfig.json"
+    "lint": "tslint -p tsconfig.json",
+    "release": "standard-version"
   },
   "main": "./src/main.js",
   "module": "./src/module.js",
@@ -64,6 +65,7 @@
     "rollup-plugin-commonjs": "^10.0.1",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-typescript2": "^0.22.0",
+    "standard-version": "^7.0.1",
     "ts-jest": "^24.0.2",
     "ts-node": "^8.3.0",
     "tslint": "^5.18.0",

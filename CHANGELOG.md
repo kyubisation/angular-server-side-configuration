@@ -1,3 +1,14 @@
+# Changelog
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+### [8.1.2](https://github.com/kyubisation/angular-server-side-configuration/compare/v8.1.1...v8.1.2) (2020-01-12)
+
+
+### Bug Fixes
+
+* bump handlebars from 4.1.2 to 4.5.3 ([#35](https://github.com/kyubisation/angular-server-side-configuration/issues/35)) ([de53338](https://github.com/kyubisation/angular-server-side-configuration/commit/de533381723afd94f18f1a9decf3e93c6d566600))
+
 # 8.1.0 (2019-10-23)
 
 ### Refactor
