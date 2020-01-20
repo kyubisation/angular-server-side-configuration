@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [8.1.3](https://github.com/kyubisation/angular-server-side-configuration/compare/v8.1.2...v8.1.3) (2020-01-20)
+
+
+### Bug Fixes
+
+* tokenizer should not short circuit ([d849f6c](https://github.com/kyubisation/angular-server-side-configuration/commit/d849f6cb5b9575fbf85e7daae084957f8b4433e5)), closes [#38](https://github.com/kyubisation/angular-server-side-configuration/issues/38)
+
 ### [8.1.2](https://github.com/kyubisation/angular-server-side-configuration/compare/v8.1.1...v8.1.2) (2020-01-12)
 
 

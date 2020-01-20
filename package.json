@@ -1,6 +1,6 @@
 {
   "name": "angular-server-side-configuration",
-  "version": "8.1.2",
+  "version": "8.1.3",
   "description": "Configure an angular application on the server",
   "builders": "./builders/builders.json",
   "schematics": "./schematics/collection.json",
