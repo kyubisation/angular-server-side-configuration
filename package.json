@@ -83,7 +83,8 @@
     "collectCoverageFrom": [
       "**/*.ts",
       "!src/index.ts",
-      "!**/*.spec.ts"
+      "!**/*.spec.ts",
+      "!test/minimal/**"
     ],
     "coverageReporters": [
       "cobertura",

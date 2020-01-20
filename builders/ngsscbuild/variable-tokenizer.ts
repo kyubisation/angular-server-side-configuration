@@ -11,7 +11,7 @@ export class VariableTokenizer {
 
   tokenize(sourceContent: string, ngsscContext: NgsscContext): TokenizeResult {
     const tokenizedVariables = ngsscContext.variables
-      .map(v => ({ ...v, token: `ngssc-token-${Date.now()}-${++this._tokenCounter}` }));
+      .map(v => ({ ...v, token: `ngssc-token-${++this._tokenCounter}-${Date.now()}` }));
     const tokenizedFileContent = tokenizedVariables
       .reduce(
         (current, next) => current.replace(next.expression, `"${next.token}" as any`),
