@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [8.2.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v8.1.3...v8.2.0) (2020-01-23)
+
+
+### Features
+
+* add filePattern option to builder ([e7d51be](https://github.com/kyubisation/angular-server-side-configuration/commit/e7d51be81926dd1d0d9199d06b077b219831b396)), closes [#37](https://github.com/kyubisation/angular-server-side-configuration/issues/37)
+
 ### [8.1.3](https://github.com/kyubisation/angular-server-side-configuration/compare/v8.1.2...v8.1.3) (2020-01-20)
 
 
