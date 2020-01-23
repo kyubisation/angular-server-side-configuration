@@ -106,7 +106,7 @@ export class NgsscBuilder {
         ...ngsscContext.variables.map(m => m.variable),
         ...(this._options.additionalEnvironmentVariables || []),
       ],
-      filePattern: basename(browserOptions.index),
+      filePattern: this._options.filePattern || basename(browserOptions.index),
       variant: ngsscContext.variant,
     };
     await writeFileAsync(join(outputPath, 'ngssc.json'), JSON.stringify(ngssc, null, 2), 'utf8');

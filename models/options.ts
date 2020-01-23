@@ -5,4 +5,5 @@ export interface Options extends JsonObject {
   aotSupport: boolean;
   browserTarget: string;
   ngsscEnvironmentFile: string;
+  filePattern: string | null;
 }
