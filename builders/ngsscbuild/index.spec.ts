@@ -71,6 +71,7 @@ describe('Ngssc Builder', () => {
         additionalEnvironmentVariables: [],
         aotSupport: true,
         browserTarget: 'dummy:build',
+        filePattern: '',
         ngsscEnvironmentFile: 'environment.prod.ts',
       });
       fail();
@@ -85,6 +86,7 @@ describe('Ngssc Builder', () => {
       additionalEnvironmentVariables: [],
       aotSupport: false,
       browserTarget: 'dummy:build',
+      filePattern: '',
       ngsscEnvironmentFile: 'environment.prod.ts',
     });
 
@@ -102,6 +104,7 @@ describe('Ngssc Builder', () => {
       additionalEnvironmentVariables: [expected],
       aotSupport: false,
       browserTarget: 'dummy:build',
+      filePattern: '',
       ngsscEnvironmentFile: 'environment.prod.ts',
     });
 
@@ -117,6 +120,7 @@ describe('Ngssc Builder', () => {
       additionalEnvironmentVariables: [],
       aotSupport: true,
       browserTarget: 'dummy:build',
+      filePattern: '',
       ngsscEnvironmentFile: 'environment.prod.ts',
     });
 
