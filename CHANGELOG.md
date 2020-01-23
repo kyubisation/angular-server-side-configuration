@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [8.2.1](https://github.com/kyubisation/angular-server-side-configuration/compare/v8.2.0...v8.2.1) (2020-01-23)
+
+
+### Bug Fixes
+
+* mark new filePattern option as optional ([b43ca20](https://github.com/kyubisation/angular-server-side-configuration/commit/b43ca20ed3db86336e3322fc78085fb70e1723ef))
+
 ## [8.2.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v8.1.3...v8.2.0) (2020-01-23)
 
 
