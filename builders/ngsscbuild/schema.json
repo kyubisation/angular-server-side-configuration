@@ -8,7 +8,9 @@
     },
     "aotSupport": {
       "type": "boolean",
-      "description": "Whether variables are going to be used in AoT contexts (like forRoot(...) or forChild(...))"
+      "description": "Whether variables are going to be used in AoT contexts (like forRoot(...) or forChild(...))",
+      "x-deprecated": true,
+      "default": false
     },
     "browserTarget": {
       "type": "string",

@@ -29,7 +29,6 @@ function addNgsscTargetToWorkspace(options: Schema) {
       options: {
         additionalEnvironmentVariables: options.additionalEnvironmentVariables
           ? options.additionalEnvironmentVariables.split(',').map(e => e.trim()) : [],
-        aotSupport: options.aotSupport,
         browserTarget: `${projectName}:build`,
         ngsscEnvironmentFile: options.ngsscEnvironmentFile,
       },

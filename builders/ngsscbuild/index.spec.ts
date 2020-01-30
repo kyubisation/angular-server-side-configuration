@@ -1,6 +1,6 @@
 import { Architect } from '@angular-devkit/architect';
 import { TestingArchitectHost, TestLogger } from '@angular-devkit/architect/testing';
-import { schema } from '@angular-devkit/core';
+import { JsonObject, schema } from '@angular-devkit/core';
 import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
@@ -48,7 +48,7 @@ describe('Ngssc Builder', () => {
       config);
   }
 
-  async function runNgsscbuild(options: Options) {
+  async function runNgsscbuild(options: Options & JsonObject) {
     // A "run" can have multiple outputs, and contains progress information.
     const run = await architect.scheduleBuilder(
       'angular-server-side-configuration:ngsscbuild', options, { logger });

@@ -1,4 +1,4 @@
-import { mkdirSync, mkdtempSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
+import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
 

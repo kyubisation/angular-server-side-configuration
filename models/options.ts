@@ -1,6 +1,4 @@
-import { JsonObject } from '@angular-devkit/core';
-
-export interface Options extends JsonObject {
+export interface Options {
   additionalEnvironmentVariables: string[];
   aotSupport: boolean;
   browserTarget: string;

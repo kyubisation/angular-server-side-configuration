@@ -1,4 +1,4 @@
-import { BuilderContext, BuilderOutput, Target, targetFromTargetString } from '@angular-devkit/architect';
+import { BuilderContext, Target, targetFromTargetString } from '@angular-devkit/architect';
 import { JsonObject } from '@angular-devkit/core';
 import { randomBytes } from 'crypto';
 import { existsSync, readdir, readFile, unlink, writeFile } from 'fs';
@@ -32,10 +32,6 @@ export class NgsscBuilder {
     this._ngsscEnvironmentFile = join(_context.workspaceRoot, _options.ngsscEnvironmentFile);
     this._tmpNgsscEnvironmentFile = `${_options.ngsscEnvironmentFile}_${randomBytes(10).toString('hex')}.tmp`;
     this._context.addTeardown(() => this._removeTmpNgsscEnvironmentFile());
-  }
-
-  static async build(options: Options, context: BuilderContext): Promise<BuilderOutput> {
-    return await new NgsscBuilder(options, context).run();
   }
 
   async run() {

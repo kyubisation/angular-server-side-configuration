@@ -1,6 +1,6 @@
 import { Path } from '@angular-devkit/core';
 import { chain, FileEntry, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
-import { getWorkspace } from '@schematics/angular/utility/config';
+import { getWorkspace, updateWorkspace } from '@schematics/angular/utility/config';
 
 import { Ngssc, Variant } from '../../models';
 import ngAdd from '../ng-add/index';
@@ -15,7 +15,6 @@ export function updateToV8(): Rule {
     return chain([
       ngAdd({
         additionalEnvironmentVariables: (ngssc.environmentVariables || []).join(','),
-        aotSupport: true,
         ngsscEnvironmentFile: 'src/environments/environment.prod.ts',
         project: '',
         variant,
@@ -23,6 +22,31 @@ export function updateToV8(): Rule {
       removeNgsscJson(),
       checkNgsscUsageInScripts(),
     ]);
+  };
+}
+
+export function updateToV9(): Rule {
+  return (tree: Tree, context: SchematicContext) => {
+    const workspace = getWorkspace(tree);
+    context.logger.info(
+      `Removing ngsscbuild entry 'aotSupport', since it is no longer necessary for Ivy.`);
+    Object.keys(workspace.projects)
+      .filter(p => workspace.projects[p].architect &&
+        workspace.projects[p].architect!.ngsscbuild)
+      .forEach(p => {
+        const ngsscbuild = workspace.projects[p].architect!.ngsscbuild;
+        if ('aotSupport' in ngsscbuild.options) {
+          delete ngsscbuild.options.aotSupport;
+          context.logger.info(` - Removed from ${p} ngsscbuild options`);
+        }
+        Object.keys(ngsscbuild.configurations || {})
+          .filter(c => 'aotSupport' in ngsscbuild.configurations[c])
+          .forEach(c => {
+            delete ngsscbuild.configurations[c].aotSupport;
+            context.logger.info(` - Removed from ${p} ngsscbuild configuration ${c}`);
+          });
+      });
+    return updateWorkspace(workspace);
   };
 }
 

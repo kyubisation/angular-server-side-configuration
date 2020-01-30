@@ -4,5 +4,4 @@ export interface Schema {
   project: string;
   variant: 'process' | 'NG_ENV';
   ngsscEnvironmentFile: string;
-  aotSupport: boolean;
 }

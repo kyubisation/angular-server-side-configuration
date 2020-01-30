@@ -1,12 +1,13 @@
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { Schema as ApplicationOptions, Style } from '@schematics/angular/application/schema';
+import { getWorkspace, updateWorkspace } from '@schematics/angular/utility/config';
 import { Schema as WorkspaceOptions } from '@schematics/angular/workspace/schema';
 import { join } from 'path';
 
 const workspaceOptions: WorkspaceOptions = {
   name: 'workspace',
   newProjectRoot: 'projects',
-  version: '6.0.0',
+  version: '9.0.0-rc.11',
 };
 
 const appOptions: ApplicationOptions = {
@@ -27,7 +28,7 @@ describe('ng-update', () => {
   let appTree: UnitTestTree;
 
   beforeEach(async () => {
-    runner = new SchematicTestRunner('schematics', collectionPath);
+    runner = new SchematicTestRunner('migrations', collectionPath);
     appTree = await runner
       .runExternalSchematicAsync('@schematics/angular', 'workspace', workspaceOptions)
       .toPromise();
@@ -38,8 +39,8 @@ describe('ng-update', () => {
 
   function assertAppliedConfig(
     tree: UnitTestTree, importString = `import 'angular-server-side-configuration/process';`) {
-    const angularJson = JSON.parse(tree.readContent('angular.json'));
-    expect(angularJson.projects.dummy.architect.ngsscbuild.builder)
+    const angularJson = getWorkspace(tree);
+    expect(angularJson.projects.dummy.architect!.ngsscbuild.builder)
       .toBe('angular-server-side-configuration:ngsscbuild');
 
     const environmentContent = tree.readContent(envPath);
@@ -90,8 +91,8 @@ describe('ng-update', () => {
       .runSchematicAsync('migration-v8', {}, appTree)
       .toPromise();
     assertAppliedConfig(tree);
-    const angularJson = JSON.parse(tree.readContent('angular.json'));
-    expect(angularJson.projects.dummy.architect.ngsscbuild.options.additionalEnvironmentVariables)
+    const angularJson = getWorkspace(tree);
+    expect(angularJson.projects.dummy.architect!.ngsscbuild.options.additionalEnvironmentVariables)
       .toEqual([expected]);
     expect(appTree.exists('/ngssc.json')).toBeFalsy();
   });
@@ -118,5 +119,45 @@ describe('ng-update', () => {
     await runner
       .runSchematicAsync('migration-v8', {}, appTree)
       .toPromise();
+  });
+
+  it('should do nothing for v9 if no ngsscbuild targets are declared', async () => {
+    const workspace = getWorkspace(appTree);
+    const tree = await runner
+      .runSchematicAsync('migration-v9', {}, appTree)
+      .toPromise();
+    const newWorkspace = getWorkspace(tree);
+    expect(newWorkspace).toEqual(workspace);
+  });
+
+  it('should remove aotSupport on v9 update', async () => {
+    runner.registerCollection('schematics', join(__dirname, '../collection.json'));
+    const tree = await runner
+      .runExternalSchematicAsync('schematics', 'ng-add', {}, appTree)
+      .toPromise();
+    const workspace = getWorkspace(tree);
+    workspace.projects.dummy.architect!.ngsscbuild.options.aotSupport = true;
+    updateWorkspace(workspace)(tree, undefined as any);
+    const migratedTree = await runner
+      .runSchematicAsync('migration-v9', {}, tree)
+      .toPromise();
+    const migratedWorkspace = getWorkspace(migratedTree);
+    expect(migratedWorkspace.projects.dummy.architect!.ngsscbuild.options).not.toHaveProperty('aotSupport');
+  });
+
+  it('should remove aotSupport from configurations on v9 update', async () => {
+    runner.registerCollection('schematics', join(__dirname, '../collection.json'));
+    const tree = await runner
+      .runExternalSchematicAsync('schematics', 'ng-add', {}, appTree)
+      .toPromise();
+    const workspace = getWorkspace(tree);
+    workspace.projects.dummy.architect!.ngsscbuild.configurations.production.aotSupport = true;
+    updateWorkspace(workspace)(tree, undefined as any);
+    const migratedTree = await runner
+      .runSchematicAsync('migration-v9', {}, tree)
+      .toPromise();
+    const migratedWorkspace = getWorkspace(migratedTree);
+    expect(migratedWorkspace.projects.dummy.architect!.ngsscbuild.configurations.production)
+      .not.toHaveProperty('aotSupport');
   });
 });
