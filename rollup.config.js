@@ -1,9 +1,30 @@
-import { tmpdir } from 'os';
 import commonjs from 'rollup-plugin-commonjs';
 import resolve from 'rollup-plugin-node-resolve';
-import typescript from 'rollup-plugin-typescript2';
+import ts from "@wessberg/rollup-plugin-ts";
+import { join } from 'path';
 
-export default {
+export default ['./builders/ngsscbuild', './schematics/ng-add', './schematics/ng-update'].map(p => ({
+  input: join(p, 'index.ts'),
+  output: {
+    file: join(p, 'index.js'),
+    format: 'cjs'
+  },
+  external: [
+    '@angular-devkit/architect',
+    '@angular-devkit/core',
+    '@angular-devkit/schematics',
+    '@schematics/angular/utility/change',
+    '@schematics/angular/utility/config',
+    'crypto',
+    'fs',
+    'path',
+    'util',
+    'typescript'
+  ],
+  plugins: [
+    ts({ browserslist: false })
+  ]
+})).concat({
   input: './src/index.ts',
   output: [
     {
@@ -20,11 +41,8 @@ export default {
     'path'
   ],
   plugins: [
-    typescript({
-      tsconfigOverride: { compilerOptions: { module: 'ESNext', declaration: false } },
-      cacheRoot: `${tmpdir()}/.rpt2_cache_ngssc`,
-    }),
+    ts({ browserslist: false }),
     resolve(),
     commonjs()
   ]
-}
+});
