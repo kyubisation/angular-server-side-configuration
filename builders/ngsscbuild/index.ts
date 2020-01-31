@@ -1,10 +1,10 @@
 import { BuilderContext, createBuilder } from '@angular-devkit/architect';
 import { JsonObject } from '@angular-devkit/core';
 
-import { Options } from '../../models';
-
 import { NgsscBuilder } from './ngssc-builder';
+import { Schema } from './schema';
 
-export default createBuilder<Options & JsonObject>(
-  async (options: Options, context: BuilderContext) =>
+export { Schema as NgsscBuildSchema } from './schema';
+export default createBuilder<Schema & JsonObject>(
+  async (options: Schema, context: BuilderContext) =>
     await new NgsscBuilder(options, context).run());

@@ -5,8 +5,9 @@ import { existsSync, readdir, readFile, unlink, writeFile } from 'fs';
 import { basename, join } from 'path';
 import { promisify } from 'util';
 
-import { BrowserOptions, FileReplacements, Ngssc, NgsscContext, Options } from '../../models';
+import { BrowserOptions, FileReplacements, Ngssc, NgsscContext } from '../../models';
 
+import { Schema } from './schema';
 import { TokenizeResult } from './tokenize-result';
 import { VariableDetector } from './variable-detector';
 import { VariableTokenizer } from './variable-tokenizer';
@@ -25,7 +26,7 @@ export class NgsscBuilder {
   private _tokenizeResult?: TokenizeResult;
 
   constructor(
-    private _options: Options,
+    private _options: Schema,
     private _context: BuilderContext,
   ) {
     this._browserTarget = targetFromTargetString(_options.browserTarget);

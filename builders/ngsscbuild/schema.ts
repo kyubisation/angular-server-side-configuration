@@ -1,4 +1,4 @@
-export interface Options {
+export interface Schema {
   additionalEnvironmentVariables: string[];
   aotSupport: boolean;
   browserTarget: string;

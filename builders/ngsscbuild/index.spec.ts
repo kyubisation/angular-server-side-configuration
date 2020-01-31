@@ -5,8 +5,10 @@ import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
 
-import { Ngssc, Options } from '../../models';
+import { Ngssc } from '../../models';
 import { envContent } from '../../test/temporary-fs';
+
+import { Schema } from './schema';
 
 describe('Ngssc Builder', () => {
   let tmpDir: string;
@@ -48,7 +50,7 @@ describe('Ngssc Builder', () => {
       config);
   }
 
-  async function runNgsscbuild(options: Options & JsonObject) {
+  async function runNgsscbuild(options: Schema & JsonObject) {
     // A "run" can have multiple outputs, and contains progress information.
     const run = await architect.scheduleBuilder(
       'angular-server-side-configuration:ngsscbuild', options, { logger });
