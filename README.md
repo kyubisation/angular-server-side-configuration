@@ -21,10 +21,15 @@ environment variables into index.html file(s) into the head tag or by replacing 
 on the host serving the bundled angular files.
 
 ## Version 8 Rewrite
-Version 8.x of this package is a complete rewrite with Angular schematics and builders.
+Version 8.x of this package was a complete rewrite with Angular schematics and builders.
 If you require support for older Angular versions,
 [Version 2.x](https://www.npmjs.com/package/angular-server-side-configuration/v/2.0.0)
 of this library can be used, as it is Angular version agnostic.
+
+## Version 9 Change
+Version 9 of angular-server-side-configuration deprecates aotSupport, since it is
+no longer required for Angular 9 with Ivy. The update schematic removes the option
+from your angular.json.
 
 ## Getting Started
 ```
@@ -63,11 +68,11 @@ used environment variables and generate an [ngssc.json](#ngsscjson) in the defin
           "builder": "angular-server-side-configuration:ngsscbuild",
           "options": {
             "additionalEnvironmentVariables": ["MANUAL_ENTRIES"],
-            "aotSupport": true, // Set this to true, if you need to use
-                                // environment variables inside AoT contexts
-                                // (e.g. forRoot(...) or forChild(...))
             "browserTarget": "your-project-name:build",
-            "ngsscEnvironmentFile": "src/environments/environment.prod.ts"
+            "ngsscEnvironmentFile": "src/environments/environment.prod.ts",
+            // Optional 
+            // (Defaults to the basename of the index option of the browser target)
+            "filePattern": "index.html"
           },
           "configurations": {
             "production": {
@@ -164,7 +169,7 @@ Usage: ngssc insert [options] [directory]
 Dockerfile
 ```Dockerfile
 FROM nginx:alpine
-ADD https://github.com/kyubisation/angular-server-side-configuration/releases/download/v8.0.0/ngssc_64bit /usr/sbin/ngssc
+ADD https://github.com/kyubisation/angular-server-side-configuration/releases/download/v9.0.0-next.0/ngssc_64bit /usr/sbin/ngssc
 RUN chmod +x /usr/sbin/ngssc
 COPY dist /usr/share/nginx/html
 COPY start.sh start.sh
