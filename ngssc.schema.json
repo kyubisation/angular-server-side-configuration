@@ -43,15 +43,6 @@
         "**/index.html"
       ],
       "pattern": "^(.*)$"
-    },
-    "insertInHead": {
-      "$id": "#/properties/insertInHead",
-      "type": "boolean",
-      "title": "The Insertinhead Schema",
-      "default": false,
-      "examples": [
-        false
-      ]
     }
   }
 }
