@@ -52,9 +52,9 @@ func main() {
 
 // NgsscJSON is the JSON structure of ngssc.json
 type NgsscJSON struct {
-	Variant 							string
-	EnvironmentVariables 	[]string
-	FilePattern  					*string
+	Variant              string
+	EnvironmentVariables []string
+	FilePattern          *string
 }
 
 // InsertCommand is the ngssc CLI command to insert environment variables
@@ -119,7 +119,7 @@ func configureWithNgsscRecursively(directory string, dryRun bool) error {
 		fmt.Printf("No ngssc.json files found in %v\n", directory)
 		return nil
 	}
-	
+
 	for _, ngsscFile := range files {
 		err = configureWithNgssc(ngsscFile, dryRun)
 	}
@@ -172,7 +172,7 @@ func readNgsscJSON(path string) (ngssc *NgsscJSON, err error) {
 		return nil, fmt.Errorf("Invalid ngssc.json at %v (Must not be empty)", path)
 	} else if ngssc.EnvironmentVariables == nil {
 		return nil, fmt.Errorf("Invalid ngssc.json at %v (environmentVariables must be defined)", path)
-	} else if (ngssc.Variant != "process" && ngssc.Variant != "NG_ENV") {
+	} else if ngssc.Variant != "process" && ngssc.Variant != "NG_ENV" {
 		return nil, fmt.Errorf("Invalid ngssc.json at %v (variant must either be process or NG_ENV)", path)
 	}
 
@@ -200,7 +200,7 @@ func generateIifeScript(ngssc NgsscJSON, source string) string {
 		iife = fmt.Sprintf("self.NG_ENV=%v", envMapJSON)
 	}
 
-	return fmt.Sprintf("<script>(function(self){%v;})(window)</script>", iife)
+	return fmt.Sprintf("<!--ngssc--><script>(function(self){%v;})(window)</script><!--/ngssc-->", iife)
 }
 
 func populateEnvironmentVariables(environmentVariables []string) map[string]*string {
@@ -237,9 +237,12 @@ func insertIifeIntoHTML(htmlFile string, iifeScript string) error {
 
 	var newHTML string
 	html := string(htmlBytes)
-	var re = regexp.MustCompile("<!--\\s*CONFIG\\s*-->")
-	if re.Match(htmlBytes) {
-		newHTML = re.ReplaceAllString(html, iifeScript)
+	var ngsscRegex = regexp.MustCompile("<!--ngssc-->[\\w\\W]*<!--/ngssc-->")
+	var configRegex = regexp.MustCompile("<!--\\s*CONFIG\\s*-->")
+	if ngsscRegex.Match(htmlBytes) {
+		newHTML = ngsscRegex.ReplaceAllString(html, iifeScript)
+	} else if configRegex.Match(htmlBytes) {
+		newHTML = configRegex.ReplaceAllString(html, iifeScript)
 	} else if strings.Contains(html, "</title>") {
 		newHTML = strings.Replace(html, "</title>", "</title>"+iifeScript, 1)
 	} else {

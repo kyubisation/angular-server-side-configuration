@@ -51,12 +51,14 @@ function generateIife(variant: Variant, populatedVariables: { [key: string]: str
   const iife = variant === 'NG_ENV' ?
     `(function(self){self.NG_ENV=${JSON.stringify(populatedVariables)};})(window)` :
     `(function(self){self.process=${JSON.stringify({ env: populatedVariables })};})(window)`;
-  return `<script>${iife}</script>`;
+  return `<!--ngssc--><script>${iife}</script><!--/ngssc-->`;
 }
 
 function insertIntoHtml(file: string, iife: string) {
   const fileContent = readFileSync(file, 'utf8');
-  if (/<!--\s*CONFIG\s*-->/.test(fileContent)) {
+  if (/<!--ngssc-->[\w\W]*<!--\/ngssc-->/.test(fileContent)) {
+    writeFileSync(file, fileContent.replace(/<!--ngssc-->[\w\W]*<!--\/ngssc-->/, iife), 'utf8');
+  } else if (/<!--\s*CONFIG\s*-->/.test(fileContent)) {
     writeFileSync(file, fileContent.replace(/<!--\s*CONFIG\s*-->/, iife), 'utf8');
   } else if (fileContent.includes('</title>')) {
     writeFileSync(file, fileContent.replace('</title>', `</title>${iife}`), 'utf8');

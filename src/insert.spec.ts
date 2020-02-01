@@ -61,7 +61,7 @@ describe('insert', () => {
     }
   });
 
-  it('should inserte into html with recursive true', () => {
+  it('should insert into html with recursive true', () => {
     createFiles();
     insert({ directory, recursive: true });
     for (const file of subdirectories.map(d => join(d, 'index.html'))) {
@@ -69,12 +69,32 @@ describe('insert', () => {
     }
   });
 
+  it('should insert idempotent', () => {
+    createFiles();
+    insert({ directory, recursive: true });
+    for (const file of subdirectories.map(d => join(d, 'index.html'))) {
+      expect(readFileSync(file, 'utf8')).toContain(iife);
+    }
+
+    const test2Value = 'test2';
+    process.env.TEST2 = test2Value;
+    const changedIife =
+      // tslint:disable-next-line: max-line-length
+      `<script>(function(self){self.process=${JSON.stringify({ env: { TEST: envTestContent, TEST2: test2Value } })};})(window)</script>`;
+    insert({ directory, recursive: true });
+    for (const file of subdirectories.map(d => join(d, 'index.html'))) {
+      expect(readFileSync(file, 'utf8')).not.toContain(iife);
+      expect(readFileSync(file, 'utf8')).toContain(changedIife);
+    }
+    delete process.env.TEST2;
+  });
+
   it('should do nothing on no html files', () => {
     writeFileSync(join(directory, 'ngssc.json'), JSON.stringify(ngssc), 'utf8');
     insert({ directory });
   });
 
-  it('should inserte into html with recursive true and variant NG_ENV', () => {
+  it('should insert into html with recursive true and variant NG_ENV', () => {
     createFiles('NG_ENV');
     insert({ directory, recursive: true });
     for (const file of subdirectories.map(d => join(d, 'index.html'))) {

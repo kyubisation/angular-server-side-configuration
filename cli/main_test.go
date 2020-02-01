@@ -66,6 +66,33 @@ func TestNgsscProcessWithSetEnvironmentVariable(t *testing.T) {
 	}
 }
 
+
+func TestIdempotentNgsscProcessWithSetEnvironmentVariable(t *testing.T) {
+	dir := createTempDir()
+	htmlPath := filepath.Join(dir, "index.html")
+	ioutil.WriteFile(filepath.Join(dir, "ngssc.json"), []byte(`{"variant":"process","environmentVariables":["TEST_VALUE","TEST_VALUE2"]}`), 0644)
+	ioutil.WriteFile(htmlPath, []byte(configHTMLTemplate), 0644)
+	os.Setenv("TEST_VALUE", "example value")
+	testcli.Run("./app", "insert", dir)
+	os.Unsetenv("TEST_VALUE")
+	if !testcli.Success() {
+		t.Fatalf("Expected to succeed, but failed: %s %s", testcli.Stdout(), testcli.Error())
+	} else if !strings.Contains(readFile(htmlPath), `<script>(function(self){self.process={"env":{"TEST_VALUE":"example value","TEST_VALUE2":null}};})(window)</script>`) {
+		t.Fatalf("Expected html to contain iife. Got:\n" + readFile(htmlPath))
+	}
+
+	os.Setenv("TEST_VALUE", "example value")
+	os.Setenv("TEST_VALUE2", "example value 2")
+	testcli.Run("./app", "insert", dir)
+	os.Unsetenv("TEST_VALUE")
+	os.Unsetenv("TEST_VALUE2")
+	if !testcli.Success() {
+		t.Fatalf("Expected to succeed, but failed: %s %s", testcli.Stdout(), testcli.Error())
+	} else if !strings.Contains(readFile(htmlPath), `<script>(function(self){self.process={"env":{"TEST_VALUE":"example value","TEST_VALUE2":"example value 2"}};})(window)</script>`) {
+		t.Fatalf("Expected html to contain updated iife. Got:\n" + readFile(htmlPath))
+	}
+}
+
 func TestNgsscNgEnvWithNotSetEnvironmentVariable(t *testing.T) {
 	dir := createTempDir()
 	htmlPath := filepath.Join(dir, "index.html")
