@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [9.0.0-next.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v8.2.1...v9.0.0-next.0) (2020-02-01)
+
+
+### Features
+
+* make insert commands idempotent ([3c55e34](https://github.com/kyubisation/angular-server-side-configuration/commit/3c55e34eb210033b976c4a8208023d8ef98580f6))
+* upgrade to angular 9-rc ([f948ae5](https://github.com/kyubisation/angular-server-side-configuration/commit/f948ae5d5e5085bda112ffa77f9ee5f43713628d))
+
 ### [8.2.1](https://github.com/kyubisation/angular-server-side-configuration/compare/v8.2.0...v8.2.1) (2020-01-23)
 
 
