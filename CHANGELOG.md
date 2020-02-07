@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [9.0.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v9.0.0-next.0...v9.0.0) (2020-02-07)
+
 ## [9.0.0-next.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v8.2.1...v9.0.0-next.0) (2020-02-01)
 
 
