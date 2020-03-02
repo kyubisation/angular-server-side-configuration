@@ -12,7 +12,7 @@ Configure an angular application at runtime on the server or in a docker contain
 The Angular CLI provides build time configuration (via environment.ts).
 In a Continuous Delivery environment this is sometimes not enough.
 
-## How it works & Limitations
+## How it works
 Environment variables are used for configuration.
 This package provides an Angular CLI builder to search for usages at build time.
 A [native CLI](#on-host-server-or-in-dockerfile) can be used to insert populated
@@ -20,13 +20,12 @@ environment variables into index.html file(s) into the head tag or by replacing 
 (Missing environment variables will be represented by `null`). This should be done
 on the host serving the bundled angular files.
 
-## Version 8 Rewrite
+## Version 8/9 Changes
 Version 8.x of this package was a complete rewrite with Angular schematics and builders.
 If you require support for older Angular versions,
 [Version 2.x](https://www.npmjs.com/package/angular-server-side-configuration/v/2.0.0)
 of this library can be used, as it is Angular version agnostic.
 
-## Version 9 Change
 Version 9 of angular-server-side-configuration deprecates aotSupport, since it is
 no longer required for Angular 9 with Ivy. The update schematic removes the option
 from your angular.json.
@@ -169,7 +168,7 @@ Usage: ngssc insert [options] [directory]
 Dockerfile
 ```Dockerfile
 FROM nginx:alpine
-ADD https://github.com/kyubisation/angular-server-side-configuration/releases/download/v9.0.0-next.0/ngssc_64bit /usr/sbin/ngssc
+ADD https://github.com/kyubisation/angular-server-side-configuration/releases/download/v9.0.1/ngssc_64bit /usr/sbin/ngssc
 RUN chmod +x /usr/sbin/ngssc
 COPY dist /usr/share/nginx/html
 COPY start.sh start.sh
