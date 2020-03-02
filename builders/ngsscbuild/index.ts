@@ -5,6 +5,9 @@ import { NgsscBuilder } from './ngssc-builder';
 import { Schema } from './schema';
 
 export { Schema as NgsscBuildSchema } from './schema';
-export default createBuilder<Schema & JsonObject>(
-  async (options: Schema, context: BuilderContext) =>
-    await new NgsscBuilder(options, context).run());
+
+export async function ngsscBuild(options: Schema, context: BuilderContext) {
+  return await new NgsscBuilder(options, context).run();
+}
+
+export default createBuilder<Schema & JsonObject>(ngsscBuild);
