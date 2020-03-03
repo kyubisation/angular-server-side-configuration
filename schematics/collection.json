@@ -3,7 +3,7 @@
   "schematics": {
     "ng-add": {
       "description": "Adds Angular Material to the application without affecting any templates",
-      "factory": "./ng-add/index",
+      "factory": "./ng-add/index#ngAdd",
       "schema": "./ng-add/schema.json",
       "aliases": ["install"]
     }

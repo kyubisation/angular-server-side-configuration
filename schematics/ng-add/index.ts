@@ -6,7 +6,7 @@ import { ProjectType, WorkspaceProject } from '@schematics/angular/utility/works
 
 import { Schema } from './schema';
 
-export default function(options: Schema): Rule {
+export function ngAdd(options: Schema): Rule {
   return chain([
     addNgsscTargetToWorkspace(options),
     addImportAndDescriptionToEnvironmentFile(options),

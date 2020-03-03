@@ -3,7 +3,7 @@ import { chain, FileEntry, Rule, SchematicContext, Tree } from '@angular-devkit/
 import { getWorkspace, updateWorkspace } from '@schematics/angular/utility/config';
 
 import { Ngssc, Variant } from '../../models';
-import ngAdd from '../ng-add/index';
+import { ngAdd } from '../ng-add/index';
 
 const NGSSC_JSON_PATH = '/ngssc.json';
 

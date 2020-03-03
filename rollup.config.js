@@ -7,7 +7,8 @@ export default ['./builders/ngsscbuild', './schematics/ng-add', './schematics/ng
   input: join(p, 'index.ts'),
   output: {
     file: join(p, 'index.js'),
-    format: 'cjs'
+    format: 'cjs',
+    exports: 'named'
   },
   external: [
     '@angular-devkit/architect',
