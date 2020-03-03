@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [9.0.2](https://github.com/kyubisation/angular-server-side-configuration/compare/v9.0.1...v9.0.2) (2020-03-03)
+
+
+### Bug Fixes
+
+* export schematics factories named ([8c44ff3](https://github.com/kyubisation/angular-server-side-configuration/commit/8c44ff3aadce1764a28a2c53e00d895c81a24fc8))
+
 ### [9.0.1](https://github.com/kyubisation/angular-server-side-configuration/compare/v9.0.0...v9.0.1) (2020-03-02)
 
 
