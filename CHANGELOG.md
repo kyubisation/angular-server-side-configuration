@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v9.0.2...v10.0.0) (2020-07-05)
+
+
+### ⚠ BREAKING CHANGES
+
+* Updating to Angular 10.
+
+### Features
+
+* add ngssc binaries for OSX (darwin) ([0561921](https://github.com/kyubisation/angular-server-side-configuration/commit/05619218bf7c748ebfefa94b27d74c9c5fe89a23))
+
+
+* update to Angular 10 ([2b3e6b7](https://github.com/kyubisation/angular-server-side-configuration/commit/2b3e6b7f49ab4988deac1d8765ab7e394e967e82))
+
 ### [9.0.2](https://github.com/kyubisation/angular-server-side-configuration/compare/v9.0.1...v9.0.2) (2020-03-03)
 
 
