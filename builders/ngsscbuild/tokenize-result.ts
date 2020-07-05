@@ -5,7 +5,7 @@
 export class TokenizeResult {
   constructor(
     readonly content: string,
-    private readonly _variables: Array<{ token: string, expression: string }>) { }
+    private readonly _variables: { token: string, expression: string }[]) { }
 
   untokenize(fileContent: string) {
     if (!this._variables.some(v => fileContent.includes(v.token))) {

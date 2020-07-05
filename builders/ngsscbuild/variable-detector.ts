@@ -36,7 +36,7 @@ export class VariableDetector {
     return { variant, variantImport };
   }
 
-  private _findProcessEnvVariables(node: Node): Array<{ variable: string, expression: string }> {
+  private _findProcessEnvVariables(node: Node): { variable: string, expression: string }[] {
     return this._findUsages(node, 'process')
       .sort((a, b) => b.parent.parent.getText().length - a.parent.parent.getText().length)
       .map(n => ({
@@ -45,7 +45,7 @@ export class VariableDetector {
       }));
   }
 
-  private _findNgEnvVariables(node: Node): Array<{ variable: string, expression: string }> {
+  private _findNgEnvVariables(node: Node): { variable: string, expression: string }[] {
     return this._findUsages(node, 'NG_ENV')
       .filter(n => n.kind === SyntaxKind.Identifier && n.parent.kind !== SyntaxKind.ImportSpecifier)
       .sort((a, b) => b.parent.getText().length - a.parent.getText().length)

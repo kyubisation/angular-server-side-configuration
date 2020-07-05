@@ -7,5 +7,5 @@ import { Variant } from './variant';
 export interface NgsscContext {
   variant: Variant;
   variantImport: string | undefined;
-  variables: Array<{ variable: string, expression: string }>;
+  variables: { variable: string, expression: string }[];
 }
