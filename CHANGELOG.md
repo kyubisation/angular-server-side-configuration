@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [10.0.1](https://github.com/kyubisation/angular-server-side-configuration/compare/v10.0.0...v10.0.1) (2020-07-05)
+
+
+### Bug Fixes
+
+* correct linting ([3ac1181](https://github.com/kyubisation/angular-server-side-configuration/commit/3ac1181c74227b7d99a295f66b5f44995eab26f4))
+
 ## [10.0.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v9.0.2...v10.0.0) (2020-07-05)
 
 
