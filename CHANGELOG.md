@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.1.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v10.0.1...v10.1.0) (2020-10-18)
+
+
+### Features
+
+* add ngsw.json detection and updating to native cli ([1dd77fa](https://github.com/kyubisation/angular-server-side-configuration/commit/1dd77fa943793b6aaa83f34efa87dbc2ef4c4015))
+
 ### [10.0.1](https://github.com/kyubisation/angular-server-side-configuration/compare/v10.0.0...v10.0.1) (2020-07-05)
 
 
