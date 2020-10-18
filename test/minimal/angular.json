@@ -43,7 +43,9 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "aot": true,
-            "assets": [],
+            "assets": [
+              "src/manifest.webmanifest"
+            ],
             "styles": [],
             "scripts": []
           },
@@ -73,7 +75,9 @@
                   "type": "anyComponentStyle",
                   "maximumWarning": "6kb"
                 }
-              ]
+              ],
+              "serviceWorker": true,
+              "ngswConfigPath": "ngsw-config.json"
             }
           }
         },

@@ -20,7 +20,8 @@
     "@angular/platform-browser": "~10.0.2",
     "@angular/platform-browser-dynamic": "~10.0.2",
     "@angular/router": "~10.0.2",
-    "angular-server-side-configuration": "file:../../angular-server-side-configuration-9.0.2.tgz",
+    "@angular/service-worker": "~10.0.2",
+    "angular-server-side-configuration": "file:../../angular-server-side-configuration-10.0.1.tgz",
     "rxjs": "~6.5.4",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.3"

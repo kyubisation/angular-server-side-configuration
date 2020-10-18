@@ -14,7 +14,7 @@
     "build": "run-p build:*",
     "pretest": "npm run clean",
     "test:node": "jest --ci",
-    "test:go": "cd cli && go build && go test",
+    "test:go": "cd cli && go test",
     "test": "run-s test:*",
     "lint": "tslint -p tsconfig.json",
     "release": "standard-version"
