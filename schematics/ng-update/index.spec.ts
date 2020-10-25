@@ -7,7 +7,7 @@ import { join } from 'path';
 const workspaceOptions: WorkspaceOptions = {
   name: 'workspace',
   newProjectRoot: 'projects',
-  version: '9.0.0-rc.11',
+  version: '10.0.0',
 };
 
 const appOptions: ApplicationOptions = {
@@ -159,5 +159,24 @@ describe('ng-update', () => {
     const migratedWorkspace = getWorkspace(migratedTree);
     expect(migratedWorkspace.projects.dummy.architect!.ngsscbuild.configurations.production)
       .not.toHaveProperty('aotSupport');
+  });
+
+  it('should update Dockerfile', async () => {
+    appTree.create('Dockerfile', `
+FROM nginx:alpine
+ADD https://github.com/kyubisation/angular-server-side-configuration/releases/download/v9.0.1/ngssc_64bit /usr/sbin/ngssc
+RUN chmod +x /usr/sbin/ngssc
+COPY dist /usr/share/nginx/html
+COPY start.sh start.sh
+RUN chmod +x ./start.sh
+CMD ["./start.sh"]
+`);
+    const tree = await runner
+      .runSchematicAsync('dockerfile', {}, appTree)
+      .toPromise();
+
+    const dockerfileContent = tree.read('Dockerfile')!.toString();
+    const version = require('../../package.json').version;
+    expect(dockerfileContent).toContain(`https://github.com/kyubisation/angular-server-side-configuration/releases/download/v${version}/ngssc_64bit`);
   });
 });

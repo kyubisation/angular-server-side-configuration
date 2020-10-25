@@ -10,6 +10,11 @@
       "version": "9-next",
       "description": "Updates angular-server-side-configuration to v9",
       "factory": "./ng-update/index#updateToV9"
+    },
+    "dockerfile": {
+      "version": "replaced by prepack",
+      "description": "Updates the download url for ngssc",
+      "factory": "./ng-update/index#dockerfile"
     }
   }
 }
