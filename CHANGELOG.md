@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.2.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v10.1.0...v10.2.0) (2020-10-25)
+
+
+### Features
+
+* update download url of Dockerfiles if available ([368e5eb](https://github.com/kyubisation/angular-server-side-configuration/commit/368e5eba3a6f23ef13ca47ad32c0cc30be8e54f4))
+
 ## [10.1.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v10.0.1...v10.1.0) (2020-10-18)
 
 
