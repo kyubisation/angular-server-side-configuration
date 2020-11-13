@@ -168,7 +168,7 @@ Usage: ngssc insert [options] [directory]
 Dockerfile
 ```Dockerfile
 FROM nginx:alpine
-ADD https://github.com/kyubisation/angular-server-side-configuration/releases/download/v0.0.0/ngssc_64bit /usr/sbin/ngssc
+ADD https://github.com/kyubisation/angular-server-side-configuration/releases/download/v10.2.0/ngssc_64bit /usr/sbin/ngssc
 RUN chmod +x /usr/sbin/ngssc
 COPY dist /usr/share/nginx/html
 COPY start.sh start.sh

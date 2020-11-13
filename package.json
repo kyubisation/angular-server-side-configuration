@@ -72,6 +72,22 @@
     "tslint": "^6.1.3",
     "typescript": "~3.9.6"
   },
+  "standard-version": {
+    "bumpFiles": [
+      {
+        "filename": "package-lock.json",
+        "type": "json"
+      },
+      {
+        "filename": "schematics/migration.json",
+        "updater": "scripts/standard-version-updater.js"
+      },
+      {
+        "filename": "README.md",
+        "updater": "scripts/standard-version-updater.js"
+      }
+    ]
+  },
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node",

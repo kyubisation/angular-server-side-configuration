@@ -12,7 +12,7 @@
       "factory": "./ng-update/index#updateToV9"
     },
     "dockerfile": {
-      "version": "replaced by prepack",
+      "version": "10.2.0",
       "description": "Updates the download url for ngssc",
       "factory": "./ng-update/index#dockerfile"
     }
