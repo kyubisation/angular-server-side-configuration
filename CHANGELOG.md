@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [11.0.1](https://github.com/kyubisation/angular-server-side-configuration/compare/v11.0.0...v11.0.1) (2020-11-16)
+
 ## [11.0.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v10.2.0...v11.0.0) (2020-11-16)
 
 ## [10.2.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v10.1.0...v10.2.0) (2020-10-25)
