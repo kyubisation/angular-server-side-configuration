@@ -18,8 +18,7 @@
     "test:go": "cd cli && go test",
     "test": "run-s test:*",
     "lint": "tslint -p tsconfig.json",
-    "release": "standard-version",
-    "prepack": "node scripts/patch-dockerfile-migration-version.js"
+    "release": "standard-version"
   },
   "main": "./src/main.js",
   "module": "./src/module.js",
