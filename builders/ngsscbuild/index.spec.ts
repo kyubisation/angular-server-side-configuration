@@ -1,6 +1,7 @@
 import { Architect } from '@angular-devkit/architect';
-import { TestingArchitectHost, TestLogger } from '@angular-devkit/architect/testing';
+import { TestingArchitectHost } from '@angular-devkit/architect/testing';
 import { JsonObject, schema } from '@angular-devkit/core';
+import { Logger } from '@angular-devkit/core/src/logger';
 import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
@@ -15,7 +16,8 @@ describe('Ngssc Builder', () => {
   let distDir: string;
   let architect: Architect;
   let architectHost: TestingArchitectHost;
-  let logger: TestLogger;
+  let logger: Logger;
+  let logs: string[];
   const buildConfig = {
     fileReplacements: [{ replace: 'dummy', with: 'environment.prod.ts' }],
     index: 'src/index.html',
@@ -39,21 +41,26 @@ describe('Ngssc Builder', () => {
     await architectHost.addBuilderFromPackage('../../../..');
     await architectHost.addBuilderFromPackage('..');
 
-    // Create a logger that keeps an array of all messages that were logged.
-    logger = new TestLogger('ngssc');
+    logs = [];
+    logger = new Logger('ngssc');
+    logger.subscribe((m) => logs.push(m.message));
   });
 
   function addDummyBuildTarget(config: any = buildConfig) {
     architectHost.addTarget(
       { project: 'dummy', target: 'build' },
       '@angular-devkit/architect:true',
-      config);
+      config
+    );
   }
 
   async function runNgsscbuild(options: Schema & JsonObject) {
     // A "run" can have multiple outputs, and contains progress information.
     const run = await architect.scheduleBuilder(
-      'angular-server-side-configuration:ngsscbuild', options, { logger });
+      'angular-server-side-configuration:ngsscbuild',
+      options,
+      { logger }
+    );
 
     // The "result" member (of type BuilderOutput) is the next output.
     const output = await run.result;
@@ -66,7 +73,9 @@ describe('Ngssc Builder', () => {
   }
 
   it('should fail with aotSupport and no fileReplacements', async () => {
-    const mockExit = jest.spyOn(process, 'exit').mockImplementation((() => { throw new Error(); }) as any);
+    const mockExit = jest.spyOn(process, 'exit').mockImplementation((() => {
+      throw new Error();
+    }) as any);
     addDummyBuildTarget({});
     try {
       await runNgsscbuild({
@@ -78,7 +87,7 @@ describe('Ngssc Builder', () => {
       });
       fail();
       // tslint:disable-next-line: no-empty
-    } catch { }
+    } catch {}
     expect(mockExit).toHaveBeenCalledWith(2);
   });
 
@@ -93,7 +102,7 @@ describe('Ngssc Builder', () => {
     });
 
     expect(output.success).toBe(true);
-    expect(logger.includes('ngssc')).toBeTruthy();
+    expect(logs.some(l => l.includes('ngssc'))).toBeTruthy();
     const ngssc: Ngssc = JSON.parse(readFileSync(join(distDir, 'ngssc.json'), 'utf8'));
     expect(ngssc.variant).toEqual('process');
     expect(ngssc.filePattern).toEqual('index.html');
@@ -111,7 +120,7 @@ describe('Ngssc Builder', () => {
     });
 
     expect(output.success).toBe(true);
-    expect(logger.includes('ngssc')).toBeTruthy();
+    expect(logs.some(l => l.includes('ngssc'))).toBeTruthy();
     const ngssc: Ngssc = JSON.parse(readFileSync(join(distDir, 'ngssc.json'), 'utf8'));
     expect(ngssc.environmentVariables).toContain(expected);
   });
@@ -127,7 +136,7 @@ describe('Ngssc Builder', () => {
     });
 
     expect(output.success).toBe(true);
-    expect(logger.includes('ngssc')).toBeTruthy();
+    expect(logs.some(l => l.includes('ngssc'))).toBeTruthy();
     const ngssc: Ngssc = JSON.parse(readFileSync(join(distDir, 'ngssc.json'), 'utf8'));
     expect(ngssc.variant).toEqual('process');
     expect(ngssc.filePattern).toEqual('index.html');

@@ -1,8 +1,18 @@
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { Schema as ApplicationOptions, Style } from '@schematics/angular/application/schema';
-import { getWorkspace, updateWorkspace } from '@schematics/angular/utility/config';
+import { getWorkspace, updateWorkspace } from '@schematics/angular/utility/workspace';
 import { Schema as WorkspaceOptions } from '@schematics/angular/workspace/schema';
 import { join } from 'path';
+import * as tsNode from 'ts-node';
+
+tsNode.register({
+  compilerOptions: {
+    target: 'es2017',
+    module: 'commonjs',
+    moduleResolution: 'node',
+    esModuleInterop: true,
+  },
+});
 
 const workspaceOptions: WorkspaceOptions = {
   name: 'workspace',
@@ -37,11 +47,14 @@ describe('ng-update', () => {
       .toPromise();
   });
 
-  function assertAppliedConfig(
-    tree: UnitTestTree, importString = `import 'angular-server-side-configuration/process';`) {
-    const angularJson = getWorkspace(tree);
-    expect(angularJson.projects.dummy.architect!.ngsscbuild.builder)
-      .toBe('angular-server-side-configuration:ngsscbuild');
+  async function assertAppliedConfig(
+    tree: UnitTestTree,
+    importString = `import 'angular-server-side-configuration/process';`
+  ) {
+    const angularJson = await getWorkspace(tree);
+    expect(angularJson.projects.get(appOptions.name)!.targets.get('ngsscbuild')!.builder).toBe(
+      'angular-server-side-configuration:ngsscbuild'
+    );
 
     const environmentContent = tree.readContent(envPath);
     expect(environmentContent).toContain(importString);
@@ -54,9 +67,7 @@ describe('ng-update', () => {
   }
 
   it('should add ngssc content to correct files', async () => {
-    const tree = await runner
-      .runSchematicAsync('migration-v8', {}, appTree)
-      .toPromise();
+    const tree = await runner.runSchematicAsync('migration-v8', {}, appTree).toPromise();
     assertAppliedConfig(tree);
   });
 
@@ -65,10 +76,11 @@ describe('ng-update', () => {
     appTree.overwrite(
       envPath,
       envContent.replace(
-        /^/, `import { NG_ENV } from 'angular-server-side-configuration/ng-env4';\n`));
-    const tree = await runner
-      .runSchematicAsync('migration-v8', {}, appTree)
-      .toPromise();
+        /^/,
+        `import { NG_ENV } from 'angular-server-side-configuration/ng-env4';\n`
+      )
+    );
+    const tree = await runner.runSchematicAsync('migration-v8', {}, appTree).toPromise();
     assertAppliedConfig(tree, `import { NG_ENV } from 'angular-server-side-configuration/ng-env';`);
   });
 
@@ -77,23 +89,24 @@ describe('ng-update', () => {
     appTree.overwrite(
       envPath,
       envContent.replace(
-        /^/, `import { NG_ENV } from 'angular-server-side-configuration/ng-env';\n`));
-    const tree = await runner
-      .runSchematicAsync('migration-v8', {}, appTree)
-      .toPromise();
+        /^/,
+        `import { NG_ENV } from 'angular-server-side-configuration/ng-env';\n`
+      )
+    );
+    const tree = await runner.runSchematicAsync('migration-v8', {}, appTree).toPromise();
     assertAppliedConfig(tree, `import { NG_ENV } from 'angular-server-side-configuration/ng-env';`);
   });
 
   it('should detect and remove ngssc.json', async () => {
     const expected = 'OTHER_VARIABLES';
     appTree.create('/ngssc.json', JSON.stringify({ environmentVariables: [expected] }));
-    const tree = await runner
-      .runSchematicAsync('migration-v8', {}, appTree)
-      .toPromise();
+    const tree = await runner.runSchematicAsync('migration-v8', {}, appTree).toPromise();
     assertAppliedConfig(tree);
-    const angularJson = getWorkspace(tree);
-    expect(angularJson.projects.dummy.architect!.ngsscbuild.options.additionalEnvironmentVariables)
-      .toEqual([expected]);
+    const angularJson = await getWorkspace(tree);
+    expect(
+      angularJson.projects.get(appOptions.name)!.targets.get('ngsscbuild')!.options!
+        .additionalEnvironmentVariables
+    ).toEqual([expected]);
     expect(appTree.exists('/ngssc.json')).toBeFalsy();
   });
 
@@ -103,12 +116,11 @@ describe('ng-update', () => {
     pkg.scripts = { ...pkg.scripts, 'build:ngssc': 'ngssc ng build' };
     appTree.overwrite(packageJsonPath, JSON.stringify(pkg));
     const logs: string[] = [];
-    runner.logger.subscribe(m => logs.push(m.message));
-    await runner
-      .runSchematicAsync('migration-v8', {}, appTree)
-      .toPromise();
-    expect(logs.some(l => l.includes('Please remove the ngssc usage from your scripts.')))
-      .toBeTruthy();
+    runner.logger.subscribe((m) => logs.push(m.message));
+    await runner.runSchematicAsync('migration-v8', {}, appTree).toPromise();
+    expect(
+      logs.some((l) => l.includes('Please remove the ngssc usage from your scripts.'))
+    ).toBeTruthy();
   });
 
   it('should not fail when no scripts are defined in package.json', async () => {
@@ -116,16 +128,12 @@ describe('ng-update', () => {
     const pkg = JSON.parse(appTree.read(packageJsonPath)!.toString('utf8'));
     delete pkg.scripts;
     appTree.overwrite(packageJsonPath, JSON.stringify(pkg));
-    await runner
-      .runSchematicAsync('migration-v8', {}, appTree)
-      .toPromise();
+    await runner.runSchematicAsync('migration-v8', {}, appTree).toPromise();
   });
 
   it('should do nothing for v9 if no ngsscbuild targets are declared', async () => {
     const workspace = getWorkspace(appTree);
-    const tree = await runner
-      .runSchematicAsync('migration-v9', {}, appTree)
-      .toPromise();
+    const tree = await runner.runSchematicAsync('migration-v9', {}, appTree).toPromise();
     const newWorkspace = getWorkspace(tree);
     expect(newWorkspace).toEqual(workspace);
   });
@@ -133,36 +141,41 @@ describe('ng-update', () => {
   it('should remove aotSupport on v9 update', async () => {
     runner.registerCollection('schematics', join(__dirname, '../collection.json'));
     const tree = await runner
-      .runExternalSchematicAsync('schematics', 'ng-add', {}, appTree)
+      .runExternalSchematicAsync('schematics', 'ng-add', { project: appOptions.name }, appTree)
       .toPromise();
-    const workspace = getWorkspace(tree);
-    workspace.projects.dummy.architect!.ngsscbuild.options.aotSupport = true;
-    updateWorkspace(workspace)(tree, undefined as any);
-    const migratedTree = await runner
-      .runSchematicAsync('migration-v9', {}, tree)
-      .toPromise();
-    const migratedWorkspace = getWorkspace(migratedTree);
-    expect(migratedWorkspace.projects.dummy.architect!.ngsscbuild.options).not.toHaveProperty('aotSupport');
+    await updateWorkspace((workspace) => {
+      workspace.projects
+        .get(appOptions.name)!
+        .targets.get('ngsscbuild')!.options!.aotSupport = true;
+    })(tree, undefined as any);
+    const migratedTree = await runner.runSchematicAsync('migration-v9', {}, tree).toPromise();
+    const angularJson = JSON.parse(migratedTree.readContent('angular.json'));
+    expect(angularJson.projects[appOptions.name].architect.ngsscbuild.options).not.toHaveProperty(
+      'aotSupport'
+    );
   });
 
   it('should remove aotSupport from configurations on v9 update', async () => {
     runner.registerCollection('schematics', join(__dirname, '../collection.json'));
     const tree = await runner
-      .runExternalSchematicAsync('schematics', 'ng-add', {}, appTree)
+      .runExternalSchematicAsync('schematics', 'ng-add', { project: appOptions.name }, appTree)
       .toPromise();
-    const workspace = getWorkspace(tree);
-    workspace.projects.dummy.architect!.ngsscbuild.configurations.production.aotSupport = true;
-    updateWorkspace(workspace)(tree, undefined as any);
-    const migratedTree = await runner
-      .runSchematicAsync('migration-v9', {}, tree)
-      .toPromise();
-    const migratedWorkspace = getWorkspace(migratedTree);
-    expect(migratedWorkspace.projects.dummy.architect!.ngsscbuild.configurations.production)
-      .not.toHaveProperty('aotSupport');
+    await updateWorkspace((workspace) => {
+      workspace.projects
+        .get(appOptions.name)!
+        .targets.get('ngsscbuild')!.options!.aotSupport = true;
+    })(tree, undefined as any);
+    const migratedTree = await runner.runSchematicAsync('migration-v9', {}, tree).toPromise();
+    const angularJson = JSON.parse(migratedTree.readContent('angular.json'));
+    expect(
+      angularJson.projects[appOptions.name].architect.ngsscbuild.configurations.production
+    ).not.toHaveProperty('aotSupport');
   });
 
   it('should update Dockerfile', async () => {
-    appTree.create('Dockerfile', `
+    appTree.create(
+      'Dockerfile',
+      `
 FROM nginx:alpine
 ADD https://github.com/kyubisation/angular-server-side-configuration/releases/download/v9.0.1/ngssc_64bit /usr/sbin/ngssc
 RUN chmod +x /usr/sbin/ngssc
@@ -170,13 +183,14 @@ COPY dist /usr/share/nginx/html
 COPY start.sh start.sh
 RUN chmod +x ./start.sh
 CMD ["./start.sh"]
-`);
-    const tree = await runner
-      .runSchematicAsync('dockerfile', {}, appTree)
-      .toPromise();
+`
+    );
+    const tree = await runner.runSchematicAsync('dockerfile', {}, appTree).toPromise();
 
     const dockerfileContent = tree.read('Dockerfile')!.toString();
     const version = require('../../package.json').version;
-    expect(dockerfileContent).toContain(`https://github.com/kyubisation/angular-server-side-configuration/releases/download/v${version}/ngssc_64bit`);
+    expect(dockerfileContent).toContain(
+      `https://github.com/kyubisation/angular-server-side-configuration/releases/download/v${version}/ngssc_64bit`
+    );
   });
 });

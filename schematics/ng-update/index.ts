@@ -1,6 +1,6 @@
 import { basename, Path } from '@angular-devkit/core';
 import { chain, FileEntry, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
-import { getWorkspace, updateWorkspace } from '@schematics/angular/utility/config';
+import { getWorkspace, updateWorkspace } from '@schematics/angular/utility/workspace';
 
 import { Ngssc, Variant } from '../../models';
 import { ngAdd } from '../ng-add/index';
@@ -8,17 +8,21 @@ import { ngAdd } from '../ng-add/index';
 const NGSSC_JSON_PATH = '/ngssc.json';
 
 export function updateToV8(): Rule {
-  return (tree: Tree) => {
+  return async (tree: Tree) => {
     const ngssc = tryReadNgsscJson(tree);
     const variant = findAndPatchVariantFromFiles(tree);
+    const workspace = await getWorkspace(tree);
+    const projects = Array.from(workspace.projects.keys());
 
     return chain([
-      ngAdd({
-        additionalEnvironmentVariables: (ngssc.environmentVariables || []).join(','),
-        ngsscEnvironmentFile: 'src/environments/environment.prod.ts',
-        project: '',
-        variant,
-      }),
+      ...projects.map((project) =>
+        ngAdd({
+          additionalEnvironmentVariables: (ngssc.environmentVariables || []).join(','),
+          ngsscEnvironmentFile: 'src/environments/environment.prod.ts',
+          project,
+          variant,
+        })
+      ),
       removeNgsscJson(),
       checkNgsscUsageInScripts(),
     ]);
@@ -26,27 +30,29 @@ export function updateToV8(): Rule {
 }
 
 export function updateToV9(): Rule {
-  return (tree: Tree, context: SchematicContext) => {
-    const workspace = getWorkspace(tree);
-    context.logger.info(
-      `Removing ngsscbuild entry 'aotSupport', since it is no longer necessary for Ivy.`);
-    Object.keys(workspace.projects)
-      .filter(p => workspace.projects[p].architect &&
-        workspace.projects[p].architect!.ngsscbuild)
-      .forEach(p => {
-        const ngsscbuild = workspace.projects[p].architect!.ngsscbuild;
+  return (_tree: Tree, context: SchematicContext) => {
+    return updateWorkspace((workspace) => {
+      context.logger.info(
+        `Removing ngsscbuild entry 'aotSupport', since it is no longer necessary for Ivy.`
+      );
+      workspace.projects.forEach((project, name) => {
+        const ngsscbuild = project.targets.get('ngsscbuild');
+        if (!ngsscbuild || !ngsscbuild.options) {
+          return;
+        }
+
         if ('aotSupport' in ngsscbuild.options) {
           delete ngsscbuild.options.aotSupport;
-          context.logger.info(` - Removed from ${p} ngsscbuild options`);
+          context.logger.info(` - Removed from ${name} ngsscbuild options`);
         }
         Object.keys(ngsscbuild.configurations || {})
-          .filter(c => 'aotSupport' in ngsscbuild.configurations[c])
-          .forEach(c => {
-            delete ngsscbuild.configurations[c].aotSupport;
-            context.logger.info(` - Removed from ${p} ngsscbuild configuration ${c}`);
+          .filter((c) => 'aotSupport' in ngsscbuild.configurations![c]!)
+          .forEach((c) => {
+            delete ngsscbuild.configurations![c]!.aotSupport;
+            context.logger.info(` - Removed from ${name} ngsscbuild configuration ${c}`);
           });
       });
-    return updateWorkspace(workspace);
+    });
   };
 }
 
@@ -55,12 +61,17 @@ export function dockerfile(): Rule {
     const downloadUrlRegex = /https:\/\/github.com\/kyubisation\/angular-server-side-configuration\/releases\/download\/v((0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)/;
     const version = require('../../package.json').version;
     tree.visit((path, entry) => {
-      if (basename(path).indexOf('Dockerfile') >= 0 &&entry && entry.content.toString().match(downloadUrlRegex)) {
+      if (
+        basename(path).indexOf('Dockerfile') >= 0 &&
+        entry &&
+        entry.content.toString().match(downloadUrlRegex)
+      ) {
         const content = entry.content
           .toString()
           .replace(
             new RegExp(downloadUrlRegex.source, 'g'),
-            `https://github.com/kyubisation/angular-server-side-configuration/releases/download/v${version}`);
+            `https://github.com/kyubisation/angular-server-side-configuration/releases/download/v${version}`
+          );
         tree.overwrite(path, content);
       }
     });
@@ -102,24 +113,25 @@ function removeNgsscJson() {
 }
 
 function checkNgsscUsageInScripts() {
-  return (tree: Tree, context: SchematicContext) => {
+  return async (tree: Tree, context: SchematicContext) => {
     const packageJson = tree.read('/package.json');
     if (!packageJson) {
       return;
     }
 
     const pkg = JSON.parse(packageJson.toString('utf8'));
-    const ngsscUsedInScripts = Object
-      .keys(pkg.scripts || {})
-      .some(k => pkg.scripts[k].includes('ngssc '));
+    const ngsscUsedInScripts = Object.keys(pkg.scripts || {}).some((k) =>
+      pkg.scripts[k].includes('ngssc ')
+    );
     if (!ngsscUsedInScripts) {
       return;
     }
 
-    const workspace = getWorkspace(tree);
-    const projectName = workspace.defaultProject || Object.keys(workspace.projects)[0];
+    const workspace = await getWorkspace(tree);
+    const projectName = Array.from(workspace.projects.keys())[0];
     context.logger.info('Please remove the ngssc usage from your scripts.');
     context.logger.info(
-      `To run the ngssc build, run the command \`ng run ${projectName}:ngsscbuild:production\`.`);
+      `To run the ngssc build, run the command \`ng run ${projectName}:ngsscbuild:production\`.`
+    );
   };
 }
