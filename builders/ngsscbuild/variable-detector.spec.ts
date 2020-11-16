@@ -14,9 +14,7 @@ describe('VariableDetector', () => {
   };
 
   function findVariableByName(result: NgsscContext, variable: string) {
-    return result.variables
-      .filter(v => v.variable === variable)
-      .map(v => v.expression)[0];
+    return result.variables.filter((v) => v.variable === variable).map((v) => v.expression)[0];
   }
 
   it('should detect process.env variables', () => {
@@ -42,7 +40,9 @@ describe('VariableDetector', () => {
     const detector = new VariableDetector();
     const result = detector.detect(envContentNgEnv);
     expect(result.variant).toBe('NG_ENV');
-    expect(result.variantImport).toBe(`import { NG_ENV } from 'angular-server-side-configuration/ng-env';`);
+    expect(result.variantImport).toBe(
+      `import { NG_ENV } from 'angular-server-side-configuration/ng-env';`
+    );
     expect(result.variables.length).toBe(6);
     for (const variable of Object.keys(expectedNgEnvVariables)) {
       expect(findVariableByName(result, variable)).toBe(expectedNgEnvVariables[variable]);

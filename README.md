@@ -5,14 +5,15 @@
 ![](https://img.shields.io/npm/v/angular-server-side-configuration.svg)
 ![](https://img.shields.io/npm/l/angular-server-side-configuration.svg)
 
-
 Configure an angular application at runtime on the server or in a docker container via environment variables.
 
 ## Motivation
+
 The Angular CLI provides build time configuration (via environment.ts).
 In a Continuous Delivery environment this is sometimes not enough.
 
 ## How it works
+
 Environment variables are used for configuration.
 This package provides an Angular CLI builder to search for usages at build time.
 A [native CLI](#on-host-server-or-in-dockerfile) can be used to insert populated
@@ -21,6 +22,7 @@ environment variables into index.html file(s) into the head tag or by replacing 
 on the host serving the bundled angular files.
 
 ## Version 8/9 Changes
+
 Version 8.x of this package was a complete rewrite with Angular schematics and builders.
 If you require support for older Angular versions,
 [Version 2.x](https://www.npmjs.com/package/angular-server-side-configuration/v/2.0.0)
@@ -31,21 +33,27 @@ no longer required for Angular 9 with Ivy. The update schematic removes the opti
 from your angular.json.
 
 ## Getting Started
+
 ```
 ng add angular-server-side-configuration
 ```
+
 or, if you have a previous version of this library installed
+
 ```
 ng update angular-server-side-configuration@latest
 ```
+
 This will configure the appropriate files.
 
 Alternatively, if you want to configure the files yourself:
+
 ```
 npm install --save angular-server-side-configuration
 ```
 
 ### angular.json
+
 Ensure you have an `ngsscbuild` entry in your project `architect` section.
 To use the builder run `ng run your-project-name:ngsscbuild:production`.
 You can add additional configurations in angular.json, which can be executed
@@ -69,7 +77,7 @@ used environment variables and generate an [ngssc.json](#ngsscjson) in the defin
             "additionalEnvironmentVariables": ["MANUAL_ENTRIES"],
             "browserTarget": "your-project-name:build",
             "ngsscEnvironmentFile": "src/environments/environment.prod.ts",
-            // Optional 
+            // Optional
             // (Defaults to the basename of the index option of the browser target)
             "filePattern": "index.html"
           },
@@ -91,10 +99,12 @@ used environment variables and generate an [ngssc.json](#ngsscjson) in the defin
 To run the ngssc build, run the command `ng run your-project-name:ngsscbuild:production`.
 
 ### environment.prod.ts
-angular-server-side-configuration supports two variants for using environment variables:
-process.env.* or NG_ENV.*  
 
-#### process.env.*
+angular-server-side-configuration supports two variants for using environment variables:
+process.env._ or NG_ENV._
+
+#### process.env.\*
+
 Use process.env.NAME in your environment.prod.ts, where NAME is the
 environment variable that should be used.
 
@@ -103,12 +113,13 @@ import 'angular-server-side-configuration/process';
 
 export const environment = {
   production: process.env.PROD !== 'false',
-  apiAddress: process.env.API_ADDRESS || 'https://example-api.com'
+  apiAddress: process.env.API_ADDRESS || 'https://example-api.com',
 };
 ```
 
-#### NG_ENV.*
-Import NG_ENV from `angular-server-side-configuration/ng-env` 
+#### NG_ENV.\*
+
+Import NG_ENV from `angular-server-side-configuration/ng-env`
 and use NG_ENV.NAME in your environment.prod.ts, where NAME is the
 environment variable that should be used.
 
@@ -117,34 +128,36 @@ import { NG_ENV } from 'angular-server-side-configuration/ng-env';
 
 export const environment = {
   production: NG_ENV.PROD !== 'false',
-  apiAddress: NG_ENV.API_ADDRESS || 'https://example-api.com'
+  apiAddress: NG_ENV.API_ADDRESS || 'https://example-api.com',
 };
 ```
 
 ### index.html (Optional)
+
 Add `<!--CONFIG-->` to index.html. This will be replaced by the configuration script tag.
 This is optional, as the environment variables can be configured to be inserted in the head tag.
 It is however the safest option.
 
 ```html
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Angular Example</title>
-  <!--CONFIG-->
-  <base href="/">
+  <head>
+    <meta charset="utf-8" />
+    <title>Angular Example</title>
+    <!--CONFIG-->
+    <base href="/" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-</head>
-<body>
-  <app-root></app-root>
-</body>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  </head>
+  <body>
+    <app-root></app-root>
+  </body>
 </html>
 ```
 
 ### On host server or in Dockerfile
+
 This library provides a Node.js and a native implementation for inserting the environment variables into your html.
 Either the `insert` function from the package (`import { insert } from 'angular-server-side-configuration';`)
 or the `insert` command of the CLI.
@@ -157,15 +170,18 @@ if you need an additional environment.)
 Thanks to [DanielHabenicht](https://github.com/DanielHabenicht) for the input and contribution.
 
 #### ngssc insert
+
 Usage: ngssc insert [options] [directory]
 
-| Options | Description |
-| --- | --- |
+| Options           | Description                                                                       |
+| ----------------- | --------------------------------------------------------------------------------- |
 | `-r, --recursive` | Recursively searches for ngssc.json files and applies the contained configuration |
-| `--dry`           | Perform the insert without actually inserting the variables |
+| `--dry`           | Perform the insert without actually inserting the variables                       |
 
 ##### Minimal Example
+
 Dockerfile
+
 ```Dockerfile
 FROM nginx:alpine
 ADD https://github.com/kyubisation/angular-server-side-configuration/releases/download/v10.2.0/ngssc_64bit /usr/sbin/ngssc
@@ -177,6 +193,7 @@ CMD ["./start.sh"]
 ```
 
 start.sh
+
 ```bash
 #!/bin/sh
 ngssc insert /usr/share/nginx/html
@@ -196,4 +213,5 @@ The ngssc.json will be generated by the ngsscbuild builder.
 ```
 
 ## License
+
 Apache License, Version 2.0

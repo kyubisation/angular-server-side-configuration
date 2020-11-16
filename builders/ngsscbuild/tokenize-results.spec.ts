@@ -2,7 +2,10 @@ import { TokenizeResult } from './tokenize-result';
 
 describe('TokenizeResult', () => {
   it('should untokenize content', () => {
-    const variables = [1, 2, 3, 4].map(v => ({ expression: `process.env.TEST${v}`, token: `ngssc-token-${v}` }));
+    const variables = [1, 2, 3, 4].map((v) => ({
+      expression: `process.env.TEST${v}`,
+      token: `ngssc-token-${v}`,
+    }));
     const result = new TokenizeResult('', variables);
     const content = result.untokenize(`
       return {

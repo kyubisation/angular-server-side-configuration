@@ -1,24 +1,10 @@
 {
   "defaultSeverity": "error",
-  "extends": [
-    "tslint-plugin-prettier",
-    "tslint-config-prettier",
-    "tslint:recommended"
-  ],
+  "extends": ["tslint-plugin-prettier", "tslint-config-prettier", "tslint:recommended"],
   "jsRules": {},
   "rules": {
-    "arrow-parens": [
-      true,
-      "ban-single-arg-parens"
-    ],
-    "interface-name": [
-      true,
-      "never-prefix"
-    ],
-    "member-access": [
-      true,
-      "no-public"
-    ],
+    "interface-name": [true, "never-prefix"],
+    "member-access": [true, "no-public"],
     "member-ordering": [
       true,
       {
@@ -37,16 +23,8 @@
         "grouped-imports": true
       }
     ],
-    "quotemark": [
-      true,
-      "single"
-    ],
-    "variable-name": [
-      true,
-      "ban-keywords",
-      "check-format",
-      "allow-leading-underscore"
-    ]
+    "quotemark": [true, "single"],
+    "variable-name": [true, "ban-keywords", "check-format", "allow-leading-underscore"]
   },
   "rulesDirectory": []
 }

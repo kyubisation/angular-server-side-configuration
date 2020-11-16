@@ -43,9 +43,7 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "aot": true,
-            "assets": [
-              "src/manifest.webmanifest"
-            ],
+            "assets": ["src/manifest.webmanifest"],
             "styles": [],
             "scripts": []
           },

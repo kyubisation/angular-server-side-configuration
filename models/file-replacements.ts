@@ -8,5 +8,4 @@ export interface FileReplacement {
   with: string;
 }
 
-export interface FileReplacements extends Array<FileReplacement | LegacyFileReplacement> {
-}
+export interface FileReplacements extends Array<FileReplacement | LegacyFileReplacement> {}

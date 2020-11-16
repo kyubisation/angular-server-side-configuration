@@ -8,6 +8,7 @@ if (environment.production) {
   enableProdMode();
 }
 
-platformBrowserDynamic().bootstrapModule(AppModule)
+platformBrowserDynamic()
+  .bootstrapModule(AppModule)
   // tslint:disable-next-line: no-console
-  .catch(err => console.error(err));
+  .catch((err) => console.error(err));

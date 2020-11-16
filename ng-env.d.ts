@@ -1,3 +1,3 @@
 export declare var NG_ENV: {
-    [name: string]: string;
+  [name: string]: string;
 };

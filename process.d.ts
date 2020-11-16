@@ -1,6 +1,6 @@
 declare namespace NodeJS {
   interface NodeProcess {
-      env?: any;
+    env?: any;
   }
   interface Process extends NodeProcess {}
 }

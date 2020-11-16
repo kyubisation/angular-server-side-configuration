@@ -3,20 +3,32 @@ import { tmpdir } from 'os';
 import { join } from 'path';
 
 import { Ngssc, Variant } from '../models';
-import { indexHtmlContent, indexHtmlContentWithoutConfig, indexHtmlContentWithoutTitle } from '../test/temporary-fs';
+import {
+  indexHtmlContent,
+  indexHtmlContentWithoutConfig,
+  indexHtmlContentWithoutTitle,
+} from '../test/temporary-fs';
 
 import { insert } from './insert';
 
 describe('insert', () => {
   let directory: string = '';
   let subdirectories: string[];
-  const ngssc: Ngssc = { environmentVariables: ['TEST', 'TEST2'], filePattern: 'index.html', variant: 'process' };
+  const ngssc: Ngssc = {
+    environmentVariables: ['TEST', 'TEST2'],
+    filePattern: 'index.html',
+    variant: 'process',
+  };
   const envTestContent = 'TESTCONTENT';
   const iife =
     // tslint:disable-next-line: max-line-length
-    `<script>(function(self){self.process=${JSON.stringify({ env: { TEST: envTestContent, TEST2: null } })};})(window)</script>`;
-  const ngEnvIife =
-    `<script>(function(self){self.NG_ENV=${JSON.stringify({ TEST: envTestContent, TEST2: null })};})(window)</script>`;
+    `<script>(function(self){self.process=${JSON.stringify({
+      env: { TEST: envTestContent, TEST2: null },
+    })};})(window)</script>`;
+  const ngEnvIife = `<script>(function(self){self.NG_ENV=${JSON.stringify({
+    TEST: envTestContent,
+    TEST2: null,
+  })};})(window)</script>`;
 
   function createFiles(variant: Variant = 'process') {
     const innerNgssc: Ngssc = { ...ngssc, variant };
@@ -25,7 +37,11 @@ describe('insert', () => {
     writeFileSync(join(directory, 'fr/index.html'), indexHtmlContentWithoutTitle, 'utf8');
     writeFileSync(join(directory, 'de/ngssc.json'), JSON.stringify(innerNgssc), 'utf8');
     writeFileSync(join(directory, 'en/ngssc.json'), JSON.stringify(innerNgssc), 'utf8');
-    writeFileSync(join(directory, 'fr/ngssc.json'), JSON.stringify({ ...innerNgssc, filePattern: undefined }), 'utf8');
+    writeFileSync(
+      join(directory, 'fr/ngssc.json'),
+      JSON.stringify({ ...innerNgssc, filePattern: undefined }),
+      'utf8'
+    );
   }
 
   beforeEach(() => {
@@ -33,8 +49,8 @@ describe('insert', () => {
     console.log = () => void 0;
     process.env.TEST = envTestContent;
     directory = mkdtempSync(join(tmpdir(), 'insert'));
-    subdirectories = ['de', 'en', 'fr'].map(d => join(directory, d));
-    subdirectories.forEach(d => mkdirSync(d));
+    subdirectories = ['de', 'en', 'fr'].map((d) => join(directory, d));
+    subdirectories.forEach((d) => mkdirSync(d));
   });
 
   it('should throw on missing ngssc.json', () => {
@@ -44,7 +60,7 @@ describe('insert', () => {
   it('should do nothing with dry run', () => {
     createFiles();
     insert({ directory, recursive: true, dryRun: true });
-    for (const file of subdirectories.map(d => join(d, 'index.html'))) {
+    for (const file of subdirectories.map((d) => join(d, 'index.html'))) {
       expect(readFileSync(file, 'utf8')).not.toContain(iife);
     }
   });
@@ -54,9 +70,10 @@ describe('insert', () => {
     writeFileSync(
       join(directory, 'ngssc.json'),
       JSON.stringify({ ...ngssc, filePattern: '**/index.html' }),
-      'utf8');
+      'utf8'
+    );
     insert({ directory });
-    for (const file of subdirectories.map(d => join(d, 'index.html'))) {
+    for (const file of subdirectories.map((d) => join(d, 'index.html'))) {
       expect(readFileSync(file, 'utf8')).toContain(iife);
     }
   });
@@ -64,7 +81,7 @@ describe('insert', () => {
   it('should insert into html with recursive true', () => {
     createFiles();
     insert({ directory, recursive: true });
-    for (const file of subdirectories.map(d => join(d, 'index.html'))) {
+    for (const file of subdirectories.map((d) => join(d, 'index.html'))) {
       expect(readFileSync(file, 'utf8')).toContain(iife);
     }
   });
@@ -72,7 +89,7 @@ describe('insert', () => {
   it('should insert idempotent', () => {
     createFiles();
     insert({ directory, recursive: true });
-    for (const file of subdirectories.map(d => join(d, 'index.html'))) {
+    for (const file of subdirectories.map((d) => join(d, 'index.html'))) {
       expect(readFileSync(file, 'utf8')).toContain(iife);
     }
 
@@ -80,9 +97,11 @@ describe('insert', () => {
     process.env.TEST2 = test2Value;
     const changedIife =
       // tslint:disable-next-line: max-line-length
-      `<script>(function(self){self.process=${JSON.stringify({ env: { TEST: envTestContent, TEST2: test2Value } })};})(window)</script>`;
+      `<script>(function(self){self.process=${JSON.stringify({
+        env: { TEST: envTestContent, TEST2: test2Value },
+      })};})(window)</script>`;
     insert({ directory, recursive: true });
-    for (const file of subdirectories.map(d => join(d, 'index.html'))) {
+    for (const file of subdirectories.map((d) => join(d, 'index.html'))) {
       expect(readFileSync(file, 'utf8')).not.toContain(iife);
       expect(readFileSync(file, 'utf8')).toContain(changedIife);
     }
@@ -97,7 +116,7 @@ describe('insert', () => {
   it('should insert into html with recursive true and variant NG_ENV', () => {
     createFiles('NG_ENV');
     insert({ directory, recursive: true });
-    for (const file of subdirectories.map(d => join(d, 'index.html'))) {
+    for (const file of subdirectories.map((d) => join(d, 'index.html'))) {
       expect(readFileSync(file, 'utf8')).toContain(ngEnvIife);
     }
   });
