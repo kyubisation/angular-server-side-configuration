@@ -30,7 +30,7 @@ export class NgsscBuilder {
     this._ngsscEnvironmentFile = join(_context.workspaceRoot, _options.ngsscEnvironmentFile);
     this._tmpNgsscEnvironmentFile = `${_options.ngsscEnvironmentFile}_${randomBytes(10).toString(
       'hex'
-    )}.tmp`;
+    )}.tmp.ts`;
     this._context.addTeardown(() => this._removeTmpNgsscEnvironmentFile());
   }
 
@@ -52,7 +52,9 @@ export class NgsscBuilder {
       rawOptions,
       browserName
     );
-    const scheduledTarget = await this._context.scheduleTarget(browserTarget, browserOptions);
+    const scheduledTarget = this._options.aotSupport
+      ? await this._context.scheduleTarget(browserTarget, browserOptions)
+      : await this._context.scheduleTarget(browserTarget);
     const result = await scheduledTarget.result;
     await this._buildNgsscJson(ngsscContext, browserOptions);
     await this._untokenize(browserOptions);
