@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [11.0.2](https://github.com/kyubisation/angular-server-side-configuration/compare/v11.0.1...v11.0.2) (2020-12-03)
+
+
+### Bug Fixes
+
+* don't use deprecated default options for non aotSupport builds ([e0b431e](https://github.com/kyubisation/angular-server-side-configuration/commit/e0b431ec36ada22fd6f103855850c7c029b21fc1))
+
 ### [11.0.1](https://github.com/kyubisation/angular-server-side-configuration/compare/v11.0.0...v11.0.1) (2020-11-16)
 
 ## [11.0.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v10.2.0...v11.0.0) (2020-11-16)
