@@ -102,7 +102,7 @@ describe('Ngssc Builder', () => {
     });
 
     expect(output.success).toBe(true);
-    expect(logs.some(l => l.includes('ngssc'))).toBeTruthy();
+    expect(logs.some((l) => l.includes('ngssc'))).toBeTruthy();
     const ngssc: Ngssc = JSON.parse(readFileSync(join(distDir, 'ngssc.json'), 'utf8'));
     expect(ngssc.variant).toEqual('process');
     expect(ngssc.filePattern).toEqual('index.html');
@@ -120,7 +120,7 @@ describe('Ngssc Builder', () => {
     });
 
     expect(output.success).toBe(true);
-    expect(logs.some(l => l.includes('ngssc'))).toBeTruthy();
+    expect(logs.some((l) => l.includes('ngssc'))).toBeTruthy();
     const ngssc: Ngssc = JSON.parse(readFileSync(join(distDir, 'ngssc.json'), 'utf8'));
     expect(ngssc.environmentVariables).toContain(expected);
   });
@@ -136,7 +136,7 @@ describe('Ngssc Builder', () => {
     });
 
     expect(output.success).toBe(true);
-    expect(logs.some(l => l.includes('ngssc'))).toBeTruthy();
+    expect(logs.some((l) => l.includes('ngssc'))).toBeTruthy();
     const ngssc: Ngssc = JSON.parse(readFileSync(join(distDir, 'ngssc.json'), 'utf8'));
     expect(ngssc.variant).toEqual('process');
     expect(ngssc.filePattern).toEqual('index.html');

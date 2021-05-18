@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/schema",
-  "id": "angular-server-side-configuration-ng-add",
+  "$id": "angular-server-side-configuration-ng-add",
   "title": "angular-server-side-configuration ng-add schematic",
   "type": "object",
   "properties": {

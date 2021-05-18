@@ -21,17 +21,6 @@ environment variables into index.html file(s) into the head tag or by replacing 
 (Missing environment variables will be represented by `null`). This should be done
 on the host serving the bundled angular files.
 
-## Version 8/9 Changes
-
-Version 8.x of this package was a complete rewrite with Angular schematics and builders.
-If you require support for older Angular versions,
-[Version 2.x](https://www.npmjs.com/package/angular-server-side-configuration/v/2.0.0)
-of this library can be used, as it is Angular version agnostic.
-
-Version 9 of angular-server-side-configuration deprecates aotSupport, since it is
-no longer required for Angular 9 with Ivy. The update schematic removes the option
-from your angular.json.
-
 ## Getting Started
 
 ```
@@ -159,15 +148,13 @@ It is however the safest option.
 ### On host server or in Dockerfile
 
 This library provides a Node.js and a native implementation for inserting the environment variables into your html.
-Either the `insert` function from the package (`import { insert } from 'angular-server-side-configuration';`)
+Either use the `insert` function from the package (`import { insert } from 'angular-server-side-configuration';`)
 or the `insert` command of the CLI.
 For the native CLI, go to [Releases](https://github.com/kyubisation/angular-server-side-configuration/releases)
 and download the appropriate executable for your server environment.
 (See [build.sh](https://github.com/kyubisation/angular-server-side-configuration/blob/master/cli/build.sh) for
 build details of the native CLI. Please open an [Issue](https://github.com/kyubisation/angular-server-side-configuration/issues/new)
 if you need an additional environment.)
-
-Thanks to [DanielHabenicht](https://github.com/DanielHabenicht) for the input and contribution.
 
 #### ngssc insert
 
@@ -184,20 +171,24 @@ Dockerfile
 
 ```Dockerfile
 FROM nginx:alpine
+
+# Install ngssc binary
 ADD https://github.com/kyubisation/angular-server-side-configuration/releases/download/v11.0.2/ngssc_64bit /usr/sbin/ngssc
 RUN chmod +x /usr/sbin/ngssc
+
+# Add ngssc init script
+COPY ngssc.sh /docker-entrypoint.d/ngssc.sh
+RUN chmod +x /docker-entrypoint.d/ngssc.sh
+
+# Copy app
 COPY dist /usr/share/nginx/html
-COPY start.sh start.sh
-RUN chmod +x ./start.sh
-CMD ["./start.sh"]
 ```
 
-start.sh
+ngssc.sh
 
 ```bash
 #!/bin/sh
 ngssc insert /usr/share/nginx/html
-nginx -g 'daemon off;'
 ```
 
 ### ngssc.json

@@ -93,7 +93,7 @@ export class NgsscBuilder {
 
   private _buildFileReplacements(rawBrowserOptions: JsonObject) {
     const fileReplacements: any[] = (
-      ((rawBrowserOptions.fileReplacements as unknown) as FileReplacements) || []
+      (rawBrowserOptions.fileReplacements as unknown as FileReplacements) || []
     )
       .map((f) => ('with' in f ? { ...f } : { replace: f.src, with: f.replaceWith }))
       .filter((f) => f.with === this._options.ngsscEnvironmentFile)
