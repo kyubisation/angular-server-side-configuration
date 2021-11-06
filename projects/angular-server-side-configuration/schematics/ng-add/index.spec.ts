@@ -145,14 +145,4 @@ describe('ng-add', () => {
 
     expect(logs.filter((l) => l.includes('Skipping')).length).toBe(4);
   });
-
-  it('should add ngssc content with variant NG_ENV to correct files', async () => {
-    const tree = await runner
-      .runSchematicAsync('ng-add', { project: appOptions.name, variant: 'NG_ENV' }, appTree)
-      .toPromise();
-    await assertAppliedConfig(
-      tree,
-      `import { NG_ENV } from 'angular-server-side-configuration/ng-env';`
-    );
-  });
 });

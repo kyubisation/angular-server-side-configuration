@@ -20,7 +20,6 @@ export function updateToV8(): Rule {
           additionalEnvironmentVariables: (ngssc.environmentVariables || []).join(','),
           ngsscEnvironmentFile: 'src/environments/environment.prod.ts',
           project,
-          variant,
         })
       ),
       removeNgsscJson(),

@@ -90,7 +90,7 @@ To run the ngssc build, run the command `ng run your-project-name:ngsscbuild:pro
 ### environment.prod.ts
 
 angular-server-side-configuration supports two variants for using environment variables:
-process.env._ or NG_ENV._
+process.env._ or NG_ENV._ (*Deprecated*)
 
 #### process.env.\*
 
@@ -106,7 +106,7 @@ export const environment = {
 };
 ```
 
-#### NG_ENV.\*
+#### NG_ENV.\* *Deprecated*
 
 Import NG_ENV from `angular-server-side-configuration/ng-env`
 and use NG_ENV.NAME in your environment.prod.ts, where NAME is the

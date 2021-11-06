@@ -11,25 +11,6 @@
         "$source": "projectName"
       }
     },
-    "variant": {
-      "description": "The ngssc variant",
-      "type": "string",
-      "default": "process",
-      "x-prompt": {
-        "message": "Choose the ngssc variant:",
-        "type": "list",
-        "items": [
-          {
-            "value": "process",
-            "label": "process.env.*"
-          },
-          {
-            "value": "NG_ENV",
-            "label": "NG_ENV.*"
-          }
-        ]
-      }
-    },
     "ngsscEnvironmentFile": {
       "description": "The ngssc environment file (usually src/environments/environment.prod.ts)",
       "type": "string",

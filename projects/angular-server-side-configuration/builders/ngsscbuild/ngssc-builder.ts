@@ -61,6 +61,12 @@ export class NgsscBuilder {
       `ngssc: Detected variant '${ngsscContext.variant}' with variables ` +
         `'${ngsscContext.variables.map((v) => v.variable).join(', ')}'`
     );
+    if (ngsscContext.variant === 'NG_ENV') {
+      this._context.logger.warn(
+        'Variant NG_ENV is deprecated and will be removed with version 14. ' +
+          'Please change usage to `process.env`.'
+      );
+    }
     return ngsscContext;
   }
 

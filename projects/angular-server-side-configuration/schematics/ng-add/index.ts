@@ -69,25 +69,20 @@ function addImportAndDescriptionToEnvironmentFile(options: Schema): Rule {
       return;
     }
 
-    const importExpression =
-      options.variant === 'NG_ENV'
-        ? `import { NG_ENV } from 'angular-server-side-configuration/ng-env';`
-        : `import 'angular-server-side-configuration/process';`;
-    const variant = options.variant === 'NG_ENV' ? 'NG_ENV' : 'process.env';
-    const insertContent = `${importExpression}
+    const insertContent = `import 'angular-server-side-configuration/process';
 
 /**
  * How to use angular-server-side-configuration:
  *
- * Use ${variant}.NAME_OF_YOUR_ENVIRONMENT_VARIABLE
+ * Use process.env.NAME_OF_YOUR_ENVIRONMENT_VARIABLE
  *
  * export const environment = {
- *   stringValue: ${variant}.STRING_VALUE,
- *   stringValueWithDefault: ${variant}.STRING_VALUE || 'defaultValue',
- *   numberValue: Number(${variant}.NUMBER_VALUE),
- *   numberValueWithDefault: Number(${variant}.NUMBER_VALUE || 10),
- *   booleanValue: Boolean(${variant}.BOOLEAN_VALUE),
- *   booleanValueInverted: ${variant}.BOOLEAN_VALUE_INVERTED !== 'false',
+ *   stringValue: process.env.STRING_VALUE,
+ *   stringValueWithDefault: process.env.STRING_VALUE || 'defaultValue',
+ *   numberValue: Number(process.env.NUMBER_VALUE),
+ *   numberValueWithDefault: Number(process.env.NUMBER_VALUE || 10),
+ *   booleanValue: Boolean(process.env.BOOLEAN_VALUE),
+ *   booleanValueInverted: process.env.BOOLEAN_VALUE_INVERTED !== 'false',
  * };
  */
 

@@ -42,6 +42,10 @@ func New(path string) (ngsscConfig NgsscConfig, err error) {
 		return ngsscConfig, fmt.Errorf("Invalid ngssc.json at %v (variant must either be process or NG_ENV)", path)
 	}
 
+	if ngssc.Variant == "NG_ENV" {
+		fmt.Println("Variant NG_ENV is deprecated and will be removed with version 14. Please change usage to `process.env`.")
+	}
+
 	if ngssc.FilePattern == nil {
 		filePatternDefault := "**/index.html"
 		ngssc.FilePattern = &filePatternDefault
