@@ -127,7 +127,7 @@ function addPlaceholderToIndexHtml(options: Schema): Rule {
       throw new SchematicsException(`Expected a build target in project ${options.project}!`);
     }
 
-    const indexPath = (build.options?.index as string) || 'src/index.html';
+    const indexPath = (build.options?.['index'] as string) || 'src/index.html';
     const indexHtml = host.get(indexPath);
     if (!indexHtml) {
       throw new SchematicsException(`Expected index html ${indexPath} to exist!`);

@@ -6,8 +6,7 @@ import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
 
-import { Ngssc } from '../../models';
-import { envContent } from '../../test/temporary-fs';
+import { Ngssc } from 'angular-server-side-configuration';
 
 import { Schema } from './schema';
 
@@ -38,7 +37,9 @@ describe('Ngssc Builder', () => {
 
     // This will either take a Node package name, or a path to the directory
     // for the package.json file.
-    await architectHost.addBuilderFromPackage('../../../..');
+    await architectHost.addBuilderFromPackage(
+      '../../../../projects/angular-server-side-configuration'
+    );
     await architectHost.addBuilderFromPackage('..');
 
     logs = [];
@@ -71,25 +72,6 @@ describe('Ngssc Builder', () => {
     await run.stop();
     return output;
   }
-
-  it('should fail with aotSupport and no fileReplacements', async () => {
-    const mockExit = jest.spyOn(process, 'exit').mockImplementation((() => {
-      throw new Error();
-    }) as any);
-    addDummyBuildTarget({});
-    try {
-      await runNgsscbuild({
-        additionalEnvironmentVariables: [],
-        aotSupport: true,
-        browserTarget: 'dummy:build',
-        filePattern: '',
-        ngsscEnvironmentFile: 'environment.prod.ts',
-      });
-      fail();
-      // tslint:disable-next-line: no-empty
-    } catch {}
-    expect(mockExit).toHaveBeenCalledWith(2);
-  });
 
   it('should build with process variant', async () => {
     addDummyBuildTarget();
@@ -124,21 +106,34 @@ describe('Ngssc Builder', () => {
     const ngssc: Ngssc = JSON.parse(readFileSync(join(distDir, 'ngssc.json'), 'utf8'));
     expect(ngssc.environmentVariables).toContain(expected);
   });
-
-  it('should build with aotSupport and process variant', async () => {
-    addDummyBuildTarget();
-    const output = await runNgsscbuild({
-      additionalEnvironmentVariables: [],
-      aotSupport: true,
-      browserTarget: 'dummy:build',
-      filePattern: '',
-      ngsscEnvironmentFile: 'environment.prod.ts',
-    });
-
-    expect(output.success).toBe(true);
-    expect(logs.some((l) => l.includes('ngssc'))).toBeTruthy();
-    const ngssc: Ngssc = JSON.parse(readFileSync(join(distDir, 'ngssc.json'), 'utf8'));
-    expect(ngssc.variant).toEqual('process');
-    expect(ngssc.filePattern).toEqual('index.html');
-  });
 });
+
+const envContent = `
+import 'angular-server-side-configuration/process';
+
+/**
+ * How to use angular-server-side-configuration:
+ *
+ * Use process.env.NAME_OF_YOUR_ENVIRONMENT_VARIABLE
+ *
+ * export const environment = {
+ *   stringValue: process.env.STRING_VALUE,
+ *   stringValueWithDefault: process.env.STRING_VALUE || 'defaultValue',
+ *   numberValue: Number(process.env.NUMBER_VALUE),
+ *   numberValueWithDefault: Number(process.env.NUMBER_VALUE || 10),
+ *   booleanValue: Boolean(process.env.BOOLEAN_VALUE),
+ *   booleanValueInverted: process.env.BOOLEAN_VALUE_INVERTED !== 'false',
+ * };
+ */
+
+export const environment = {
+  production: process.env.PROD !== 'false',
+  apiBackend: process.env.API_BACKEND || 'http://example.com',
+  ternary: process.env.TERNARY ? 'asdf' : 'qwer',
+  simpleValue: process.env.SIMPLE_VALUE,
+  something: {
+    asdf: process.env.OMG || 'omg',
+    qwer: parseInt(process.env.NUMBER || ''),
+  }
+};
+`;

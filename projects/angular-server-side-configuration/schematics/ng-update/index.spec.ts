@@ -17,7 +17,7 @@ tsNode.register({
 const workspaceOptions: WorkspaceOptions = {
   name: 'workspace',
   newProjectRoot: 'projects',
-  version: '10.0.0',
+  version: '13.0.0',
 };
 
 const appOptions: ApplicationOptions = {
@@ -104,9 +104,12 @@ describe('ng-update', () => {
     assertAppliedConfig(tree);
     const angularJson = await getWorkspace(tree);
     expect(
-      angularJson.projects.get(appOptions.name)!.targets.get('ngsscbuild')!.options!
-        .additionalEnvironmentVariables
-    ).toEqual([expected]);
+      JSON.stringify(
+        angularJson.projects.get(appOptions.name)!.targets.get('ngsscbuild')!.options![
+          'additionalEnvironmentVariables'
+        ]
+      )
+    ).toEqual(JSON.stringify([expected]));
     expect(appTree.exists('/ngssc.json')).toBeFalsy();
   });
 
@@ -144,7 +147,7 @@ describe('ng-update', () => {
       .runExternalSchematicAsync('schematics', 'ng-add', { project: appOptions.name }, appTree)
       .toPromise();
     await updateWorkspace((workspace) => {
-      workspace.projects.get(appOptions.name)!.targets.get('ngsscbuild')!.options!.aotSupport =
+      workspace.projects.get(appOptions.name)!.targets.get('ngsscbuild')!.options!['aotSupport'] =
         true;
     })(tree, undefined as any);
     const migratedTree = await runner.runSchematicAsync('migration-v9', {}, tree).toPromise();
@@ -160,7 +163,7 @@ describe('ng-update', () => {
       .runExternalSchematicAsync('schematics', 'ng-add', { project: appOptions.name }, appTree)
       .toPromise();
     await updateWorkspace((workspace) => {
-      workspace.projects.get(appOptions.name)!.targets.get('ngsscbuild')!.options!.aotSupport =
+      workspace.projects.get(appOptions.name)!.targets.get('ngsscbuild')!.options!['aotSupport'] =
         true;
     })(tree, undefined as any);
     const migratedTree = await runner.runSchematicAsync('migration-v9', {}, tree).toPromise();

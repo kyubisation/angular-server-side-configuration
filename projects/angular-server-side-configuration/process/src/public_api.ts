@@ -5,13 +5,13 @@
   }
 })(typeof window === 'object' ? window : undefined);
 
-declare namespace NodeJS {
+export declare namespace NodeJS {
   interface NodeProcess {
     env?: any;
   }
   interface Process extends NodeProcess {}
 }
 
-declare var process: NodeJS.Process;
+export declare var process: NodeJS.Process;
 
 export {};

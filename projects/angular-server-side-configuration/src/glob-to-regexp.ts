@@ -1,6 +1,6 @@
 // Source: https://github.com/fitzgen/glob-to-regexp/blob/master/index.js
 
-interface Options {
+export interface Options {
   extended?: boolean | undefined;
   globstar?: boolean | undefined;
   flags?: string | undefined;

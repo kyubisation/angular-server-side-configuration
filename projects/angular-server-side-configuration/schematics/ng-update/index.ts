@@ -2,7 +2,7 @@ import { basename, Path } from '@angular-devkit/core';
 import { chain, FileEntry, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { getWorkspace, updateWorkspace } from '@schematics/angular/utility/workspace';
 
-import { Ngssc, Variant } from '../../models';
+import { Ngssc, Variant } from 'angular-server-side-configuration';
 import { ngAdd } from '../ng-add/index';
 
 const NGSSC_JSON_PATH = '/ngssc.json';
@@ -42,13 +42,13 @@ export function updateToV9(): Rule {
         }
 
         if ('aotSupport' in ngsscbuild.options) {
-          delete ngsscbuild.options.aotSupport;
+          delete ngsscbuild.options['aotSupport'];
           context.logger.info(` - Removed from ${name} ngsscbuild options`);
         }
         Object.keys(ngsscbuild.configurations || {})
           .filter((c) => 'aotSupport' in ngsscbuild.configurations![c]!)
           .forEach((c) => {
-            delete ngsscbuild.configurations![c]!.aotSupport;
+            delete ngsscbuild.configurations![c]!['aotSupport'];
             context.logger.info(` - Removed from ${name} ngsscbuild configuration ${c}`);
           });
       });

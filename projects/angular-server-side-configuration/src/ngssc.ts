@@ -1,5 +1,3 @@
-import { Variant } from './variant';
-
 /**
  * Model for ngssc.json.
  * @public
@@ -12,3 +10,9 @@ export interface Ngssc {
   /** Pattern for files that should have variables inserted. */
   filePattern?: string;
 }
+
+/**
+ * Available angular-server-side-configuration variants.
+ * @public
+ */
+export type Variant = 'process' | 'NG_ENV';

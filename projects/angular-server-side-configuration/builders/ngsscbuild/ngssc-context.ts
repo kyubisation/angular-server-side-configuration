@@ -1,4 +1,4 @@
-import { Variant } from './variant';
+import { Variant } from 'angular-server-side-configuration';
 
 /**
  * The context for ngssc.

@@ -3,12 +3,13 @@
   "version": "12.0.0",
   "description": "Configure an angular application on the server",
   "scripts": {
-    "clean": "rimraf coverage dist {builders,models,schematics,src}/**/*.{d.ts,js} test/*.{d.ts,js} junit.xml",
-    "build:node": "npm run clean && rollup -c rollup.config.js",
+    "clean": "rimraf coverage dist junit.xml",
+    "build:node": "npm run clean && ts-node --project scripts/tsconfig.json scripts/build.ts",
     "build:go": "docker-compose run build-go",
     "build": "run-p build:*",
     "format": "prettier --write **/*.{js,ts,css,scss,json,md,html}",
     "pretest": "npm run clean",
+    "test:lib": "jest --ci --config jest.lib.config.js",
     "test:node": "jest --ci",
     "test:go": "cd cli && go test",
     "test": "run-s test:*",
@@ -49,29 +50,25 @@
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
+    "@angular-devkit/architect": "~0.1300.1",
     "@angular-devkit/build-angular": "~13.0.1",
+    "@angular-devkit/core": "~13.0.1",
+    "@angular-devkit/schematics": "~13.0.1",
     "@angular/cli": "~13.0.1",
     "@angular/compiler-cli": "~13.0.0",
-    "@types/jasmine": "~3.10.0",
-    "@types/jest": "^26.0.23",
+    "@schematics/angular": "~13.0.0",
+    "@types/jest": "^27.0.2",
     "@types/node": "^14.14.0",
     "@types/rimraf": "^3.0.0",
-    "esbuild": "^0.13.12",
-    "jasmine-core": "~3.10.0",
-    "jest": "^26.6.3",
-    "jest-junit": "^12.0.0",
-    "karma": "~6.3.0",
-    "karma-chrome-launcher": "~3.1.0",
-    "karma-coverage": "~2.0.3",
-    "karma-jasmine": "~4.0.0",
-    "karma-jasmine-html-reporter": "~1.7.0",
+    "jest": "^27.3.1",
+    "jest-junit": "^13.0.0",
+    "jest-preset-angular": "^11.0.0-rc.1",
     "ng-packagr": "^13.0.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.3.0",
     "rimraf": "^3.0.2",
     "standard-version": "^9.3.0",
-    "ts-jest": "^26.5.6",
-    "ts-node": "^9.1.1",
+    "ts-node": "^10.2.1",
     "typescript": "~4.4.3"
   },
   "prettier": {
@@ -100,9 +97,10 @@
     ]
   },
   "jest": {
-    "preset": "ts-jest",
-    "testEnvironment": "node",
-    "testRegex": "\\.spec\\.ts$",
+    "preset": "jest-preset-angular",
+    "setupFilesAfterEnv": [
+      "<rootDir>/setup-jest.ts"
+    ],
     "reporters": [
       "default",
       "jest-junit"
@@ -111,8 +109,8 @@
     "collectCoverageFrom": [
       "**/*.ts",
       "!src/index.ts",
-      "!**/*.spec.ts",
-      "!test/minimal/**"
+      "!**/public-api.ts",
+      "!**/*.spec.ts"
     ],
     "coverageReporters": [
       "cobertura",

@@ -1,2 +1,2 @@
-export { Ngssc, Variant } from './models';
+export * from './ngssc';
 export * from './insert';

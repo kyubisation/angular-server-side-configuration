@@ -118,9 +118,12 @@ describe('ng-add', () => {
     await assertAppliedConfig(tree);
     const workspace = await getWorkspace(tree);
     expect(
-      workspace.projects.get(appOptions.name)!.targets.get('ngsscbuild')!.options!
-        .additionalEnvironmentVariables
-    ).toEqual(expected.split(','));
+      JSON.stringify(
+        workspace.projects.get(appOptions.name)!.targets.get('ngsscbuild')!.options![
+          'additionalEnvironmentVariables'
+        ]
+      )
+    ).toEqual(JSON.stringify(expected.split(',')));
   });
 
   it('should add ngssc content to correct files, with missing title tag', async () => {
