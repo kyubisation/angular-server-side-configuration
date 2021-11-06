@@ -15,3 +15,12 @@ services:
       - "8080:80"
     environment:
       - VARIABLE=Variable
+  nginx-bash:
+    image: nginx
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+  nginx-nr-bash:
+    image: nginxinc/nginx-unprivileged
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+

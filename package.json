@@ -2,11 +2,6 @@
   "name": "angular-server-side-configuration",
   "version": "12.0.0",
   "description": "Configure an angular application on the server",
-  "builders": "./builders/builders.json",
-  "schematics": "./schematics/collection.json",
-  "ng-update": {
-    "migrations": "./schematics/migration.json"
-  },
   "scripts": {
     "clean": "rimraf coverage dist {builders,models,schematics,src}/**/*.{d.ts,js} test/*.{d.ts,js} junit.xml",
     "build:node": "npm run clean && rollup -c rollup.config.js",
@@ -20,15 +15,6 @@
     "lint": "tslint -p tsconfig.json",
     "release": "standard-version"
   },
-  "main": "./src/main.js",
-  "module": "./src/module.js",
-  "typings": "./src/module.d.ts",
-  "files": [
-    "**/*.{js,d.ts,json}",
-    "!*.spec.{d.ts,ts,js}",
-    "!{test,cli,.git,.vscode}",
-    "!{tsconfig,tslint,package-lock}.json"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kyubisation/angular-server-side-configuration.git"
@@ -48,32 +34,45 @@
     "url": "https://github.com/kyubisation/angular-server-side-configuration/issues"
   },
   "homepage": "https://github.com/kyubisation/angular-server-side-configuration#readme",
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "~13.0.0",
+    "@angular/common": "~13.0.0",
+    "@angular/compiler": "~13.0.0",
+    "@angular/core": "~13.0.0",
+    "@angular/forms": "~13.0.0",
+    "@angular/platform-browser": "~13.0.0",
+    "@angular/platform-browser-dynamic": "~13.0.0",
+    "@angular/router": "~13.0.0",
+    "rxjs": "~7.4.0",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.11.4"
+  },
   "devDependencies": {
-    "@angular-devkit/architect": "~0.1200.0",
-    "@angular-devkit/core": "^12.0.0",
-    "@angular-devkit/schematics": "^12.0.0",
-    "@rollup/plugin-commonjs": "^19.0.0",
-    "@rollup/plugin-node-resolve": "^13.0.0",
-    "@schematics/angular": "^12.0.0",
-    "@types/glob-to-regexp": "^0.4.0",
+    "@angular-devkit/build-angular": "~13.0.1",
+    "@angular/cli": "~13.0.1",
+    "@angular/compiler-cli": "~13.0.0",
+    "@types/jasmine": "~3.10.0",
     "@types/jest": "^26.0.23",
     "@types/node": "^14.14.0",
     "@types/rimraf": "^3.0.0",
-    "@wessberg/rollup-plugin-ts": "^1.3.14",
-    "glob-to-regexp": "^0.4.1",
+    "esbuild": "^0.13.12",
+    "jasmine-core": "~3.10.0",
     "jest": "^26.6.3",
     "jest-junit": "^12.0.0",
+    "karma": "~6.3.0",
+    "karma-chrome-launcher": "~3.1.0",
+    "karma-coverage": "~2.0.3",
+    "karma-jasmine": "~4.0.0",
+    "karma-jasmine-html-reporter": "~1.7.0",
+    "ng-packagr": "^13.0.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.3.0",
     "rimraf": "^3.0.2",
-    "rollup": "^2.48.0",
     "standard-version": "^9.3.0",
     "ts-jest": "^26.5.6",
     "ts-node": "^9.1.1",
-    "tslint": "^6.1.3",
-    "tslint-config-prettier": "^1.18.0",
-    "tslint-plugin-prettier": "^2.3.0",
-    "typescript": "~4.2.4"
+    "typescript": "~4.4.3"
   },
   "prettier": {
     "singleQuote": true,
@@ -87,11 +86,11 @@
         "type": "json"
       },
       {
-        "filename": "package-lock.json",
+        "filename": "projects/angular-server-side-configuration/package.json",
         "type": "json"
       },
       {
-        "filename": "schematics/migration.json",
+        "filename": "projects/angular-server-side-configuration/schematics/migration.json",
         "updater": "scripts/standard-version-updater.js"
       },
       {

@@ -2,12 +2,12 @@ import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
 
-import { Ngssc, Variant } from '../models';
+import { Ngssc, Variant } from './models';
 import {
   indexHtmlContent,
   indexHtmlContentWithoutConfig,
   indexHtmlContentWithoutTitle,
-} from '../test/temporary-fs';
+} from '../../../test/temporary-fs';
 
 import { insert } from './insert';
 
@@ -47,7 +47,7 @@ describe('insert', () => {
   beforeEach(() => {
     // tslint:disable-next-line: no-console
     console.log = () => void 0;
-    process.env.TEST = envTestContent;
+    process.env['TEST'] = envTestContent;
     directory = mkdtempSync(join(tmpdir(), 'insert'));
     subdirectories = ['de', 'en', 'fr'].map((d) => join(directory, d));
     subdirectories.forEach((d) => mkdirSync(d));
@@ -94,7 +94,7 @@ describe('insert', () => {
     }
 
     const test2Value = 'test2';
-    process.env.TEST2 = test2Value;
+    process.env['TEST2'] = test2Value;
     const changedIife =
       // tslint:disable-next-line: max-line-length
       `<script>(function(self){self.process=${JSON.stringify({
@@ -105,7 +105,7 @@ describe('insert', () => {
       expect(readFileSync(file, 'utf8')).not.toContain(iife);
       expect(readFileSync(file, 'utf8')).toContain(changedIife);
     }
-    delete process.env.TEST2;
+    delete process.env['TEST2'];
   });
 
   it('should do nothing on no html files', () => {

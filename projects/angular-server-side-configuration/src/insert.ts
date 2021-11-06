@@ -1,8 +1,8 @@
 import { existsSync, lstatSync, readdirSync, readFileSync, writeFileSync } from 'fs';
-import globToRegExp from 'glob-to-regexp';
 import { dirname, join } from 'path';
 
-import { Ngssc, Variant } from '../models';
+import { globToRegExp } from './glob-to-regexp';
+import { Ngssc, Variant } from './models';
 
 export function insert(
   options: { dryRun?: boolean; recursive?: boolean; directory?: string } = {}
