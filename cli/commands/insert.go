@@ -2,7 +2,7 @@ package commands
 
 import (
 	"fmt"
-	"ngssc/tasks"
+	"ngssc/cli/tasks"
 	"os"
 	"path/filepath"
 

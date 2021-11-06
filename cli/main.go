@@ -2,7 +2,7 @@ package main
 
 import (
 	"log"
-	"ngssc/commands"
+	"ngssc/cli/commands"
 	"os"
 
 	"github.com/urfave/cli"

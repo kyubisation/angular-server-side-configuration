@@ -2,8 +2,8 @@ package tasks
 
 import (
 	"fmt"
-	"ngssc/config"
-	"ngssc/targets"
+	"ngssc/cli/config"
+	"ngssc/cli/targets"
 	"path/filepath"
 	"strings"
 

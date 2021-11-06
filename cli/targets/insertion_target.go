@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"ngssc/config"
+	"ngssc/cli/config"
 	"os"
 	"path/filepath"
 	"regexp"
