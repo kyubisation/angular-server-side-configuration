@@ -4,7 +4,7 @@
   "description": "Configure an angular application on the server",
   "scripts": {
     "clean": "rimraf coverage dist junit.xml",
-    "build:lib": "ts-node --project scripts/tsconfig.json scripts/build.ts",
+    "build:lib": "ts-node --project scripts/tsconfig.json ./scripts/build-lib.ts",
     "build:cli": "docker-compose run build-go",
     "build:cli:upx": "docker-compose run -e BUILD_UPX=true build-go",
     "build": "run-p build:*",
