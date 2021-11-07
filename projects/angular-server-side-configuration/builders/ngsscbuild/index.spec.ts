@@ -1,10 +1,10 @@
+import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'fs';
+import { tmpdir } from 'os';
+import { join } from 'path';
 import { Architect } from '@angular-devkit/architect';
 import { TestingArchitectHost } from '@angular-devkit/architect/testing';
 import { JsonObject, schema } from '@angular-devkit/core';
 import { Logger } from '@angular-devkit/core/src/logger';
-import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'fs';
-import { tmpdir } from 'os';
-import { join } from 'path';
 
 import { Ngssc } from 'angular-server-side-configuration';
 

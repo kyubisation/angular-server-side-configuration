@@ -1,8 +1,8 @@
+import { join } from 'path';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { Schema as ApplicationOptions, Style } from '@schematics/angular/application/schema';
 import { getWorkspace, updateWorkspace } from '@schematics/angular/utility/workspace';
 import { Schema as WorkspaceOptions } from '@schematics/angular/workspace/schema';
-import { join } from 'path';
 import * as tsNode from 'ts-node';
 
 tsNode.register({

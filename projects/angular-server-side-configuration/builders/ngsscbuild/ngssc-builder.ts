@@ -1,3 +1,5 @@
+import { promises } from 'fs';
+import { basename, join } from 'path';
 import {
   BuilderContext,
   Target,
@@ -5,8 +7,6 @@ import {
   BuilderOutput,
 } from '@angular-devkit/architect';
 import { JsonObject } from '@angular-devkit/core';
-import { promises } from 'fs';
-import { basename, join } from 'path';
 
 import { Ngssc } from 'angular-server-side-configuration';
 

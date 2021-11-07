@@ -2,6 +2,6 @@ const baseConfig = require('./package').jest;
 
 module.exports = {
   ...baseConfig,
-  "testEnvironment": "node",
+  testEnvironment: 'node',
   roots: ['<rootDir>/projects'],
 };

@@ -6,7 +6,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "angular-server-side-config-app": {
+    "ngssc-app": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:application": {
@@ -20,18 +20,13 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/angular-server-side-config-app",
+            "outputPath": "dist/ngssc-app",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
-            "styles": [
-              "src/styles.css"
-            ],
+            "assets": ["src/favicon.ico", "src/assets"],
+            "styles": ["src/styles.css"],
             "scripts": []
           },
           "configurations": {
@@ -71,10 +66,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "angular-server-side-config-app:build:production"
+              "browserTarget": "ngssc-app:build:production"
             },
             "development": {
-              "browserTarget": "angular-server-side-config-app:build:development"
+              "browserTarget": "ngssc-app:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -82,7 +77,13 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "angular-server-side-config-app:build"
+            "browserTarget": "ngssc-app:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
           }
         }
       }
@@ -107,6 +108,15 @@
             }
           },
           "defaultConfiguration": "production"
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/angular-server-side-configuration/**/*.ts",
+              "projects/angular-server-side-configuration/**/*.html"
+            ]
+          }
         }
       }
     }
