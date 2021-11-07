@@ -17,6 +17,10 @@ env GOOS=linux GOARCH=amd64 go build -ldflags="-s -w -X main.CliVersion=$VERSION
 echo "Building for Darwin 64-bit"
 env GOOS=darwin GOARCH=amd64 go build -ldflags="-s -w -X main.CliVersion=$VERSION" -o /dist/ngssc_darwin_64bit main.go
 
+if [[ -z "$BUILD_UPX" ]]; then
+    exit 0
+fi
+
 echo "Minify Windows 32 binary"
 cp /dist/ngssc_32bit.exe /dist/ngssc_32bit_min.exe
 upx --brute /dist/ngssc_32bit_min.exe

@@ -1,0 +1,75 @@
+name: Release
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+      - '[0-9]+.[0-9]+.[0-9]+-*'
+
+jobs:
+  release-library:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      - uses: ./.github/actions/yarn-install
+
+      - name: 'Build library'
+        run: yarn build:lib
+
+      - name: 'Publish: Determine npm tag'
+        id: npm_tag
+        run: |
+          if [[ "$REF" == *"-"* ]]
+          then
+              echo "::set-output name=npm_tag::next"
+          else
+              echo "::set-output name=npm_tag::latest"
+          fi
+        env:
+          REF: ${{ github.ref }}
+      - name: 'Publish: angular-server-side-configuration'
+        run: yarn publish dist/angular-server-side-configuration --tag ${{ steps.npm_tag.outputs.npm_tag }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  release-cli:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: '^1.15.0'
+      - run: go version
+
+      - name: 'Build cli'
+        run: yarn build:cli:upx
+
+      - uses: actions/github-script@v5
+        with:
+          script: |
+            const fs = require('fs').promises;
+
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const tag_name = context.ref.split('/')[2];
+            console.log(`Creating release for ${owner} in ${repo} at ${tag_name}`);
+            const release = await github.rest.repos.createRelease({
+              owner,
+              repo,
+              tag_name,
+              generate_release_notes: true,
+              draft: true,
+            });
+
+            for (const file of await fs.readdirSync('./dist/cli')) {
+              console.log(`Adding asset ${file}`);
+              await github.repos.uploadReleaseAsset({
+                owner,
+                repo,
+                release_id: release.data.id,
+                name: file,
+                data: await fs.readFile(`./dist/cli/${file}`),
+              });           
+            }

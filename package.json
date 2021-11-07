@@ -4,16 +4,16 @@
   "description": "Configure an angular application on the server",
   "scripts": {
     "clean": "rimraf coverage dist junit.xml",
-    "build:node": "npm run clean && ts-node --project scripts/tsconfig.json scripts/build.ts",
-    "build:go": "docker-compose run build-go",
+    "build:lib": "ts-node --project scripts/tsconfig.json scripts/build.ts",
+    "build:cli": "docker-compose run build-go",
+    "build:cli:upx": "docker-compose run -e BUILD_UPX=true build-go",
     "build": "run-p build:*",
     "format": "prettier --write **/*.{js,ts,css,scss,json,md,html}",
     "pretest": "npm run clean",
     "test:lib": "jest --ci --config jest.lib.config.js",
-    "test:node": "jest --ci",
-    "test:go": "cd cli && go test",
+    "test:cli": "cd cli && go test",
     "test": "run-s test:*",
-    "lint": "tslint -p tsconfig.json",
+    "lint": "ng lint",
     "release": "standard-version"
   },
   "repository": {

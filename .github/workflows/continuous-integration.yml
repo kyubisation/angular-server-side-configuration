@@ -1,0 +1,43 @@
+name: Continuous Integration
+on: [push, pull_request]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      - uses: ./.github/actions/yarn-install
+
+      - name: 'Run eslint'
+        run: yarn -s lint
+
+  build-and-test-library:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      - uses: ./.github/actions/yarn-install
+
+      - name: 'Build library'
+        run: yarn build:lib
+      - name: 'Test library'
+        run: yarn test:lib
+
+  build-and-test-cli:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: '^1.15.0'
+      - run: go version
+
+      - name: 'Build cli'
+        run: yarn build:cli
+      - name: 'Test cli'
+        run: yarn test:cli
