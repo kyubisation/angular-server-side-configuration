@@ -1,93 +1,77 @@
-import { createSourceFile, ImportDeclaration, Node, ScriptTarget, SyntaxKind } from 'typescript';
+import {
+  createSourceFile,
+  forEachChild,
+  isElementAccessExpression,
+  isIdentifier,
+  isPropertyAccessExpression,
+  isStringLiteralLike,
+  Node,
+  ScriptTarget,
+  isImportDeclaration,
+} from 'typescript';
 import { Variant } from 'angular-server-side-configuration';
+import { logging } from '@angular-devkit/core';
 import { NgsscContext } from './ngssc-context';
 
-/**
- * Detect environment variables in given file.
- * @public
- */
+/** Detect environment variables in given file. */
 export class VariableDetector {
+  constructor(private _logger?: logging.LoggerApi) {}
+
   detect(fileContent: string): NgsscContext {
-    const fileMetaData = createSourceFile('environment.ts', fileContent, ScriptTarget.ESNext, true);
-    const { variant, variantImport } = this._detectVariant(fileMetaData);
-    const variables =
-      variant === 'process'
-        ? this._findProcessEnvVariables(fileMetaData)
-        : this._findNgEnvVariables(fileMetaData);
-    return {
-      variables: variables.sort((a, b) => b.variable.length - a.variable.length),
-      variant,
-      variantImport,
-    };
-  }
-
-  private _detectVariant(node: Node): { variant: Variant; variantImport: string | undefined } {
-    const variantImport = this._findNodesOfType<ImportDeclaration>(
-      node,
-      SyntaxKind.ImportDeclaration
-    )
-      .map((n) => n.getFullText().trim())
-      .filter((n) => n.includes('angular-server-side-configuration'))[0];
-    if (!variantImport || variantImport.match(/angular-server-side-configuration\/process/)) {
-      return { variant: 'process', variantImport };
-    }
-
-    const variant: Variant | undefined = variantImport.match(
-      /angular-server-side-configuration\/ng-env/
-    )
-      ? 'NG_ENV'
-      : undefined;
-    if (!variant) {
-      throw new Error('Could not detect variant (expected either process or ng-env)');
-    }
-    return { variant, variantImport };
-  }
-
-  private _findProcessEnvVariables(node: Node): { variable: string; expression: string }[] {
-    return this._findUsages(node, 'process')
-      .sort((a, b) => b.parent.parent.getText().length - a.parent.parent.getText().length)
-      .map((n) => ({
-        expression: this._resolveExpression(n.parent),
-        variable: n.parent.parent.getText().split('.')[2],
-      }));
-  }
-
-  private _findNgEnvVariables(node: Node): { variable: string; expression: string }[] {
-    return this._findUsages(node, 'NG_ENV')
-      .filter(
-        (n) => n.kind === SyntaxKind.Identifier && n.parent.kind !== SyntaxKind.ImportSpecifier
-      )
-      .sort((a, b) => b.parent.getText().length - a.parent.getText().length)
-      .map((n) => ({
-        expression: this._resolveExpression(n),
-        variable: n.parent.getText().split('.')[1],
-      }));
-  }
-
-  private _findNodesOfType<TNode extends Node>(node: Node, kind: number): TNode[] {
-    return node
-      .getChildren()
-      .map((c) => this._findNodesOfType<TNode>(c, kind))
-      .reduce(
-        (current, next) => current.concat(...next),
-        node.kind === kind ? [node as TNode] : []
-      );
-  }
-
-  private _findUsages(node: Node, variant: string): Node[] {
-    return node
-      .getChildren()
-      .map((c) => this._findUsages(c, variant))
-      .reduce((current, next) => current.concat(next), node.getText() === variant ? [node] : []);
-  }
-
-  private _resolveExpression(node: Node) {
-    while (true) {
-      if (!SyntaxKind[node.parent.kind].endsWith('Expression')) {
-        return node.getText();
+    const sourceFile = createSourceFile('environment.ts', fileContent, ScriptTarget.ESNext, true);
+    let variant: Variant = 'process';
+    const ngEnvVariables: string[] = [];
+    const processVariables: string[] = [];
+    iterateNodes(sourceFile, (node) => {
+      if (
+        isImportDeclaration(node) &&
+        node.moduleSpecifier.getText().match(/angular-server-side-configuration\/ng-env/)
+      ) {
+        variant = 'NG_ENV';
+      } else if (!isIdentifier(node)) {
+        return;
       }
-
-      node = node.parent;
+      if (node.getText() === 'NG_ENV') {
+        const variable = this._extractVariable(node, (n) => n.parent);
+        if (variable) {
+          ngEnvVariables.push(variable);
+        }
+      } else if (node.getText() === 'process') {
+        const variable = this._extractVariable(node, (n) => n.parent.parent);
+        if (variable) {
+          processVariables.push(variable);
+        }
+      }
+    });
+    if (ngEnvVariables.length && processVariables.length) {
+      this._logger?.warn(
+        `Detected both process.env.* and NG_ENV.* variables with selected variant ${variant}. Only the variables matching the current variant will be used.`
+      );
     }
+    const variables = (variant === 'process' ? processVariables : ngEnvVariables).sort();
+    return { variables, variant };
   }
+
+  private _extractVariable(node: Node, resolveRoot: (n: Node) => Node) {
+    if (!isPropertyAccessExpression(node.parent) && !isElementAccessExpression(node.parent)) {
+      return undefined;
+    }
+    const root: Node = resolveRoot(node);
+    if (isPropertyAccessExpression(root)) {
+      return root.name.getText();
+    }
+    if (isElementAccessExpression(root) && isStringLiteralLike(root.argumentExpression)) {
+      return root.argumentExpression.getText().replace(/['"`]/g, '');
+    }
+
+    this._logger?.warn(
+      `Unable to resolve variable from ${node.getText()}. Please use direct assignment.`
+    );
+    return undefined;
+  }
+}
+
+function iterateNodes(node: Node, action: (node: Node) => void) {
+  action(node);
+  forEachChild(node, (n) => iterateNodes(n, action));
 }
