@@ -4,6 +4,7 @@
       "angular-server-side-configuration": ["../../../dist/angular-server-side-configuration"]
     },
     "declaration": true,
+    "esModuleInterop": true,
     "lib": ["es2017"],
     "module": "commonjs",
     "moduleResolution": "node",

@@ -3,14 +3,13 @@
   "version": "12.0.0",
   "description": "Configure an angular application on the server",
   "scripts": {
-    "clean": "rimraf coverage dist junit.xml",
     "build:lib": "ts-node --project scripts/tsconfig.json ./scripts/build-lib.ts",
     "build:cli": "docker-compose run build-go",
     "build:cli:upx": "docker-compose run -e BUILD_UPX=true build-go",
-    "build": "run-p build:*",
+    "build:ngssc": "ng run ngssc-app:ngsscbuild:production",
+    "build": "run-s build:*",
     "format": "prettier --write **/*.{js,ts,css,scss,json,md,html}",
-    "pretest": "npm run clean",
-    "test:lib": "jest --ci --config jest.lib.config.js",
+    "test:lib": "jest --ci --config jest.config.ts",
     "test:cli": "cd cli && go test",
     "test": "run-s test:*",
     "lint": "ng lint",
@@ -45,7 +44,7 @@
     "@angular/platform-browser": "~13.0.0",
     "@angular/platform-browser-dynamic": "~13.0.0",
     "@angular/router": "~13.0.0",
-    "rxjs": "~7.4.0",
+    "rxjs": "6.6.7",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
   },
@@ -71,11 +70,10 @@
     "eslint-plugin-import": "^2.25.2",
     "jest": "^27.3.1",
     "jest-junit": "^13.0.0",
-    "jest-preset-angular": "^11.0.0-rc.1",
+    "jest-preset-angular": "^11.0.0-rc.3",
     "ng-packagr": "^13.0.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.3.0",
-    "rimraf": "^3.0.2",
     "standard-version": "^9.3.0",
     "ts-node": "^10.2.1",
     "typescript": "~4.4.3"
@@ -104,35 +102,5 @@
         "updater": "scripts/standard-version-updater.js"
       }
     ]
-  },
-  "jest": {
-    "preset": "jest-preset-angular",
-    "setupFilesAfterEnv": [
-      "<rootDir>/setup-jest.ts"
-    ],
-    "reporters": [
-      "default",
-      "jest-junit"
-    ],
-    "collectCoverage": true,
-    "collectCoverageFrom": [
-      "**/*.ts",
-      "!src/index.ts",
-      "!**/public-api.ts",
-      "!**/*.spec.ts"
-    ],
-    "coverageReporters": [
-      "cobertura",
-      "html"
-    ],
-    "coverageDirectory": "coverage",
-    "coverageThreshold": {
-      "global": {
-        "branches": 85,
-        "functions": 95,
-        "lines": 95,
-        "statements": 95
-      }
-    }
   }
 }

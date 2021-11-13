@@ -1,10 +1,9 @@
 describe('process', () => {
   it('should add process.env to window', async () => {
-    expect(typeof window).toBe('undefined');
-    (global as any).window = {};
+    delete (window as any).process;
+    expect('process' in window).toBeFalsy();
     await import('./public_api');
-    expect(global.window).toHaveProperty('process');
-    expect(global.window.process).toHaveProperty('env');
-    delete (global as any).window;
+    expect(window).toHaveProperty('process');
+    expect(window.process).toHaveProperty('env');
   });
 });
