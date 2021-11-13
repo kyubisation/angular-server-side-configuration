@@ -1,5 +1,5 @@
 import { execSync } from 'child_process';
-import { existsSync, lstatSync, readdirSync } from 'fs';
+import { lstatSync, readdirSync } from 'fs';
 import { copyFile, mkdir, readFile, writeFile } from 'fs/promises';
 import { dirname, join, relative, resolve } from 'path';
 
@@ -10,15 +10,16 @@ if (module === require.main) {
   finalizePackage();
 }
 
+interface Schema {
+  properties: Record<string, any>;
+}
+
 async function finalizePackage() {
   const rootDir = resolve(join(__dirname, '..'));
   const sourceDir = join(rootDir, 'projects/angular-server-side-configuration');
   const targetDir = join(rootDir, 'dist/angular-server-side-configuration');
   const schemaDirs = ['builders', 'schematics'].map((d) => join(sourceDir, d));
-  if (!existsSync(targetDir)) {
-    console.log('dist not available. Starting ng build.');
-    execSync('npx ng build angular-server-side-configuration', { cwd: rootDir, stdio: 'inherit' });
-  }
+  execSync('npx ng build angular-server-side-configuration', { cwd: rootDir, stdio: 'inherit' });
 
   console.log(`Copying required assets:`);
   for (const file of ['README.md', 'LICENSE']) {
@@ -33,10 +34,39 @@ async function finalizePackage() {
     await copyFile(file, targetPath);
   }
 
+  const ngsscSchema: Schema = JSON.parse(
+    await readFile(join(sourceDir, 'builders/ngsscbuild/schema.json'), 'utf8')
+  );
+  delete ngsscSchema.properties['browserTarget'];
+  for (const schemaVariant of ['browser', 'dev-server']) {
+    const sourceFile = join(
+      rootDir,
+      'node_modules/@angular-devkit/build-angular/src/builders',
+      schemaVariant,
+      'schema.json'
+    );
+    const schema: Schema = JSON.parse(await readFile(sourceFile, 'utf8'));
+    schema.properties = { ...schema.properties, ...ngsscSchema.properties };
+    const targetFile = join(targetDir, 'builders', schemaVariant, 'schema.json');
+    const relativePath = relative(targetDir, targetFile);
+    console.log(` - ${relativePath}`);
+    await mkdir(dirname(targetFile), { recursive: true });
+    await writeFile(targetFile, JSON.stringify(schema, null, 2), 'utf8');
+
+    await writeFile(
+      join(sourceDir, 'builders', schemaVariant, 'schema.json'),
+      JSON.stringify(schema, null, 2),
+      'utf8'
+    );
+  }
+
   for (const schemaDir of schemaDirs) {
     const relativeSchemaDir = relative(rootDir, schemaDir);
     console.log(`Building ${relativeSchemaDir}`);
-    execSync(`npx tsc --project ${relativeSchemaDir}`, { cwd: rootDir, stdio: 'inherit' });
+    execSync(`npx tsc --project ${relativeSchemaDir}/tsconfig.json`, {
+      cwd: rootDir,
+      stdio: 'inherit',
+    });
   }
 }
 
