@@ -13,6 +13,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 14
+          registry-url: 'https://registry.npmjs.org'
       - uses: ./.github/actions/yarn-install
 
       - name: 'Build library'
@@ -63,7 +64,7 @@ jobs:
               draft: true,
             });
 
-            for (const file of await fs.readdirSync('./dist/cli')) {
+            for (const file of await fs.readdir('./dist/cli')) {
               console.log(`Adding asset ${file}`);
               await github.repos.uploadReleaseAsset({
                 owner,
