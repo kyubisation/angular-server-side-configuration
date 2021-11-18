@@ -9,7 +9,7 @@
     "build:ngssc": "ng run ngssc-app:ngsscbuild:production",
     "build": "run-s build:*",
     "format": "prettier --write **/*.{js,ts,css,scss,json,md,html}",
-    "test:lib": "jest --ci --config jest.config.ts",
+    "test:lib": "jest --config jest.config.ts",
     "test:cli": "cd cli && go test",
     "test": "run-s test:*",
     "lint": "ng lint",

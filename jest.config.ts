@@ -8,7 +8,18 @@ const config: Config.InitialOptions = {
   ],
   reporters: ['default', 'jest-junit'],
   collectCoverage: true,
-  collectCoverageFrom: ['**/*.ts', '!**/*.spec.ts'],
+  collectCoverageFrom: [
+    '**/*.ts',
+    // Exclude specs
+    '!**/*.spec.ts',
+    // Exclude jest configs
+    '!**/*.config.ts',
+    // Exclude app files
+    '!**/main.ts',
+    '!**/polyfills.ts',
+    '!**/app.module.ts',
+    '!**/environment.prod.ts',
+  ],
   coverageReporters: ['cobertura', 'html'],
   coverageDirectory: 'coverage',
 };
