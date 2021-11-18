@@ -1,10 +1,5 @@
 # angular-server-side-configuration
 
-![](https://img.shields.io/azure-devops/build/kyubisation/894749fe-3edd-41f8-818f-ba14e6a3cc22/2/master.svg)
-![](https://img.shields.io/azure-devops/coverage/kyubisation/angular-server-side-configuration/2/master.svg)
-![](https://img.shields.io/npm/v/angular-server-side-configuration.svg)
-![](https://img.shields.io/npm/l/angular-server-side-configuration.svg)
-
 Configure an angular application at runtime on the server or in a docker container via environment variables.
 
 ## Motivation
@@ -20,6 +15,10 @@ A [native CLI](#on-host-server-or-in-dockerfile) can be used to insert populated
 environment variables into index.html file(s) into the head tag or by replacing `<!--CONFIG-->`
 (Missing environment variables will be represented by `null`). This should be done
 on the host serving the bundled angular files.
+
+Starting with version 13, there are experimental builders for the `build` and `serve` commands.
+To install the experimental builders run `ng add angular-server-side-configuration` and answer
+`Would you like to use the experimental builders for build and serve?` with `y(es)`.
 
 ## Getting Started
 

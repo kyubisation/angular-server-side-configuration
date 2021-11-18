@@ -25,8 +25,13 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
-            "assets": ["src/favicon.ico", "src/assets"],
-            "styles": ["src/styles.css"],
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "src/styles.css"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -77,14 +82,134 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ngssc-app:build"
+            "browserTarget": "ngssc-app:build",
+            "format": "json",
+            "outputPath": "src/locales"
           }
         },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
           }
+        },
+        "ngsscbuild": {
+          "builder": "./dist/angular-server-side-configuration:ngsscbuild",
+          "options": {
+            "additionalEnvironmentVariables": [
+              "MANUAL_VALUE"
+            ],
+            "browserTarget": "ngssc-app:build",
+            "ngsscEnvironmentFile": "src/environments/environment.prod.ts"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "ngssc-app:build:production"
+            }
+          }
+        }
+      }
+    },
+    "ngssc-builders-app": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:application": {
+          "strict": true
+        }
+      },
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "i18n": {
+        "locales": {
+          "de-CH": "src/locales/messages.de-CH.json"
+        }
+      },
+      "architect": {
+        "build": {
+          "builder": "./dist/angular-server-side-configuration:browser",
+          "options": {
+            "outputPath": "dist/ngssc-builders-app",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "tsconfig.app.json",
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "src/styles.css"
+            ],
+            "scripts": [],
+            "localize": false,
+            "ngsscEnvironmentFile": "src/environments/environment.prod.ts",
+            "additionalEnvironmentVariables": ["MANUAL_KEY"]
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "i18n": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "outputHashing": "all",
+              "localize": true
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.ngssc.ts"
+                }
+              ],
+              "ngsscEnvironmentFile": "src/environments/environment.ngssc.ts"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "./dist/angular-server-side-configuration:dev-server",
+          "configurations": {
+            "production": {
+              "browserTarget": "ngssc-builders-app:build:production"
+            },
+            "development": {
+              "browserTarget": "ngssc-builders-app:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
         }
       }
     },

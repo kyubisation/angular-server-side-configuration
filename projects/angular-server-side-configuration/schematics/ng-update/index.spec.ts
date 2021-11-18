@@ -71,19 +71,6 @@ describe('ng-update', () => {
     assertAppliedConfig(tree);
   });
 
-  it('should migrate ng-env4 import', async () => {
-    const envContent = appTree.read(envPath)!.toString('utf8');
-    appTree.overwrite(
-      envPath,
-      envContent.replace(
-        /^/,
-        `import { NG_ENV } from 'angular-server-side-configuration/ng-env4';\n`
-      )
-    );
-    const tree = await runner.runSchematicAsync('migration-v8', {}, appTree).toPromise();
-    assertAppliedConfig(tree, `import { NG_ENV } from 'angular-server-side-configuration/ng-env';`);
-  });
-
   it('should detect ng-env variant', async () => {
     const envContent = appTree.read(envPath)!.toString('utf8');
     appTree.overwrite(

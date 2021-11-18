@@ -1,8 +1,8 @@
-import { basename, Path } from '@angular-devkit/core';
-import { chain, FileEntry, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import { basename } from '@angular-devkit/core';
+import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { getWorkspace, updateWorkspace } from '@schematics/angular/utility/workspace';
 
-import { Ngssc, Variant } from 'angular-server-side-configuration';
+import { Ngssc } from 'angular-server-side-configuration';
 import { ngAdd } from '../ng-add/index';
 
 const NGSSC_JSON_PATH = '/ngssc.json';
@@ -10,7 +10,6 @@ const NGSSC_JSON_PATH = '/ngssc.json';
 export function updateToV8(): Rule {
   return async (tree: Tree) => {
     const ngssc = tryReadNgsscJson(tree);
-    const variant = findAndPatchVariantFromFiles(tree);
     const workspace = await getWorkspace(tree);
     const projects = Array.from(workspace.projects.keys());
 
@@ -18,6 +17,7 @@ export function updateToV8(): Rule {
       ...projects.map((project) =>
         ngAdd({
           additionalEnvironmentVariables: (ngssc.environmentVariables || []).join(','),
+          experimentalBuilders: false,
           ngsscEnvironmentFile: 'src/environments/environment.prod.ts',
           project,
         })
@@ -81,26 +81,6 @@ export function dockerfile(): Rule {
 function tryReadNgsscJson(tree: Tree): Partial<Ngssc> {
   const ngssc = tree.read(NGSSC_JSON_PATH);
   return ngssc ? JSON.parse(ngssc.toString('utf8')) : {};
-}
-
-function findAndPatchVariantFromFiles(tree: Tree): Variant {
-  let variant: Variant = 'process';
-  const ngEnv4Import = 'angular-server-side-configuration/ng-env4';
-  const ngEnvImport = 'angular-server-side-configuration/ng-env';
-  tree.visit((path: Path, entry?: Readonly<FileEntry> | null) => {
-    if (path.endsWith('.ts') && entry) {
-      const content = entry.content.toString('utf8');
-      if (content.includes(ngEnv4Import)) {
-        const newContent = content.replace(ngEnv4Import, ngEnvImport);
-        tree.overwrite(path, newContent);
-        variant = 'NG_ENV';
-      } else if (content.includes(ngEnvImport)) {
-        variant = 'NG_ENV';
-      }
-    }
-  });
-
-  return variant;
 }
 
 function removeNgsscJson() {

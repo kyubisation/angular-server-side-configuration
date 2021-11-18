@@ -17,7 +17,7 @@ tsNode.register({
 const workspaceOptions: WorkspaceOptions = {
   name: 'workspace',
   newProjectRoot: 'projects',
-  version: '10.0.0',
+  version: '13.0.0',
 };
 
 const appOptions: ApplicationOptions = {
@@ -144,5 +144,34 @@ describe('ng-add', () => {
     await runner.runSchematicAsync('ng-add', { project: appOptions.name }, initialTree).toPromise();
 
     expect(logs.filter((l) => l.includes('Skipping')).length).toBe(4);
+  });
+
+  it('should replace builders when choosing experimental builders', async () => {
+    const tree = await runner
+      .runSchematicAsync(
+        'ng-add',
+        {
+          project: appOptions.name,
+          experimentalBuilders: true,
+          ngsscEnvironmentFile: 'src/environments/environment.prod.ts',
+        },
+        appTree
+      )
+      .toPromise();
+
+    const workspace = await getWorkspace(tree);
+    const project = workspace.projects.get(appOptions.name)!;
+    const buildTarget = project.targets.get('build')!;
+    expect(buildTarget.builder).toBe('angular-server-side-configuration:browser');
+    expect(buildTarget.options!['ngsscEnvironmentFile']).toEqual(
+      'projects/dummy/src/environments/environment.prod.ts'
+    );
+    expect(buildTarget.configurations!['development']!['ngsscEnvironmentFile']).toEqual(
+      'projects/dummy/src/environments/environment.ts'
+    );
+    expect(project.targets.get('serve')!.builder).toBe(
+      'angular-server-side-configuration:dev-server'
+    );
+    expect(project.targets.get('ngsscbuild')).toBeUndefined();
   });
 });

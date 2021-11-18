@@ -60,10 +60,6 @@ typings/
 # next.js build output
 .next
 
-# TypeScript
-*/**/*.js
-*.d.ts
-
 # Angular
 .angular
 

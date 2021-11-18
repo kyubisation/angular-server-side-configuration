@@ -8,7 +8,7 @@ import {
 } from '@angular-devkit/schematics';
 import { InsertChange } from '@schematics/angular/utility/change';
 import { getWorkspace, updateWorkspace } from '@schematics/angular/utility/workspace';
-
+import type { FileReplacement } from '@angular-devkit/build-angular';
 import { Schema } from './schema';
 
 export function ngAdd(options: Schema): Rule {
@@ -28,6 +28,40 @@ function addNgsscTargetToWorkspace(options: Schema): Rule {
         return;
       }
 
+      const ngsscOptions = {
+        additionalEnvironmentVariables: options.additionalEnvironmentVariables
+          ? options.additionalEnvironmentVariables.split(',').map((e) => e.trim())
+          : [],
+        ngsscEnvironmentFile: join(normalize(project.root), options.ngsscEnvironmentFile),
+      };
+
+      if (options.experimentalBuilders) {
+        const buildTarget = project.targets.get('build')!;
+        const { production, development } = buildTarget.configurations || {};
+        if (production && development) {
+          const fileReplacements: FileReplacement[] = production['fileReplacements']! as any;
+          const devEnvironmentFile =
+            Array.isArray(fileReplacements) &&
+            fileReplacements.find((f) => f.with === ngsscOptions.ngsscEnvironmentFile);
+          if (devEnvironmentFile) {
+            development['ngsscEnvironmentFile'] = devEnvironmentFile.replace;
+          }
+        }
+
+        buildTarget.builder = 'angular-server-side-configuration:browser';
+        buildTarget.options = { ...buildTarget.options, ...ngsscOptions };
+
+        const serveTarget = project.targets.get('serve')!;
+        serveTarget.builder = 'angular-server-side-configuration:dev-server';
+
+        const target = project.targets.get('ngsscbuild');
+        if (target) {
+          project.targets.delete('ngsscbuild');
+        }
+
+        return;
+      }
+
       const target = project.targets.get('ngsscbuild');
       if (target) {
         context.logger.info(
@@ -40,11 +74,8 @@ function addNgsscTargetToWorkspace(options: Schema): Rule {
         name: 'ngsscbuild',
         builder: 'angular-server-side-configuration:ngsscbuild',
         options: {
-          additionalEnvironmentVariables: options.additionalEnvironmentVariables
-            ? options.additionalEnvironmentVariables.split(',').map((e) => e.trim())
-            : [],
+          ...ngsscOptions,
           browserTarget: `${options.project}:build`,
-          ngsscEnvironmentFile: options.ngsscEnvironmentFile,
         },
         configurations: {
           production: {
@@ -74,16 +105,18 @@ function addImportAndDescriptionToEnvironmentFile(options: Schema): Rule {
 /**
  * How to use angular-server-side-configuration:
  *
- * Use process.env.NAME_OF_YOUR_ENVIRONMENT_VARIABLE
+ * Use process.env['NAME_OF_YOUR_ENVIRONMENT_VARIABLE']
  *
  * export const environment = {
- *   stringValue: process.env.STRING_VALUE,
- *   stringValueWithDefault: process.env.STRING_VALUE || 'defaultValue',
- *   numberValue: Number(process.env.NUMBER_VALUE),
- *   numberValueWithDefault: Number(process.env.NUMBER_VALUE || 10),
- *   booleanValue: Boolean(process.env.BOOLEAN_VALUE),
- *   booleanValueInverted: process.env.BOOLEAN_VALUE_INVERTED !== 'false',
+ *   stringValue: process.env['STRING_VALUE'],
+ *   stringValueWithDefault: process.env['STRING_VALUE'] || 'defaultValue',
+ *   numberValue: Number(process.env['NUMBER_VALUE']),
+ *   numberValueWithDefault: Number(process.env['NUMBER_VALUE'] || 10),
+ *   booleanValue: Boolean(process.env['BOOLEAN_VALUE']),
+ *   booleanValueInverted: process.env['BOOLEAN_VALUE_INVERTED'] !== 'false',
  * };
+ * 
+ * Please note that process.env[variable] cannot be resolved. Please directly use strings.
  */
 
 `;
@@ -97,6 +130,10 @@ function addImportAndDescriptionToEnvironmentFile(options: Schema): Rule {
 
 function addNgsscToPackageScripts(options: Schema): Rule {
   return (host: Tree, context: SchematicContext) => {
+    if (options.experimentalBuilders) {
+      return;
+    }
+
     const pkgPath = '/package.json';
     const buffer = host.read(pkgPath);
     if (buffer === null) {

@@ -30,11 +30,12 @@ export async function ngsscBuild(options: NgsscBuildSchema, context: BuilderCont
 export async function detectVariablesAndBuildNgsscJson(
   options: NgsscBuildSchema,
   browserOptions: BrowserBuilderOptions,
-  context: BuilderContext
+  context: BuilderContext,
+  multiple: boolean = false
 ) {
   const ngsscContext = await detectVariables(options, context);
   const outputPath = join(context.workspaceRoot, browserOptions.outputPath);
-  const ngssc = buildNgssc(ngsscContext, options, browserOptions);
+  const ngssc = buildNgssc(ngsscContext, options, browserOptions, multiple);
   await writeFileAsync(join(outputPath, 'ngssc.json'), JSON.stringify(ngssc, null, 2), 'utf8');
 }
 
@@ -63,28 +64,31 @@ export async function detectVariables(
 export function buildNgssc(
   ngsscContext: NgsscContext,
   options: NgsscBuildSchema,
-  browserOptions?: BrowserBuilderOptions
+  browserOptions?: BrowserBuilderOptions,
+  multiple: boolean = false
 ): Ngssc {
   return {
     environmentVariables: [
       ...ngsscContext.variables,
       ...(options.additionalEnvironmentVariables || []),
     ],
-    filePattern: options.filePattern || extractFilePattern(browserOptions?.index),
+    filePattern: options.filePattern || extractFilePattern(browserOptions?.index, multiple),
     variant: ngsscContext.variant,
   };
 }
 
-function extractFilePattern(index: BrowserBuilderOptions['index'] | undefined) {
+function extractFilePattern(index: BrowserBuilderOptions['index'] | undefined, multiple: boolean) {
+  let result = '**/index.html';
   if (!index) {
-    return '**/index.html';
+    return result;
   } else if (typeof index === 'string') {
-    return basename(index);
+    result = basename(index);
   } else if (index.output) {
-    return basename(index.output);
+    result = basename(index.output);
   } else {
-    return basename(index.input);
+    result = basename(index.input);
   }
+  return multiple && !result.startsWith('*') ? `**/${result}` : result;
 }
 
 export default createBuilder<NgsscBuildSchema & JsonObject>(ngsscBuild);
