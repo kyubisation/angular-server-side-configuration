@@ -29,8 +29,7 @@ func run(args []string) error {
 			Name:     "insert",
 			Category: "Server Side",
 			Usage: "Insert environment variables. Looks for an ngssc.json file inside the current or " +
-				"given directory. Alternatively use the --config-in-html flag. " +
-				"Directory defaults to current working directory",
+				"given directory. Directory defaults to current working directory.",
 			Flags: []cli.Flag{
 				cli.BoolFlag{
 					Name:  "recursive, r",
