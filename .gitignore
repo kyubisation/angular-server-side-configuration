@@ -20,6 +20,9 @@ coverage
 # nyc test coverage
 .nyc_output
 
+# Golang coverage
+cli/coverage.out
+
 # Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
 .grunt
 

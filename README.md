@@ -105,7 +105,7 @@ export const environment = {
 };
 ```
 
-#### NG_ENV.\* _Deprecated_
+#### NG\_ENV.\* *Deprecated*
 
 Import NG_ENV from `angular-server-side-configuration/ng-env`
 and use NG_ENV.NAME in your environment.prod.ts, where NAME is the
@@ -157,12 +157,53 @@ if you need an additional environment.)
 
 #### ngssc insert
 
+Insert environment variables. Looks for an ngssc.json file inside the current or
+given directory. Directory defaults to current working directory.
+
 Usage: ngssc insert [options] [directory]
 
 | Options           | Description                                                                       |
 | ----------------- | --------------------------------------------------------------------------------- |
-| `-r, --recursive` | Recursively searches for ngssc.json files and applies the contained configuration |
+| `--recursive, -r` | Recursively searches for ngssc.json files and applies the contained configuration |
 | `--dry`           | Perform the insert without actually inserting the variables                       |
+
+#### ngssc substitute
+
+Substitutes the variable \$\{NGSSC_CSP_HASH\} in files ending with ".template"
+and copies the file while removing the ".template" extension.
+
+\$\{NGSSC_CSP_HASH\} represents the CSP hash value of the IIFE generated/inserted by the
+insert command, wrapped by single quotes.
+
+By default looks for "\*.template" files in the current working directory. Specify another
+directory to search for "\*.template" files via argument.
+(e.g. `ngssc substitute /path/to/template/files`)
+
+When applying the variable(s), the file is copied to the same directory without the
+".template" extension with the substituion applied.
+(e.g. `ngssc substitute`: /a/my.conf.template => /a/my.conf)
+
+Use the "--out" flag to define a different output directory.
+(e.g. `ngssc substitute --out=/b`: /a/my.conf.template => /b/my.conf)
+
+Optionally supports substituting environment variables with the --include-env flag.
+The format \$\{EXAMPLE\} must be used (\$EXAMPLE will not work). Additionally only
+alphanumeric characters and \_ are allowed as variable names (e.g. \$\{EXAMPLE_KEY\}).
+(e.g. `ngssc substitute --include-env`)
+
+**ATTENTION**: Since the official nginx container image already provides a similar mechanism
+with substitution, it is recommended **not** to use the `/etc/nginx/templates` directory.
+Instead use the directory `/etc/nginx/ngssc-templates`.
+
+Usage: ngssc substitute [options] [directory]
+
+| Options                | Description                                                                                                                                                                                                                                 |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--ngssc-path`         | Path to the ngssc.json file or containing directory to be used for the generated IIFE. Supports glob. Defaults to [current working directory]/\*\*/ngssc.json. Throws if multiple ngssc.json with different variant or variables are found. |
+| `--hash-algorithm, -a` | The hash algorithm to be used. Supports sha256, sha384 and sha512. Defaults to sha512.                                                                                                                                                      |
+| `--out, -o`            | The directory into which the updated files should be copied.                                                                                                                                                                                |
+| `--include-env, -e`    | Substitute all variables in the format of \$\{VARIABLE_NAME\}.                                                                                                                                                                              |
+| `--dry`                | Perform the insert without actually inserting the variables                                                                                                                                                                                 |
 
 ##### Minimal Example
 
@@ -188,6 +229,9 @@ ngssc.sh
 ```bash
 #!/bin/sh
 ngssc insert /usr/share/nginx/html
+# Substitute CSP variable (and optionally environment variables)
+# See documentation above
+#ngssc substitute --ngssc-path=/usr/share/nginx/html -o=/etc/nginx/conf.d/ /etc/nginx/ngssc-templates/
 ```
 
 ### ngssc.json

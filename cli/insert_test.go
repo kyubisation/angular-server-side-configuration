@@ -2,161 +2,164 @@ package main
 
 import (
 	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 )
 
 func TestNgsscProcessWithNotSetEnvironmentVariable(t *testing.T) {
-	context := NewTestIOContext(t)
+	context := newTestDir(t)
 	context.CreateFile("index.html", configHTMLTemplate)
 	context.CreateFile("ngssc.json", `{"variant":"process","environmentVariables":["TEST_VALUE"]}`)
 
 	result := runWithArgs("insert", context.path)
-	if !result.Success() {
-		t.Fatalf("Expected to succeed, but failed: %v %v", result.Stdout(), result.Error())
-	} else if !context.FileContains("index.html", `<script>(function(self){self.process={"env":{"TEST_VALUE":null}};})(window)</script>`) {
-		t.Fatalf("Expected html to contain iife. Got:\n" + context.ReadFile("index.html"))
-	}
+	assertSuccess(t, result)
+	expect := `<script>(function(self){self.process={"env":{"TEST_VALUE":null}};})(window)</script>`
+	assertContains(t, context.ReadFile("index.html"), expect, "Expected html to contain iife.")
 }
 
 func TestNgsscProcessWithSetEnvironmentVariable(t *testing.T) {
-	context := NewTestIOContext(t)
+	context := newTestDir(t)
 	context.CreateFile("index.html", configHTMLTemplate)
 	context.CreateFile("ngssc.json", `{"variant":"process","environmentVariables":["TEST_VALUE"]}`)
 
 	os.Setenv("TEST_VALUE", "example value")
 	result := runWithArgs("insert", context.path)
 	os.Unsetenv("TEST_VALUE")
-	if !result.Success() {
-		t.Fatalf("Expected to succeed, but failed: %v %v", result.Stdout(), result.Error())
-	} else if !context.FileContains("index.html", `<script>(function(self){self.process={"env":{"TEST_VALUE":"example value"}};})(window)</script>`) {
-		t.Fatalf("Expected html to contain iife. Got:\n" + context.ReadFile("index.html"))
-	}
+	assertSuccess(t, result)
+	expect := `<script>(function(self){self.process={"env":{"TEST_VALUE":"example value"}};})(window)</script>`
+	assertContains(t, context.ReadFile("index.html"), expect, "Expected html to contain iife.")
+}
+
+func TestNgsscProcessWithSetEnvironmentVariableAndCwd(t *testing.T) {
+	context := newTestDir(t)
+	context.CreateFile("index.html", configHTMLTemplate)
+	context.CreateFile("ngssc.json", `{"variant":"process","environmentVariables":["TEST_VALUE"]}`)
+
+	chdir(t, context.path)
+	os.Setenv("TEST_VALUE", "example value")
+	result := runWithArgs("insert")
+	os.Unsetenv("TEST_VALUE")
+	assertSuccess(t, result)
+	expect := `<script>(function(self){self.process={"env":{"TEST_VALUE":"example value"}};})(window)</script>`
+	assertContains(t, context.ReadFile("index.html"), expect, "Expected html to contain iife.")
 }
 
 func TestIdempotentNgsscProcessWithSetEnvironmentVariable(t *testing.T) {
-	context := NewTestIOContext(t)
+	context := newTestDir(t)
 	context.CreateFile("index.html", configHTMLTemplate)
 	context.CreateFile("ngssc.json", `{"variant":"process","environmentVariables":["TEST_VALUE","TEST_VALUE2"]}`)
 
 	os.Setenv("TEST_VALUE", "example value")
 	result := runWithArgs("insert", context.path)
 	os.Unsetenv("TEST_VALUE")
-	if !result.Success() {
-		t.Fatalf("Expected to succeed, but failed: %v %v", result.Stdout(), result.Error())
-	} else if !context.FileContains("index.html", `<script>(function(self){self.process={"env":{"TEST_VALUE":"example value","TEST_VALUE2":null}};})(window)</script>`) {
-		t.Fatalf("Expected html to contain iife. Got:\n" + context.ReadFile("index.html"))
-	}
+	assertSuccess(t, result)
+	expect := `<script>(function(self){self.process={"env":{"TEST_VALUE":"example value","TEST_VALUE2":null}};})(window)</script>`
+	assertContains(t, context.ReadFile("index.html"), expect, "Expected html to contain iife.")
 
 	os.Setenv("TEST_VALUE", "example value")
 	os.Setenv("TEST_VALUE2", "example value 2")
 	result = runWithArgs("insert", context.path)
 	os.Unsetenv("TEST_VALUE")
 	os.Unsetenv("TEST_VALUE2")
-	if !result.Success() {
-		t.Fatalf("Expected to succeed, but failed: %v %v", result.Stdout(), result.Error())
-	} else if context.FileContains("index.html", `<script>(function(self){self.process={"env":{"TEST_VALUE":"example value","TEST_VALUE2":null}};})(window)</script>`) {
-		t.Fatalf("Expected html to contain updated iife. Got:\n" + context.ReadFile("index.html"))
-	} else if !context.FileContains("index.html", `<script>(function(self){self.process={"env":{"TEST_VALUE":"example value","TEST_VALUE2":"example value 2"}};})(window)</script>`) {
-		t.Fatalf("Expected html to contain updated iife. Got:\n" + context.ReadFile("index.html"))
-	}
+	assertSuccess(t, result)
+	expect = `<script>(function(self){self.process={"env":{"TEST_VALUE":"example value","TEST_VALUE2":null}};})(window)</script>`
+	assertNotContains(t, context.ReadFile("index.html"), expect, "Expected html to contain updated iife.")
+	expect = `<script>(function(self){self.process={"env":{"TEST_VALUE":"example value","TEST_VALUE2":"example value 2"}};})(window)</script>`
+	assertContains(t, context.ReadFile("index.html"), expect, "Expected html to contain updated iife.")
 }
 
 func TestNgsscNgEnvWithNotSetEnvironmentVariable(t *testing.T) {
-	context := NewTestIOContext(t)
+	context := newTestDir(t)
 	context.CreateFile("index.html", configHTMLTemplate)
 	context.CreateFile("ngssc.json", `{"variant":"NG_ENV","environmentVariables":["TEST_VALUE"]}`)
 
 	result := runWithArgs("insert", context.path)
-	if !result.Success() {
-		t.Fatalf("Expected to succeed, but failed: %v %v", result.Stdout(), result.Error())
-	} else if !context.FileContains("index.html", `<script>(function(self){self.NG_ENV={"TEST_VALUE":null};})(window)</script>`) {
-		t.Fatalf("Expected html to contain iife. Got:\n" + context.ReadFile("index.html"))
-	}
+	assertSuccess(t, result)
+	expect := `<script>(function(self){self.NG_ENV={"TEST_VALUE":null};})(window)</script>`
+	assertContains(t, context.ReadFile("index.html"), expect, "Expected html to contain iife.")
+}
+
+func TestNgsscWithInvalidDir(t *testing.T) {
+	context := newTestDir(t)
+
+	result := runWithArgs("insert", filepath.Join(context.path, "invalid"))
+	assertFailure(t, result)
+	assertContains(t, result.err.Error(), "working directory does not exist", "")
 }
 
 func TestNgsscNgEnvWithSetEnvironmentVariable(t *testing.T) {
-	context := NewTestIOContext(t)
+	context := newTestDir(t)
 	context.CreateFile("index.html", configHTMLTemplate)
 	context.CreateFile("ngssc.json", `{"variant":"NG_ENV","environmentVariables":["TEST_VALUE"]}`)
 
 	os.Setenv("TEST_VALUE", "example value")
 	result := runWithArgs("insert", context.path)
 	os.Unsetenv("TEST_VALUE")
-	if !result.Success() {
-		t.Fatalf("Expected to succeed, but failed: %v %v", result.Stdout(), result.Error())
-	} else if !context.FileContains("index.html", `<script>(function(self){self.NG_ENV={"TEST_VALUE":"example value"};})(window)</script>`) {
-		t.Fatalf("Expected html to contain iife. Got:\n" + context.ReadFile("index.html"))
-	}
+	assertSuccess(t, result)
+	expect := `<script>(function(self){self.NG_ENV={"TEST_VALUE":"example value"};})(window)</script>`
+	assertContains(t, context.ReadFile("index.html"), expect, "Expected html to contain iife.")
 }
 
 func TestNgsscNgEnvWithMultipleHtmlFiles(t *testing.T) {
-	context := NewTestIOContext(t)
+	context := newTestDir(t)
 	context.CreateFile("ngssc.json", `{"variant":"NG_ENV","environmentVariables":["TEST_VALUE"]}`)
-	deContext := context.CreateLanguageContext("de")
+	deContext := context.CreateDirectory("de")
 	deContext.CreateFile("index.html", configHTMLTemplate)
-	enContext := context.CreateLanguageContext("en")
+	enContext := context.CreateDirectory("en")
 	enContext.CreateFile("index.html", configHTMLTemplate)
 
 	result := runWithArgs("insert", context.path)
-	if !result.Success() {
-		t.Fatalf("Expected to succeed, but failed: %v %v", result.Stdout(), result.Error())
-	} else if !deContext.FileContains("index.html", `<script>(function(self){self.NG_ENV={"TEST_VALUE":null};})(window)</script>`) {
-		t.Fatalf("Expected html to contain iife. Got:\n" + deContext.ReadFile("index.html"))
-	} else if !enContext.FileContains("index.html", `<script>(function(self){self.NG_ENV={"TEST_VALUE":null};})(window)</script>`) {
-		t.Fatalf("Expected html to contain iife. Got:\n" + enContext.ReadFile("index.html"))
-	}
+	assertSuccess(t, result)
+	expect := `<script>(function(self){self.NG_ENV={"TEST_VALUE":null};})(window)</script>`
+	assertContains(t, deContext.ReadFile("index.html"), expect, "Expected html to contain iife.")
+	expect = `<script>(function(self){self.NG_ENV={"TEST_VALUE":null};})(window)</script>`
+	assertContains(t, enContext.ReadFile("index.html"), expect, "Expected html to contain iife.")
 }
 
 func TestNgsscNgEnvWithFilePattern(t *testing.T) {
-	context := NewTestIOContext(t)
+	context := newTestDir(t)
 	context.CreateFile("main.html", configHTMLTemplate)
 	context.CreateFile("ngssc.json", `{"variant":"NG_ENV","environmentVariables":["TEST_VALUE"],"filePattern":"main.html"}`)
 
 	os.Setenv("TEST_VALUE", "example value")
 	result := runWithArgs("insert", context.path)
 	os.Unsetenv("TEST_VALUE")
-	if !result.Success() {
-		t.Fatalf("Expected to succeed, but failed: %v %v", result.Stdout(), result.Error())
-	} else if !context.FileContains("main.html", `<script>(function(self){self.NG_ENV={"TEST_VALUE":"example value"};})(window)</script>`) {
-		t.Fatalf("Expected html to contain iife. Got:\n" + context.ReadFile("main.html"))
-	}
+	assertSuccess(t, result)
+	expect := `<script>(function(self){self.NG_ENV={"TEST_VALUE":"example value"};})(window)</script>`
+	assertContains(t, context.ReadFile("main.html"), expect, "Expected html to contain iife.")
 }
 
 func TestNgsscProcessWithInsertInHead(t *testing.T) {
-	context := NewTestIOContext(t)
+	context := newTestDir(t)
 	context.CreateFile("index.html", htmlTemplate)
 	context.CreateFile("ngssc.json", `{"variant":"process","environmentVariables":["TEST_VALUE"]}`)
 
 	result := runWithArgs("insert", context.path)
-	if !result.Success() {
-		t.Fatalf("Expected to succeed, but failed: %v %v", result.Stdout(), result.Error())
-	} else if !context.FileContains("index.html", `<script>(function(self){self.process={"env":{"TEST_VALUE":null}};})(window)</script>`) {
-		t.Fatalf("Expected html to contain iife. Got:\n" + context.ReadFile("index.html"))
-	}
+	assertSuccess(t, result)
+	expect := `<script>(function(self){self.process={"env":{"TEST_VALUE":null}};})(window)</script>`
+	assertContains(t, context.ReadFile("index.html"), expect, "Expected html to contain iife.")
 }
 
 func TestNgsscRecursive(t *testing.T) {
-	context := NewTestIOContext(t)
-	deContext := context.CreateLanguageContext("de")
+	context := newTestDir(t)
+	deContext := context.CreateDirectory("de")
 	deContext.CreateFile("index.html", configHTMLTemplate)
 	deContext.CreateFile("ngssc.json", `{"variant":"process","environmentVariables":["TEST_VALUE"],"filePattern":"index.html"}`)
-	enContext := context.CreateLanguageContext("en")
+	enContext := context.CreateDirectory("en")
 	enContext.CreateFile("index.html", configHTMLTemplate)
 	enContext.CreateFile("ngssc.json", `{"variant":"process","environmentVariables":["TEST_VALUE"],"filePattern":"index.html"}`)
 
 	result := runWithArgs("insert", context.path, "--recursive")
-	if !result.Success() {
-		t.Fatalf("Expected to succeed, but failed: %v %v", result.Stdout(), result.Error())
-	} else if !deContext.FileContains("index.html", `<script>(function(self){self.process={"env":{"TEST_VALUE":null}};})(window)</script>`) {
-		t.Fatalf("Expected de html to contain iife. Got:\n" + deContext.ReadFile("index.html"))
-	} else if !enContext.FileContains("index.html", `<script>(function(self){self.process={"env":{"TEST_VALUE":null}};})(window)</script>`) {
-		t.Fatalf("Expected en html to contain iife. Got:\n" + enContext.ReadFile("index.html"))
-	}
+	assertSuccess(t, result)
+	expect := `<script>(function(self){self.process={"env":{"TEST_VALUE":null}};})(window)</script>`
+	assertContains(t, deContext.ReadFile("index.html"), expect, "Expected html to contain iife.")
+	expect = `<script>(function(self){self.process={"env":{"TEST_VALUE":null}};})(window)</script>`
+	assertContains(t, enContext.ReadFile("index.html"), expect, "Expected html to contain iife.")
 }
 
 func TestNgsscProcessWithNgsw(t *testing.T) {
-	context := NewTestIOContext(t)
+	context := newTestDir(t)
 	context.CreateFile("index.html", configHTMLTemplate)
 	context.CreateFile("ngssc.json", `{"variant":"process","environmentVariables":["TEST_VALUE"]}`)
 	context.CreateFile("ngsw.json", ngswTemplate)
@@ -164,13 +167,13 @@ func TestNgsscProcessWithNgsw(t *testing.T) {
 	os.Setenv("TEST_VALUE", "example value")
 	result := runWithArgs("insert", context.path)
 	os.Unsetenv("TEST_VALUE")
-	if !result.Success() {
-		t.Fatalf("Expected to succeed, but failed: %v %v", result.Stdout(), result.Error())
-	} else if !context.FileContains("index.html", `<script>(function(self){self.process={"env":{"TEST_VALUE":"example value"}};})(window)</script>`) {
-		t.Fatalf("Expected html to contain iife. Got:\n" + context.ReadFile("index.html"))
-	} else if !result.StdoutContains("Detected ngsw.json and updated index hash at ") {
-		t.Fatalf("Expected ngsw.json to be updated:\n " + result.Stdout())
-	}
+	assertSuccess(t, result)
+	expect := `<script>(function(self){self.process={"env":{"TEST_VALUE":"example value"}};})(window)</script>`
+	assertContains(t, context.ReadFile("index.html"), expect, "Expected html to contain iife.")
+	assertTrue(
+		t,
+		result.StdoutContains("Detected ngsw.json and updated index hash at "),
+		"Expected ngsw.json to be updated:\n "+result.Stdout())
 }
 
 var configHTMLTemplate = `<!DOCTYPE html>
