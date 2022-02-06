@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [13.1.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v13.0.0...v13.1.0) (2022-02-06)
+
+
+### Features
+
+* add --nginx flags for native cli command ([#67](https://github.com/kyubisation/angular-server-side-configuration/issues/67)) ([bbcda62](https://github.com/kyubisation/angular-server-side-configuration/commit/bbcda624777f5128466a06e8a1dd3ecd8a1d6d54))
+* implement `substitute` command for the native CLI ([#65](https://github.com/kyubisation/angular-server-side-configuration/issues/65)) ([f234c6b](https://github.com/kyubisation/angular-server-side-configuration/commit/f234c6ba099207264663ba379aa9146941d50c0a)), closes [#64](https://github.com/kyubisation/angular-server-side-configuration/issues/64)
+
+
+### Bug Fixes
+
+* mark process and ng-env imports as having side effects ([#66](https://github.com/kyubisation/angular-server-side-configuration/issues/66)) ([bae19f1](https://github.com/kyubisation/angular-server-side-configuration/commit/bae19f1912aefe27e134b03905a8f6506f1b900c))
+
 ## [13.0.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v12.0.0...v13.0.0) (2021-11-18)
 
 
