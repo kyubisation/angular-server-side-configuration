@@ -1,5 +1,5 @@
 import { execSync } from 'child_process';
-import { lstatSync, readdirSync } from 'fs';
+import { lstatSync, readdirSync, writeFileSync } from 'fs';
 import { copyFile, mkdir, readFile, writeFile } from 'fs/promises';
 import { dirname, join, relative, resolve } from 'path';
 
@@ -68,6 +68,21 @@ async function finalizePackage() {
       stdio: 'inherit',
     });
   }
+
+  const distPackageJson = require('../dist/angular-server-side-configuration/package.json');
+  distPackageJson.sideEffects = [
+    './esm2020/ng-env/public_api.mjs',
+    './esm2020/process/public_api.mjs',
+    './fesm2015/angular-server-side-configuration-ng-env.mjs',
+    './fesm2015/angular-server-side-configuration-process.mjs',
+    './fesm2020/angular-server-side-configuration-ng-env.mjs',
+    './fesm2020/angular-server-side-configuration-process.mjs',
+  ];
+  writeFileSync(
+    join(__dirname, '../dist/angular-server-side-configuration/package.json'),
+    JSON.stringify(distPackageJson, null, 2),
+    'utf8'
+  );
 }
 
 function walk(root: string | string[], fileRegex: RegExp): string[] {
