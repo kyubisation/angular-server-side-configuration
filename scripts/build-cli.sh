@@ -3,19 +3,19 @@
 cd /src/cli
 
 echo "Building for Windows 32-bit"
-env GOOS=windows GOARCH=386 go build -ldflags="-s -w -X main.CliVersion=$VERSION" -o /dist/ngssc_32bit.exe main.go
+env GOOS=windows GOARCH=386 go build -ldflags="-s -w -X main.CliVersion=$VERSION" -o /dist/ngssc_32bit.exe
 
 echo "Building for Windows 64-bit"
-env GOOS=windows GOARCH=amd64 go build -ldflags="-s -w -X main.CliVersion=$VERSION" -o /dist/ngssc_64bit.exe main.go
+env GOOS=windows GOARCH=amd64 go build -ldflags="-s -w -X main.CliVersion=$VERSION" -o /dist/ngssc_64bit.exe
 
 echo "Building for Linux 32-bit"
-env GOOS=linux GOARCH=386 go build -ldflags="-s -w -X main.CliVersion=$VERSION" -o /dist/ngssc_32bit main.go
+env GOOS=linux GOARCH=386 go build -ldflags="-s -w -X main.CliVersion=$VERSION" -o /dist/ngssc_32bit
 
 echo "Building for Linux 64-bit"
-env GOOS=linux GOARCH=amd64 go build -ldflags="-s -w -X main.CliVersion=$VERSION" -o /dist/ngssc_64bit main.go
+env GOOS=linux GOARCH=amd64 go build -ldflags="-s -w -X main.CliVersion=$VERSION" -o /dist/ngssc_64bit
 
 echo "Building for Darwin 64-bit"
-env GOOS=darwin GOARCH=amd64 go build -ldflags="-s -w -X main.CliVersion=$VERSION" -o /dist/ngssc_darwin_64bit main.go
+env GOOS=darwin GOARCH=amd64 go build -ldflags="-s -w -X main.CliVersion=$VERSION" -o /dist/ngssc_darwin_64bit
 
 if [[ -z "$BUILD_UPX" ]]; then
     exit 0

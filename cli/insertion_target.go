@@ -1,11 +1,9 @@
-package targets
+package main
 
 import (
 	"crypto/sha1"
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"ngssc/cli/config"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -15,28 +13,23 @@ import (
 // InsertionTarget represents an html file target
 type InsertionTarget struct {
 	filePath    string
-	ngsscConfig config.NgsscConfig
-}
-
-// New InsertionTarget instance from an html file and an ngssc configuration
-func New(filePath string, ngsscConfig config.NgsscConfig) InsertionTarget {
-	target := InsertionTarget{filePath, ngsscConfig}
-	return target
+	ngsscConfig NgsscConfig
 }
 
 // Insert the environment variables into the targeted file
 func (target InsertionTarget) Insert() error {
 	htmlBytes, err := ioutil.ReadFile(target.filePath)
 	if err != nil {
-		fmt.Printf("Failed to read %v\n", target.filePath)
-		return err
+		return fmt.Errorf("failed to read %v\n%v", target.filePath, err)
 	}
 
 	html := string(htmlBytes)
-	iifeScript := generateIifeScript(target.ngsscConfig)
+	iifeScript := fmt.Sprintf(
+		"<!--ngssc--><script>%v</script><!--/ngssc-->",
+		target.ngsscConfig.BuildIifeScriptContent())
 	var newHTML string
-	ngsscRegex := regexp.MustCompile("<!--ngssc-->[\\w\\W]*<!--/ngssc-->")
-	configRegex := regexp.MustCompile("<!--\\s*CONFIG\\s*-->")
+	ngsscRegex := regexp.MustCompile(`<!--ngssc-->[\w\W]*<!--/ngssc-->`)
+	configRegex := regexp.MustCompile(`<!--\s*CONFIG\s*-->`)
 	if ngsscRegex.Match(htmlBytes) {
 		newHTML = ngsscRegex.ReplaceAllString(html, iifeScript)
 	} else if configRegex.Match(htmlBytes) {
@@ -50,30 +43,12 @@ func (target InsertionTarget) Insert() error {
 	newHTMLBytes := []byte(newHTML)
 	err = ioutil.WriteFile(target.filePath, newHTMLBytes, 0644)
 	if err != nil {
-		fmt.Printf("Failed to update %v\n", target.filePath)
-		return err
+		return fmt.Errorf("failed to update %v\n%v", target.filePath, err)
 	}
 
 	replaceIndexHashInNgsw(target, htmlBytes, newHTMLBytes)
 
 	return nil
-}
-
-func generateIifeScript(ngsscConfig config.NgsscConfig) string {
-	jsonBytes, err := json.Marshal(ngsscConfig.EnvironmentVariables)
-	if err != nil {
-		fmt.Print(err)
-	}
-
-	envMapJSON := string(jsonBytes)
-	var iife string
-	if ngsscConfig.Variant == "process" {
-		iife = fmt.Sprintf(`self.process={"env":%v}`, envMapJSON)
-	} else {
-		iife = fmt.Sprintf("self.NG_ENV=%v", envMapJSON)
-	}
-
-	return fmt.Sprintf("<!--ngssc--><script>(function(self){%v;})(window)</script><!--/ngssc-->", iife)
 }
 
 func replaceIndexHashInNgsw(target InsertionTarget, originalHash []byte, replacedHash []byte) {
