@@ -162,10 +162,11 @@ given directory. Directory defaults to current working directory.
 
 Usage: ngssc insert [options] [directory]
 
-| Options           | Description                                                                       |
-| ----------------- | --------------------------------------------------------------------------------- |
-| `--recursive, -r` | Recursively searches for ngssc.json files and applies the contained configuration |
-| `--dry`           | Perform the insert without actually inserting the variables                       |
+| Options           | Description                                                                                                                                |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `--recursive, -r` | Recursively searches for ngssc.json files and applies the contained configuration.                                                         |
+| `--nginx`         | Applies default configuration for ngssc insert to work with nginx. Sets working directory to /usr/share/nginx/html/ and recursive to true. |
+| `--dry`           | Perform the insert without actually inserting the variables.                                                                               |
 
 #### ngssc substitute
 
@@ -203,6 +204,7 @@ Usage: ngssc substitute [options] [directory]
 | `--hash-algorithm, -a` | The hash algorithm to be used. Supports sha256, sha384 and sha512. Defaults to sha512.                                                                                                                                                      |
 | `--out, -o`            | The directory into which the updated files should be copied.                                                                                                                                                                                |
 | `--include-env, -e`    | Substitute all variables in the format of \$\{VARIABLE_NAME\}.                                                                                                                                                                              |
+| `--nginx`              | Applies default configuration for ngssc substitute to work with nginx. Sets ngssc-path to /usr/share/nginx/html/, template directory to /etc/nginx/ngssc-templates/ and out directory to /etc/nginx/conf.d/.                                |
 | `--dry`                | Perform the insert without actually inserting the variables                                                                                                                                                                                 |
 
 ##### Minimal Example

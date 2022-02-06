@@ -11,6 +11,7 @@ import (
 // SubstituteCommand is the ngssc CLI command to insert environment variables
 func SubstituteCommand(c *cli.Context) error {
 	// Init Flags
+	nginxFlag := c.Bool("nginx")
 	dryRun := c.Bool("dry")
 	ngsscPath := c.String("ngssc-path")
 	hashAlgorithm := c.String("hash-algorithm")
@@ -33,6 +34,16 @@ func SubstituteCommand(c *cli.Context) error {
 		if err != nil {
 			return fmt.Errorf("unable to resolve the absolute path of %v\n%v", c.Args()[0], err)
 		}
+	} else if nginxFlag {
+		templateDirectory = "/etc/nginx/ngssc-templates"
+	}
+
+	if ngsscPath == "" && nginxFlag {
+		ngsscPath = "/usr/share/nginx/html/**/ngssc.json"
+	}
+
+	if out == "" && nginxFlag {
+		out = "/etc/nginx/conf.d/"
 	}
 
 	task := &SubstitutionTask{

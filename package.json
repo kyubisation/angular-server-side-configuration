@@ -13,6 +13,7 @@
     "format": "prettier --write **/*.{js,ts,css,scss,json,md,html}",
     "test:lib": "jest --config jest.config.ts",
     "test:cli": "cd cli && go test",
+    "test:cli:coverage": "cd cli && go test -coverprofile=coverage.out && go tool cover -html=coverage.out",
     "test:container": "docker-compose up --build local-test",
     "test": "run-s test:lib test:cli",
     "serve:demo": "cross-env VARIABLE=demo ng serve ngssc-builders-app",

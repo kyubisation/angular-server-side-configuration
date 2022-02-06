@@ -40,6 +40,11 @@ func run(args []string) error {
 					Usage: "Recursively searches for ngssc.json files and applies the contained configuration.",
 				},
 				cli.BoolFlag{
+					Name: "nginx",
+					Usage: "Applies default configuration for ngssc insert to work with nginx. " +
+						"Sets working directory to /usr/share/nginx/html/ and recursive to true.",
+				},
+				cli.BoolFlag{
 					Name:  "dry",
 					Usage: "Perform the insert without actually inserting the variables.",
 				},
@@ -70,7 +75,7 @@ func run(args []string) error {
 							alphanumeric characters and _ are allowed as variable names (e.g. ${EXAMPLE_KEY}).
 							(e.g. ngssc substitute --include-env)
 `,
-			UsageText: "[PATH_TO_TEMPLATE_FILES]",
+			UsageText: "[TEMPLATE_DIRECTORY]",
 			Flags: []cli.Flag{
 				cli.StringFlag{
 					Name: "ngssc-path",
@@ -91,6 +96,12 @@ func run(args []string) error {
 				cli.BoolFlag{
 					Name:  "include-env, e",
 					Usage: "Substitute all variables in the format of ${VARIABLE_NAME}.",
+				},
+				cli.BoolFlag{
+					Name: "nginx",
+					Usage: "Applies default configuration for ngssc substitute to work with nginx. " +
+						"Sets ngssc-path to /usr/share/nginx/html/, template directory to " +
+						"/etc/nginx/ngssc-templates/ and out directory to /etc/nginx/conf.d/.",
 				},
 				cli.BoolFlag{
 					Name:  "dry",
