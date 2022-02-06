@@ -11,8 +11,12 @@ import (
 // InsertCommand is the ngssc CLI command to insert environment variables
 func InsertCommand(c *cli.Context) error {
 	// Init Flags
+	nginxFlag := c.Bool("nginx")
 	dryRunFlag := c.Bool("dry")
 	recursive := c.Bool("recursive")
+	if !recursive && nginxFlag {
+		recursive = true
+	}
 
 	// Dry Run Flag
 	if dryRunFlag {
@@ -27,6 +31,8 @@ func InsertCommand(c *cli.Context) error {
 		if err != nil {
 			return fmt.Errorf("unable to resolve the absolute path of %v\n%v", c.Args()[0], err)
 		}
+	} else if nginxFlag {
+		workingDirectory = "/usr/share/nginx/html"
 	} else {
 		var err error
 		workingDirectory, err = os.Getwd()
