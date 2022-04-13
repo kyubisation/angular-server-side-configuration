@@ -56,7 +56,7 @@ function populateVariables(variables: string[]) {
 }
 
 function generateIife(
-  variant: 'process' | 'NG_ENV',
+  variant: 'process' | 'global' | 'NG_ENV',
   populatedVariables: { [key: string]: string | null }
 ) {
   const iife =

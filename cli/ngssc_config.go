@@ -69,7 +69,7 @@ func readNgsscJson(path string) (ngsscConfig NgsscConfig, err error) {
 		return ngsscConfig, fmt.Errorf("invalid ngssc.json at %v (Must not be empty)", path)
 	} else if ngssc.EnvironmentVariables == nil {
 		return ngsscConfig, fmt.Errorf("invalid ngssc.json at %v (environmentVariables must be defined)", path)
-	} else if ngssc.Variant != "process" && ngssc.Variant != "NG_ENV" {
+	} else if ngssc.Variant != "process" && ngssc.Variant != "global" && ngssc.Variant != "NG_ENV" {
 		return ngsscConfig, fmt.Errorf("invalid ngssc.json at %v (variant must either be process or NG_ENV)", path)
 	}
 
@@ -106,7 +106,9 @@ func (ngsscConfig NgsscConfig) BuildIifeScriptContent() string {
 	var iife string
 	if ngsscConfig.Variant == "NG_ENV" {
 		iife = fmt.Sprintf("self.NG_ENV=%v", envMapJSON)
-	} else {
+	} else if ngsscConfig.Variant == "global" {
+		iife = fmt.Sprintf("Object.assign(self,%v)", envMapJSON)
+		} else {
 		iife = fmt.Sprintf(`self.process={"env":%v}`, envMapJSON)
 	}
 

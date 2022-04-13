@@ -69,6 +69,19 @@ func TestIdempotentNgsscProcessWithSetEnvironmentVariable(t *testing.T) {
 	assertContains(t, context.ReadFile("index.html"), expect, "Expected html to contain updated iife.")
 }
 
+func TestNgsscGlobalWithSetEnvironmentVariable(t *testing.T) {
+	context := newTestDir(t)
+	context.CreateFile("index.html", configHTMLTemplate)
+	context.CreateFile("ngssc.json", `{"variant":"global","environmentVariables":["TEST_VALUE"]}`)
+
+	os.Setenv("TEST_VALUE", "example value")
+	result := runWithArgs("insert", context.path)
+	os.Unsetenv("TEST_VALUE")
+	assertSuccess(t, result)
+	expect := `<script>(function(self){Object.assign(self,{"TEST_VALUE":"example value"});})(window)</script>`
+	assertContains(t, context.ReadFile("index.html"), expect, "Expected html to contain iife.")
+}
+
 func TestNgsscNgEnvWithNotSetEnvironmentVariable(t *testing.T) {
 	context := newTestDir(t)
 	context.CreateFile("index.html", configHTMLTemplate)
