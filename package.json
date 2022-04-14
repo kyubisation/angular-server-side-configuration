@@ -4,8 +4,8 @@
   "description": "Configure an angular application on the server",
   "scripts": {
     "build:lib": "ts-node --project scripts/tsconfig.json ./scripts/build-lib.ts",
-    "build:cli": "docker-compose run build-go",
-    "build:cli:upx": "docker-compose run -e BUILD_UPX=true build-go",
+    "build:cli": "docker-compose run --rm build-go",
+    "build:cli:upx": "docker-compose run --rm -e BUILD_UPX=true build-go",
     "build:ngssc": "ng run ngssc-app:ngsscbuild:production",
     "build:demo": "ng build ngssc-builders-app",
     "build:demo-i18n": "ng build ngssc-builders-app -c i18n",
