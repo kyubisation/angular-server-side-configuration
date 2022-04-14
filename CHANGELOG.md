@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [13.2.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v13.1.0...v13.2.0) (2022-04-14)
+
+
+### Features
+
+* add `global` insert variant ([#69](https://github.com/kyubisation/angular-server-side-configuration/issues/69)) ([fe6677a](https://github.com/kyubisation/angular-server-side-configuration/commit/fe6677a3b2b3452711a64f9cdc84861f4279e017))
+
 ## [13.1.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v13.0.0...v13.1.0) (2022-02-06)
 
 
