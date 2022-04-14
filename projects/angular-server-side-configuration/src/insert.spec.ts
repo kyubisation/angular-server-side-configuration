@@ -14,11 +14,13 @@ describe('insert', () => {
     variant: 'process',
   };
   const envTestContent = 'TESTCONTENT';
-  const iife =
-    // tslint:disable-next-line: max-line-length
-    `<script>(function(self){self.process=${JSON.stringify({
-      env: { TEST: envTestContent, TEST2: null },
-    })};})(window)</script>`;
+  const iife = `<script>(function(self){self.process=${JSON.stringify({
+    env: { TEST: envTestContent, TEST2: null },
+  })};})(window)</script>`;
+  const globalIife = `<script>(function(self){Object.assign(self,${JSON.stringify({
+    TEST: envTestContent,
+    TEST2: null,
+  })});})(window)</script>`;
   const ngEnvIife = `<script>(function(self){self.NG_ENV=${JSON.stringify({
     TEST: envTestContent,
     TEST2: null,
@@ -105,6 +107,14 @@ describe('insert', () => {
   it('should do nothing on no html files', () => {
     writeFileSync(join(directory, 'ngssc.json'), JSON.stringify(ngssc), 'utf8');
     insert({ directory });
+  });
+
+  it('should insert into html with recursive true and variant global', () => {
+    createFiles('global');
+    insert({ directory, recursive: true });
+    for (const file of subdirectories.map((d) => join(d, 'index.html'))) {
+      expect(readFileSync(file, 'utf8')).toContain(globalIife);
+    }
   });
 
   it('should insert into html with recursive true and variant NG_ENV', () => {

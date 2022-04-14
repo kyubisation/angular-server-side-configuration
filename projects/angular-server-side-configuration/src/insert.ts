@@ -52,10 +52,14 @@ function populateVariables(variables: string[]) {
 }
 
 function generateIife(variant: Variant, populatedVariables: { [key: string]: string | null }) {
-  const iife =
-    variant === 'NG_ENV'
-      ? `(function(self){self.NG_ENV=${JSON.stringify(populatedVariables)};})(window)`
-      : `(function(self){self.process=${JSON.stringify({ env: populatedVariables })};})(window)`;
+  let iife:string;
+  if (variant === 'NG_ENV') {
+    iife = `(function(self){self.NG_ENV=${JSON.stringify(populatedVariables)};})(window)`;
+  } else if (variant === 'global') {
+    iife = `(function(self){Object.assign(self,${JSON.stringify(populatedVariables)});})(window)`;
+  } else {
+    iife = `(function(self){self.process=${JSON.stringify({ env: populatedVariables })};})(window)`;
+  }
   return `<!--ngssc--><script>${iife}</script><!--/ngssc-->`;
 }
 

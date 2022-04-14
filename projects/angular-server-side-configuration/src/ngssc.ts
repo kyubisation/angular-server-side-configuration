@@ -15,4 +15,4 @@ export interface Ngssc {
  * Available angular-server-side-configuration variants.
  * @public
  */
-export type Variant = 'process' | 'NG_ENV';
+export type Variant = 'process' | 'global' | 'NG_ENV';
