@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [14.0.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v13.2.1...v14.0.0) (2022-06-04)
+
+
+### ⚠ BREAKING CHANGES
+
+* Update to Angular 14
+
+* update to Angular 14 ([875ce64](https://github.com/kyubisation/angular-server-side-configuration/commit/875ce64e209c1d0dd01ce919d0a883b68d8feeab))
+
 ### [13.2.1](https://github.com/kyubisation/angular-server-side-configuration/compare/v13.2.0...v13.2.1) (2022-04-14)
 
 ## [13.2.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v13.1.0...v13.2.0) (2022-04-14)
