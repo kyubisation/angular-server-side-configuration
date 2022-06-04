@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [14.0.1](https://github.com/kyubisation/angular-server-side-configuration/compare/v14.0.0...v14.0.1) (2022-06-04)
+
+
+### Bug Fixes
+
+* update peer dependencies version range ([04d6f55](https://github.com/kyubisation/angular-server-side-configuration/commit/04d6f55ca276cd4a1007b116f8befe4bf82942c3))
+
 ## [14.0.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v13.2.1...v14.0.0) (2022-06-04)
 
 

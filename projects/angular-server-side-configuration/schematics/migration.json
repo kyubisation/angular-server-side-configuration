@@ -12,7 +12,7 @@
       "factory": "./ng-update/index#updateToV9"
     },
     "dockerfile": {
-      "version": "14.0.0",
+      "version": "14.0.1",
       "description": "Updates the download url for ngssc",
       "factory": "./ng-update/index#dockerfile"
     }
