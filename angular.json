@@ -245,6 +245,5 @@
         }
       }
     }
-  },
-  "defaultProject": "angular-server-side-configuration"
+  }
 }
