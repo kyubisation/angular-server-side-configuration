@@ -3,21 +3,11 @@ import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/te
 import { Schema as ApplicationOptions, Style } from '@schematics/angular/application/schema';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
 import { Schema as WorkspaceOptions } from '@schematics/angular/workspace/schema';
-import * as tsNode from 'ts-node';
-
-tsNode.register({
-  compilerOptions: {
-    target: 'es2017',
-    module: 'commonjs',
-    moduleResolution: 'node',
-    esModuleInterop: true,
-  },
-});
 
 const workspaceOptions: WorkspaceOptions = {
   name: 'workspace',
   newProjectRoot: 'projects',
-  version: '13.0.0',
+  version: '15.0.0',
 };
 
 const appOptions: ApplicationOptions = {
@@ -55,9 +45,7 @@ describe('ng-add', () => {
       'angular-server-side-configuration:ngsscbuild'
     );
 
-    const environmentContent = tree.readContent(
-      'projects/dummy/src/environments/environment.prod.ts'
-    );
+    const environmentContent = tree.readContent('projects/dummy/src/app/app.module.ts');
     expect(environmentContent).toContain(importString);
 
     const indexContent = tree.readContent(htmlPath);
@@ -66,20 +54,6 @@ describe('ng-add', () => {
     const packageJson = JSON.parse(tree.readContent('package.json'));
     expect(packageJson.scripts['build:ngssc']).toContain(':ngsscbuild:production');
   }
-
-  it('should fail with wrong environment file path', async () => {
-    try {
-      await runner
-        .runSchematicAsync(
-          'ng-add',
-          { project: appOptions.name, ngsscEnvironmentFile: 'wrong.path' },
-          appTree
-        )
-        .toPromise();
-      fail();
-      // tslint:disable-next-line: no-empty
-    } catch {}
-  });
 
   it('should fail with missing package.json', async () => {
     appTree.delete('package.json');
@@ -153,7 +127,6 @@ describe('ng-add', () => {
         {
           project: appOptions.name,
           experimentalBuilders: true,
-          ngsscEnvironmentFile: 'src/environments/environment.prod.ts',
         },
         appTree
       )
@@ -163,12 +136,6 @@ describe('ng-add', () => {
     const project = workspace.projects.get(appOptions.name)!;
     const buildTarget = project.targets.get('build')!;
     expect(buildTarget.builder).toBe('angular-server-side-configuration:browser');
-    expect(buildTarget.options!['ngsscEnvironmentFile']).toEqual(
-      'projects/dummy/src/environments/environment.prod.ts'
-    );
-    expect(buildTarget.configurations!['development']!['ngsscEnvironmentFile']).toEqual(
-      'projects/dummy/src/environments/environment.ts'
-    );
     expect(project.targets.get('serve')!.builder).toBe(
       'angular-server-side-configuration:dev-server'
     );

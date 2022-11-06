@@ -11,12 +11,6 @@
         "$source": "projectName"
       }
     },
-    "ngsscEnvironmentFile": {
-      "description": "The ngssc environment file (usually src/environments/environment.prod.ts)",
-      "type": "string",
-      "default": "src/environments/environment.prod.ts",
-      "x-prompt": "Configure the ngssc environment file:"
-    },
     "additionalEnvironmentVariables": {
       "description": "Additional environment variables that should be added to ngssc.json",
       "type": "string",

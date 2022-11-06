@@ -33,7 +33,7 @@ export function ngsscServeWebpackBrowser(
   } = {}
 ): Observable<DevServerBuilderOutput> {
   transforms.indexHtml = async (content: string) => {
-    const ngsscContext = await detectVariables(options, context);
+    const ngsscContext = await detectVariables(context);
     const ngssc = buildNgssc(ngsscContext, options);
     const populatedVariables = populateVariables(ngssc.environmentVariables);
     context.logger.info(

@@ -3,5 +3,4 @@ export interface Schema {
   experimentalBuilders: boolean;
   /** Name of the project. */
   project: string;
-  ngsscEnvironmentFile: string;
 }

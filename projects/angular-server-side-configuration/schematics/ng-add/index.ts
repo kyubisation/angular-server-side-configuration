@@ -1,4 +1,4 @@
-import { join, normalize } from '@angular-devkit/core';
+import { dirname, join, normalize } from '@angular-devkit/core';
 import {
   chain,
   Rule,
@@ -14,7 +14,7 @@ import { Schema } from './schema';
 export function ngAdd(options: Schema): Rule {
   return chain([
     addNgsscTargetToWorkspace(options),
-    addImportAndDescriptionToEnvironmentFile(options),
+    addDescriptionToMainFile(options),
     addNgsscToPackageScripts(options),
     addPlaceholderToIndexHtml(options),
   ]);
@@ -32,22 +32,10 @@ function addNgsscTargetToWorkspace(options: Schema): Rule {
         additionalEnvironmentVariables: options.additionalEnvironmentVariables
           ? options.additionalEnvironmentVariables.split(',').map((e) => e.trim())
           : [],
-        ngsscEnvironmentFile: join(normalize(project.root), options.ngsscEnvironmentFile),
       };
 
       if (options.experimentalBuilders) {
         const buildTarget = project.targets.get('build')!;
-        const { production, development } = buildTarget.configurations || {};
-        if (production && development) {
-          const fileReplacements: FileReplacement[] = production['fileReplacements']! as any;
-          const devEnvironmentFile =
-            Array.isArray(fileReplacements) &&
-            fileReplacements.find((f) => f.with === ngsscOptions.ngsscEnvironmentFile);
-          if (devEnvironmentFile) {
-            development['ngsscEnvironmentFile'] = devEnvironmentFile.replace;
-          }
-        }
-
         buildTarget.builder = 'angular-server-side-configuration:browser';
         buildTarget.options = { ...buildTarget.options, ...ngsscOptions };
 
@@ -86,13 +74,31 @@ function addNgsscTargetToWorkspace(options: Schema): Rule {
     });
 }
 
-function addImportAndDescriptionToEnvironmentFile(options: Schema): Rule {
+function addDescriptionToMainFile(options: Schema): Rule {
+  const noAppropriateInsertFileWarning =
+    'Unable to resolve appropriate file to insert import. Please follow documentation.';
   return async (host: Tree, context: SchematicContext) => {
     const { project } = await resolveWorkspace(options, host);
-    const normalizedPath = join(normalize(project.root), options.ngsscEnvironmentFile);
-    const file = host.get(normalizedPath);
+    const buildTarget = project.targets.get('build')!;
+    const mainFile = normalize((buildTarget?.options?.['main'] as string) ?? '');
+    if (!mainFile) {
+      context.logger.warn(noAppropriateInsertFileWarning);
+      return;
+    }
+
+    const insertFile = [
+      join(dirname(mainFile), 'app/app.module.ts'),
+      join(dirname(mainFile), 'app/app.component.ts'),
+      mainFile,
+    ].find((f) => host.exists(f));
+    if (!insertFile) {
+      context.logger.warn(noAppropriateInsertFileWarning);
+      return;
+    }
+    const file = host.get(insertFile);
     if (!file) {
-      throw new SchematicsException(`${normalizedPath} does not exist!`);
+      context.logger.warn(noAppropriateInsertFileWarning);
+      return;
     } else if (file.content.includes('angular-server-side-configuration')) {
       context.logger.info(
         `Skipping adding import to ${file.path}, since import was already detected.`
@@ -107,14 +113,13 @@ function addImportAndDescriptionToEnvironmentFile(options: Schema): Rule {
  *
  * Use process.env['NAME_OF_YOUR_ENVIRONMENT_VARIABLE']
  *
- * export const environment = {
- *   stringValue: process.env['STRING_VALUE'],
- *   stringValueWithDefault: process.env['STRING_VALUE'] || 'defaultValue',
- *   numberValue: Number(process.env['NUMBER_VALUE']),
- *   numberValueWithDefault: Number(process.env['NUMBER_VALUE'] || 10),
- *   booleanValue: Boolean(process.env['BOOLEAN_VALUE']),
- *   booleanValueInverted: process.env['BOOLEAN_VALUE_INVERTED'] !== 'false',
- * };
+ * const stringValue = process.env['STRING_VALUE'];
+ * const stringValueWithDefault = process.env['STRING_VALUE'] || 'defaultValue';
+ * const numberValue = Number(process.env['NUMBER_VALUE']);
+ * const numberValueWithDefault = Number(process.env['NUMBER_VALUE'] || 10);
+ * const booleanValue = process.env['BOOLEAN_VALUE'] === 'true';
+ * const booleanValueInverted = process.env['BOOLEAN_VALUE_INVERTED'] !== 'false';
+ * const complexValue = JSON.parse(process.env['COMPLEX_JSON_VALUE]);
  * 
  * Please note that process.env[variable] cannot be resolved. Please directly use strings.
  */

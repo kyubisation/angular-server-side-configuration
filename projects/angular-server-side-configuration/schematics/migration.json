@@ -1,15 +1,10 @@
 {
-  "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "$schema": "../../../node_modules/@angular-devkit/schematics/collection-schema.json",
   "schematics": {
-    "migration-v8": {
-      "version": "8-beta",
-      "description": "Updates angular-server-side-configuration to v8",
-      "factory": "./ng-update/index#updateToV8"
-    },
-    "migration-v9": {
-      "version": "9-next",
-      "description": "Updates angular-server-side-configuration to v9",
-      "factory": "./ng-update/index#updateToV9"
+    "migration-v15": {
+      "version": "15-next",
+      "description": "Updates angular-server-side-configuration to v15",
+      "factory": "./ng-update/index#updateToV15"
     },
     "dockerfile": {
       "version": "14.0.1",
