@@ -4,61 +4,54 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [14.0.1](https://github.com/kyubisation/angular-server-side-configuration/compare/v14.0.0...v14.0.1) (2022-06-04)
 
-
 ### Bug Fixes
 
-* update peer dependencies version range ([04d6f55](https://github.com/kyubisation/angular-server-side-configuration/commit/04d6f55ca276cd4a1007b116f8befe4bf82942c3))
+- update peer dependencies version range ([04d6f55](https://github.com/kyubisation/angular-server-side-configuration/commit/04d6f55ca276cd4a1007b116f8befe4bf82942c3))
 
 ## [14.0.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v13.2.1...v14.0.0) (2022-06-04)
 
-
 ### ⚠ BREAKING CHANGES
 
-* Update to Angular 14
+- Update to Angular 14
 
-* update to Angular 14 ([875ce64](https://github.com/kyubisation/angular-server-side-configuration/commit/875ce64e209c1d0dd01ce919d0a883b68d8feeab))
+- update to Angular 14 ([875ce64](https://github.com/kyubisation/angular-server-side-configuration/commit/875ce64e209c1d0dd01ce919d0a883b68d8feeab))
 
 ### [13.2.1](https://github.com/kyubisation/angular-server-side-configuration/compare/v13.2.0...v13.2.1) (2022-04-14)
 
 ## [13.2.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v13.1.0...v13.2.0) (2022-04-14)
 
-
 ### Features
 
-* add `global` insert variant ([#69](https://github.com/kyubisation/angular-server-side-configuration/issues/69)) ([fe6677a](https://github.com/kyubisation/angular-server-side-configuration/commit/fe6677a3b2b3452711a64f9cdc84861f4279e017))
+- add `global` insert variant ([#69](https://github.com/kyubisation/angular-server-side-configuration/issues/69)) ([fe6677a](https://github.com/kyubisation/angular-server-side-configuration/commit/fe6677a3b2b3452711a64f9cdc84861f4279e017))
 
 ## [13.1.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v13.0.0...v13.1.0) (2022-02-06)
 
-
 ### Features
 
-* add --nginx flags for native cli command ([#67](https://github.com/kyubisation/angular-server-side-configuration/issues/67)) ([bbcda62](https://github.com/kyubisation/angular-server-side-configuration/commit/bbcda624777f5128466a06e8a1dd3ecd8a1d6d54))
-* implement `substitute` command for the native CLI ([#65](https://github.com/kyubisation/angular-server-side-configuration/issues/65)) ([f234c6b](https://github.com/kyubisation/angular-server-side-configuration/commit/f234c6ba099207264663ba379aa9146941d50c0a)), closes [#64](https://github.com/kyubisation/angular-server-side-configuration/issues/64)
-
+- add --nginx flags for native cli command ([#67](https://github.com/kyubisation/angular-server-side-configuration/issues/67)) ([bbcda62](https://github.com/kyubisation/angular-server-side-configuration/commit/bbcda624777f5128466a06e8a1dd3ecd8a1d6d54))
+- implement `substitute` command for the native CLI ([#65](https://github.com/kyubisation/angular-server-side-configuration/issues/65)) ([f234c6b](https://github.com/kyubisation/angular-server-side-configuration/commit/f234c6ba099207264663ba379aa9146941d50c0a)), closes [#64](https://github.com/kyubisation/angular-server-side-configuration/issues/64)
 
 ### Bug Fixes
 
-* mark process and ng-env imports as having side effects ([#66](https://github.com/kyubisation/angular-server-side-configuration/issues/66)) ([bae19f1](https://github.com/kyubisation/angular-server-side-configuration/commit/bae19f1912aefe27e134b03905a8f6506f1b900c))
+- mark process and ng-env imports as having side effects ([#66](https://github.com/kyubisation/angular-server-side-configuration/issues/66)) ([bae19f1](https://github.com/kyubisation/angular-server-side-configuration/commit/bae19f1912aefe27e134b03905a8f6506f1b900c))
 
 ## [13.0.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v12.0.0...v13.0.0) (2021-11-18)
 
-
 ### ⚠ BREAKING CHANGES
 
-* This also refactors the ngsscbuild builder extensively.
-This breaking change will only affect you, if you used the internals of this library.
-* Switch to Ivy and the new Angular Package Format.
+- This also refactors the ngsscbuild builder extensively.
+  This breaking change will only affect you, if you used the internals of this library.
+- Switch to Ivy and the new Angular Package Format.
 
 ### Features
 
-* enable VariableDetector to also detect index access usages ([702dac3](https://github.com/kyubisation/angular-server-side-configuration/commit/702dac3c0a92dbc113227e49425d761f1b6ca34d))
-* implement experimental builders for `build` (browser) and `server` (dev-browser) targets ([5b5c022](https://github.com/kyubisation/angular-server-side-configuration/commit/5b5c022e24f570c8b3f22da7ba4799ecbbe4e565))
-* update to Angular 13 ([df5949f](https://github.com/kyubisation/angular-server-side-configuration/commit/df5949f745a3d67dd87a28bb533f6e5ee390df84))
-
+- enable VariableDetector to also detect index access usages ([702dac3](https://github.com/kyubisation/angular-server-side-configuration/commit/702dac3c0a92dbc113227e49425d761f1b6ca34d))
+- implement experimental builders for `build` (browser) and `server` (dev-browser) targets ([5b5c022](https://github.com/kyubisation/angular-server-side-configuration/commit/5b5c022e24f570c8b3f22da7ba4799ecbbe4e565))
+- update to Angular 13 ([df5949f](https://github.com/kyubisation/angular-server-side-configuration/commit/df5949f745a3d67dd87a28bb533f6e5ee390df84))
 
 ### Bug Fixes
 
-* deprecate NG_ENV variant ([501ee6c](https://github.com/kyubisation/angular-server-side-configuration/commit/501ee6ce4b9aef40821ae38998507b1667a3f12a))
+- deprecate NG_ENV variant ([501ee6c](https://github.com/kyubisation/angular-server-side-configuration/commit/501ee6ce4b9aef40821ae38998507b1667a3f12a))
 
 ## [12.0.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v11.0.2...v12.0.0) (2021-05-18)
 

@@ -100,11 +100,6 @@
       "type": "array",
       "description": "Additional environment variables that should be added to ngssc.json"
     },
-    "ngsscEnvironmentFile": {
-      "type": "string",
-      "description": "The ngssc environment file (usually src/environments/environment.prod.ts)",
-      "default": "src/environments/environment.prod.ts"
-    },
     "filePattern": {
       "type": "string",
       "description": "The file pattern, into which the environment variables should be inserted during ngssc insert (Defaults to index.html)",
@@ -112,7 +107,5 @@
     }
   },
   "additionalProperties": false,
-  "required": [
-    "browserTarget"
-  ]
+  "required": ["browserTarget"]
 }

@@ -80,7 +80,6 @@ describe('Ngssc Builder', () => {
       aotSupport: false,
       browserTarget: 'dummy:build',
       filePattern: '',
-      ngsscEnvironmentFile: 'environment.prod.ts',
     });
 
     expect(output.success).toBe(true);
@@ -98,7 +97,6 @@ describe('Ngssc Builder', () => {
       aotSupport: false,
       browserTarget: 'dummy:build',
       filePattern: '',
-      ngsscEnvironmentFile: 'environment.prod.ts',
     });
 
     expect(output.success).toBe(true);

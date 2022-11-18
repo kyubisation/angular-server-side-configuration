@@ -25,13 +25,8 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
-            "styles": [
-              "src/styles.css"
-            ],
+            "assets": ["src/favicon.ico", "src/assets"],
+            "styles": ["src/styles.css"],
             "scripts": []
           },
           "configurations": {
@@ -87,23 +82,34 @@
             "outputPath": "src/locales"
           }
         },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "polyfills": ["zone.js", "zone.js/testing"],
+            "tsConfig": "tsconfig.spec.json",
+            "assets": ["src/favicon.ico", "src/assets"],
+            "styles": ["src/styles.css"],
+            "scripts": [],
+            "browsers": "ChromeHeadless"
+          },
+          "configurations": {
+            "ci": {
+              "watch": false,
+              "codeCoverage": true
+            }
+          }
+        },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": [
-              "src/**/*.ts",
-              "src/**/*.html"
-            ]
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
           }
         },
         "ngsscbuild": {
           "builder": "./dist/angular-server-side-configuration:ngsscbuild",
           "options": {
-            "additionalEnvironmentVariables": [
-              "MANUAL_VALUE"
-            ],
-            "browserTarget": "ngssc-app:build",
-            "ngsscEnvironmentFile": "src/environments/environment.prod.ts"
+            "additionalEnvironmentVariables": ["MANUAL_VALUE"],
+            "browserTarget": "ngssc-app:build"
           },
           "configurations": {
             "production": {
@@ -137,16 +143,10 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
-            "styles": [
-              "src/styles.css"
-            ],
+            "assets": ["src/favicon.ico", "src/assets"],
+            "styles": ["src/styles.css"],
             "scripts": [],
             "localize": false,
-            "ngsscEnvironmentFile": "src/environments/environment.prod.ts",
             "additionalEnvironmentVariables": ["MANUAL_KEY"]
           },
           "configurations": {
@@ -193,8 +193,7 @@
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.ngssc.ts"
                 }
-              ],
-              "ngsscEnvironmentFile": "src/environments/environment.ngssc.ts"
+              ]
             }
           },
           "defaultConfiguration": "production"

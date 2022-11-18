@@ -1,4 +1,4 @@
-import { promises } from 'fs';
+import { lstatSync, promises, readdirSync } from 'fs';
 import { basename, join } from 'path';
 import { BuilderContext, createBuilder, targetFromTargetString } from '@angular-devkit/architect';
 import { json, JsonObject } from '@angular-devkit/core';
@@ -33,32 +33,59 @@ export async function detectVariablesAndBuildNgsscJson(
   context: BuilderContext,
   multiple: boolean = false
 ) {
-  const ngsscContext = await detectVariables(options, context);
+  const ngsscContext = await detectVariables(context);
   const outputPath = join(context.workspaceRoot, browserOptions.outputPath);
   const ngssc = buildNgssc(ngsscContext, options, browserOptions, multiple);
   await writeFileAsync(join(outputPath, 'ngssc.json'), JSON.stringify(ngssc, null, 2), 'utf8');
 }
 
-export async function detectVariables(
-  options: NgsscBuildSchema,
-  context: BuilderContext
-): Promise<NgsscContext> {
-  const environmentVariableFile = join(context.workspaceRoot, options.ngsscEnvironmentFile);
+export async function detectVariables(context: BuilderContext): Promise<NgsscContext> {
   const detector = new VariableDetector(context.logger);
-  const fileContent = await readFileAsync(environmentVariableFile, 'utf8');
-  const ngsscContext = detector.detect(fileContent);
+  const typeScriptFiles = findTypeScriptFiles(context.workspaceRoot);
+  let ngsscContext: NgsscContext | null = null;
+  for (const file of typeScriptFiles) {
+    const fileContent = await readFileAsync(file, 'utf8');
+    const innerNgsscContext = detector.detect(fileContent);
+    if (!ngsscContext) {
+      ngsscContext = innerNgsscContext;
+      continue;
+    }
+    if (ngsscContext.variant !== innerNgsscContext.variant) {
+      context.logger.info(
+        `ngssc: Detected conflicting variants (${ngsscContext.variant} and ${innerNgsscContext.variant}) being used`
+      );
+    }
+    ngsscContext.variables.push(
+      ...innerNgsscContext.variables.filter((v) => !ngsscContext!.variables.includes(v))
+    );
+  }
+  if (!ngsscContext) {
+    return { variant: 'process', variables: [] };
+  }
+
   context.logger.info(
     `ngssc: Detected variant '${ngsscContext.variant}' with variables ` +
       `'${ngsscContext.variables.join(', ')}'`
   );
-  if (ngsscContext.variant === 'NG_ENV') {
-    context.logger.warn(
-      'Variant NG_ENV is deprecated and will be removed with version 14. ' +
-        'Please change usage to `process.env`.'
-    );
-  }
 
   return ngsscContext;
+}
+
+function findTypeScriptFiles(root: string): string[] {
+  const directory = root.replace(/\\/g, '/');
+  return readdirSync(directory)
+    .map((f) => `${directory}/${f}`)
+    .map((f) => {
+      const stat = lstatSync(f);
+      if (stat.isDirectory()) {
+        return findTypeScriptFiles(f);
+      } else if (stat.isFile() && f.endsWith('.ts') && !f.endsWith('.spec.ts')) {
+        return [f];
+      } else {
+        return [];
+      }
+    })
+    .reduce((current, next) => current.concat(next), []);
 }
 
 export function buildNgssc(

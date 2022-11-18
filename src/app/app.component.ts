@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { environment } from '../environments/environment';
+import { Component, Inject, InjectionToken } from '@angular/core';
+
+export const TITLE_TOKEN = new InjectionToken<string>('injection-token');
 
 @Component({
   selector: 'app-root',
@@ -7,5 +8,5 @@ import { environment } from '../environments/environment';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  title = environment.variable;
+  constructor(@Inject(TITLE_TOKEN) public title: string) {}
 }

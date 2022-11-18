@@ -52,7 +52,7 @@ function populateVariables(variables: string[]) {
 }
 
 function generateIife(variant: Variant, populatedVariables: { [key: string]: string | null }) {
-  let iife:string;
+  let iife: string;
   if (variant === 'NG_ENV') {
     iife = `(function(self){self.NG_ENV=${JSON.stringify(populatedVariables)};})(window)`;
   } else if (variant === 'global') {

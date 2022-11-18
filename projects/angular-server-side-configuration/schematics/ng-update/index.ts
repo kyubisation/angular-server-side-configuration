@@ -1,38 +1,12 @@
 import { basename } from '@angular-devkit/core';
-import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
-import { getWorkspace, updateWorkspace } from '@schematics/angular/utility/workspace';
+import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import { updateWorkspace } from '@schematics/angular/utility/workspace';
 
-import { Ngssc } from 'angular-server-side-configuration';
-import { ngAdd } from '../ng-add/index';
-
-const NGSSC_JSON_PATH = '/ngssc.json';
-
-export function updateToV8(): Rule {
-  return async (tree: Tree) => {
-    const ngssc = tryReadNgsscJson(tree);
-    const workspace = await getWorkspace(tree);
-    const projects = Array.from(workspace.projects.keys());
-
-    return chain([
-      ...projects.map((project) =>
-        ngAdd({
-          additionalEnvironmentVariables: (ngssc.environmentVariables || []).join(','),
-          experimentalBuilders: false,
-          ngsscEnvironmentFile: 'src/environments/environment.prod.ts',
-          project,
-        })
-      ),
-      removeNgsscJson(),
-      checkNgsscUsageInScripts(),
-    ]);
-  };
-}
-
-export function updateToV9(): Rule {
+export function updateToV15(): Rule {
   return (_tree: Tree, context: SchematicContext) => {
     return updateWorkspace((workspace) => {
       context.logger.info(
-        `Removing ngsscbuild entry 'aotSupport', since it is no longer necessary for Ivy.`
+        `Removing obsolete ngsscbuild entry 'ngsscEnvironmentFile'.`
       );
       workspace.projects.forEach((project, name) => {
         const ngsscbuild = project.targets.get('ngsscbuild');
@@ -40,12 +14,12 @@ export function updateToV9(): Rule {
           return;
         }
 
-        if ('aotSupport' in ngsscbuild.options) {
-          delete ngsscbuild.options['aotSupport'];
+        if ('ngsscEnvironmentFile' in ngsscbuild.options) {
+          delete ngsscbuild.options['ngsscEnvironmentFile'];
           context.logger.info(` - Removed from ${name} ngsscbuild options`);
         }
         Object.keys(ngsscbuild.configurations || {})
-          .filter((c) => 'aotSupport' in ngsscbuild.configurations![c]!)
+          .filter((c) => 'ngsscEnvironmentFile' in ngsscbuild.configurations![c]!)
           .forEach((c) => {
             delete ngsscbuild.configurations![c]!['aotSupport'];
             context.logger.info(` - Removed from ${name} ngsscbuild configuration ${c}`);
@@ -75,43 +49,5 @@ export function dockerfile(): Rule {
         tree.overwrite(path, content);
       }
     });
-  };
-}
-
-function tryReadNgsscJson(tree: Tree): Partial<Ngssc> {
-  const ngssc = tree.read(NGSSC_JSON_PATH);
-  return ngssc ? JSON.parse(ngssc.toString('utf8')) : {};
-}
-
-function removeNgsscJson() {
-  return (tree: Tree, context: SchematicContext) => {
-    if (tree.exists(NGSSC_JSON_PATH)) {
-      tree.delete(NGSSC_JSON_PATH);
-      context.logger.info('Removed legacy ngssc.json');
-    }
-  };
-}
-
-function checkNgsscUsageInScripts() {
-  return async (tree: Tree, context: SchematicContext) => {
-    const packageJson = tree.read('/package.json');
-    if (!packageJson) {
-      return;
-    }
-
-    const pkg = JSON.parse(packageJson.toString('utf8'));
-    const ngsscUsedInScripts = Object.keys(pkg.scripts || {}).some((k) =>
-      pkg.scripts[k].includes('ngssc ')
-    );
-    if (!ngsscUsedInScripts) {
-      return;
-    }
-
-    const workspace = await getWorkspace(tree);
-    const projectName = Array.from(workspace.projects.keys())[0];
-    context.logger.info('Please remove the ngssc usage from your scripts.');
-    context.logger.info(
-      `To run the ngssc build, run the command \`ng run ${projectName}:ngsscbuild:production\`.`
-    );
   };
 }
