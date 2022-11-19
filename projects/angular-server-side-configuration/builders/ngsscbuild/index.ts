@@ -46,7 +46,9 @@ export async function detectVariables(context: BuilderContext): Promise<NgsscCon
   for (const file of typeScriptFiles) {
     const fileContent = await readFileAsync(file, 'utf8');
     const innerNgsscContext = detector.detect(fileContent);
-    if (!ngsscContext) {
+    if (!innerNgsscContext.variables.length) {
+      continue;
+    } else if (!ngsscContext) {
       ngsscContext = innerNgsscContext;
       continue;
     }
