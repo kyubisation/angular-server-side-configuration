@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [15.0.1](https://github.com/kyubisation/angular-server-side-configuration/compare/v15.0.0...v15.0.1) (2022-11-19)
+
+
+### Bug Fixes
+
+* aggregate detected variables correctly ([#72](https://github.com/kyubisation/angular-server-side-configuration/issues/72)) ([b8ed332](https://github.com/kyubisation/angular-server-side-configuration/commit/b8ed332269937011d84205324c948f5fd348a879))
+
 ## [15.0.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v14.0.1...v15.0.0) (2022-11-18)
 
 

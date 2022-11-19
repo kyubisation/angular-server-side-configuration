@@ -7,7 +7,7 @@
       "factory": "./ng-update/index#updateToV15"
     },
     "dockerfile": {
-      "version": "15.0.0",
+      "version": "15.0.1",
       "description": "Updates the download url for ngssc",
       "factory": "./ng-update/index#dockerfile"
     }
