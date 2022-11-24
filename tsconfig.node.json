@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "paths": {
-      "angular-server-side-configuration": ["dist/angular-server-side-configuration"],
-      "angular-server-side-configuration/*": ["dist/angular-server-side-configuration/*"]
+      "angular-server-side-configuration": ["./dist/angular-server-side-configuration"],
+      "angular-server-side-configuration/*": ["./dist/angular-server-side-configuration/*"]
     },
     "declaration": true,
     "esModuleInterop": true,

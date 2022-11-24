@@ -5,9 +5,7 @@ import { updateWorkspace } from '@schematics/angular/utility/workspace';
 export function updateToV15(): Rule {
   return (_tree: Tree, context: SchematicContext) => {
     return updateWorkspace((workspace) => {
-      context.logger.info(
-        `Removing obsolete ngsscbuild entry 'ngsscEnvironmentFile'.`
-      );
+      context.logger.info(`Removing obsolete ngsscbuild entry 'ngsscEnvironmentFile'.`);
       workspace.projects.forEach((project, name) => {
         const ngsscbuild = project.targets.get('ngsscbuild');
         if (!ngsscbuild || !ngsscbuild.options) {
@@ -21,7 +19,7 @@ export function updateToV15(): Rule {
         Object.keys(ngsscbuild.configurations || {})
           .filter((c) => 'ngsscEnvironmentFile' in ngsscbuild.configurations![c]!)
           .forEach((c) => {
-            delete ngsscbuild.configurations![c]!['aotSupport'];
+            delete ngsscbuild.configurations![c]!['ngsscEnvironmentFile'];
             context.logger.info(` - Removed from ${name} ngsscbuild configuration ${c}`);
           });
       });
