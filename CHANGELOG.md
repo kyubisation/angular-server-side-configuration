@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [15.0.2](https://github.com/kyubisation/angular-server-side-configuration/compare/v15.0.1...v15.0.2) (2022-11-24)
+
+
+### Bug Fixes
+
+* ensure correct build ([#73](https://github.com/kyubisation/angular-server-side-configuration/issues/73)) ([075880b](https://github.com/kyubisation/angular-server-side-configuration/commit/075880b58f09a33e63f84a000430f7db16ca07ae))
+
 ### [15.0.1](https://github.com/kyubisation/angular-server-side-configuration/compare/v15.0.0...v15.0.1) (2022-11-19)
 
 ### Bug Fixes
