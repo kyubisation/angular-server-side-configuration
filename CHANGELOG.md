@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [15.1.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v15.0.2...v15.1.0) (2023-03-22)
+
+
+### Features
+
+* add searchPattern as an option and restrict default search pattern ([#75](https://github.com/kyubisation/angular-server-side-configuration/issues/75)) ([d701f51](https://github.com/kyubisation/angular-server-side-configuration/commit/d701f51260637a84ede278e248934e0437a7ff86))
+
+
+### Bug Fixes
+
+* use correct path for environment files in ng-add ([421b3ff](https://github.com/kyubisation/angular-server-side-configuration/commit/421b3ff3bc81ba263d975adf8478136397215a85))
+
 ### [15.0.2](https://github.com/kyubisation/angular-server-side-configuration/compare/v15.0.1...v15.0.2) (2022-11-24)
 
 
