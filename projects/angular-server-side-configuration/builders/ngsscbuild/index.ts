@@ -1,9 +1,10 @@
-import { lstatSync, promises, readdirSync } from 'fs';
+import { promises } from 'fs';
 import { basename, join } from 'path';
 import { BuilderContext, createBuilder, targetFromTargetString } from '@angular-devkit/architect';
+import { BrowserBuilderOptions } from '@angular-devkit/build-angular';
 import { json, JsonObject } from '@angular-devkit/core';
 import { Ngssc } from 'angular-server-side-configuration';
-import { BrowserBuilderOptions } from '@angular-devkit/build-angular';
+import { glob } from 'glob';
 import { Schema } from './schema';
 import { VariableDetector } from './variable-detector';
 import { NgsscContext } from './ngssc-context';
@@ -33,15 +34,31 @@ export async function detectVariablesAndBuildNgsscJson(
   context: BuilderContext,
   multiple: boolean = false
 ) {
-  const ngsscContext = await detectVariables(context);
+  const ngsscContext = await detectVariables(context, options.searchPattern);
   const outputPath = join(context.workspaceRoot, browserOptions.outputPath);
   const ngssc = buildNgssc(ngsscContext, options, browserOptions, multiple);
   await writeFileAsync(join(outputPath, 'ngssc.json'), JSON.stringify(ngssc, null, 2), 'utf8');
 }
 
-export async function detectVariables(context: BuilderContext): Promise<NgsscContext> {
+export async function detectVariables(
+  context: BuilderContext,
+  searchPattern?: string | null
+): Promise<NgsscContext> {
+  const projectName = context.target && context.target.project;
+  if (!projectName) {
+    throw new Error('The builder requires a target.');
+  }
+
+  const projectMetadata = await context.getProjectMetadata(projectName);
+  const sourceRoot = projectMetadata.sourceRoot as string | undefined;
+  const defaultSearchPattern = sourceRoot ? `${sourceRoot}/**/!(*server*).ts` : '**/!(*server*).ts';
+
   const detector = new VariableDetector(context.logger);
-  const typeScriptFiles = findTypeScriptFiles(context.workspaceRoot);
+  const typeScriptFiles = await glob(searchPattern || defaultSearchPattern, {
+    absolute: true,
+    cwd: context.workspaceRoot,
+    ignore: ['**/node_modules/**', '**/*.spec.ts', '**/*.d.ts'],
+  });
   let ngsscContext: NgsscContext | null = null;
   for (const file of typeScriptFiles) {
     const fileContent = await readFileAsync(file, 'utf8');
@@ -71,23 +88,6 @@ export async function detectVariables(context: BuilderContext): Promise<NgsscCon
   );
 
   return ngsscContext;
-}
-
-function findTypeScriptFiles(root: string): string[] {
-  const directory = root.replace(/\\/g, '/');
-  return readdirSync(directory)
-    .map((f) => `${directory}/${f}`)
-    .map((f) => {
-      const stat = lstatSync(f);
-      if (stat.isDirectory()) {
-        return findTypeScriptFiles(f);
-      } else if (stat.isFile() && f.endsWith('.ts') && !f.endsWith('.spec.ts')) {
-        return [f];
-      } else {
-        return [];
-      }
-    })
-    .reduce((current, next) => current.concat(next), []);
 }
 
 export function buildNgssc(

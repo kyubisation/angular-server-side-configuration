@@ -3,5 +3,6 @@
   "dest": "../../dist/angular-server-side-configuration",
   "lib": {
     "entryFile": "src/public-api.ts"
-  }
+  },
+  "allowedNonPeerDependencies": ["glob"]
 }

@@ -14,6 +14,11 @@
       "type": "string",
       "description": "The file pattern, into which the environment variables should be inserted during ngssc insert (Defaults to index.html)",
       "default": ""
+    },
+    "searchPattern": {
+      "type": "string",
+      "description": "The search pattern to use when searching for environment variable occurrences (Defaults to {sourceRoot}/**/!(*server*).ts)",
+      "default": ""
     }
   }
 }

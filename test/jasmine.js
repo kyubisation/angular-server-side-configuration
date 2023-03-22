@@ -9,5 +9,12 @@ if (module === require.main) {
   const jasmine = new Jasmine({ projectBaseDir: path.resolve() });
   jasmine.exitOnCompletion = true;
   jasmine.addMatchingSpecFiles(['projects/angular-server-side-configuration/**/*.spec.ts']);
-  jasmine.execute();
+  jasmine
+    .execute()
+    .then((result) => {
+      if (result.failedExpectations.length) {
+        console.error(result.failedExpectations);
+      }
+    })
+    .catch((e) => console.error(e));
 }
