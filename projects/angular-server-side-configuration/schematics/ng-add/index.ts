@@ -87,6 +87,8 @@ function addDescriptionToMainFile(options: Schema): Rule {
     }
 
     const insertFile = [
+      join(dirname(mainFile), 'environment.prod.ts'),
+      join(dirname(mainFile), 'environment.ts'),
       join(dirname(mainFile), 'app/app.module.ts'),
       join(dirname(mainFile), 'app/app.component.ts'),
       mainFile,
