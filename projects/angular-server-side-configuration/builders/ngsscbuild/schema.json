@@ -17,7 +17,7 @@
     },
     "searchPattern": {
       "type": "string",
-      "description": "The search pattern to use when searching for environment variable occurrences (Defaults to {sourceRoot}/**/!(*server*).ts)",
+      "description": "The search pattern to use when searching for environment variable occurrences (Defaults to {sourceRoot}/**/environments/environment*.ts)",
       "default": ""
     }
   }
