@@ -4,16 +4,15 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## [16.0.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v15.1.0...v16.0.0) (2023-05-03)
 
-
 ### ⚠ BREAKING CHANGES
 
-* In order to improve security (and apply `Secure by default`), the default for `searchPattern` has been changed to  `{sourceRoot}/**/environments/environment*.ts` (from `{sourceRoot}/**/!(*server*).ts`). If your project uses environment variables in other files, update the `searchPattern` entry in your `ngsscbuild` block in your angular.json.
-* Update to Angular 16
+- In order to improve security (and apply `Secure by default`), the default for `searchPattern` has been changed to `{sourceRoot}/**/environments/environment*.ts` (from `{sourceRoot}/**/!(*server*).ts`). If your project uses environment variables in other files, update the `searchPattern` entry in your `ngsscbuild` block in your angular.json.
+- Update to Angular 16
 
 ### Features
 
-* change default search pattern to only include environment files ([#82](https://github.com/kyubisation/angular-server-side-configuration/issues/82)) ([f0aef80](https://github.com/kyubisation/angular-server-side-configuration/commit/f0aef80af20d81c650fc0681cdd2964d56853948))
-* upgrade to Angular 16 ([#81](https://github.com/kyubisation/angular-server-side-configuration/issues/81)) ([c1f4d02](https://github.com/kyubisation/angular-server-side-configuration/commit/c1f4d0211b7c547c4184b8411c57ddc5f2fe82e6))
+- change default search pattern to only include environment files ([#82](https://github.com/kyubisation/angular-server-side-configuration/issues/82)) ([f0aef80](https://github.com/kyubisation/angular-server-side-configuration/commit/f0aef80af20d81c650fc0681cdd2964d56853948))
+- upgrade to Angular 16 ([#81](https://github.com/kyubisation/angular-server-side-configuration/issues/81)) ([c1f4d02](https://github.com/kyubisation/angular-server-side-configuration/commit/c1f4d0211b7c547c4184b8411c57ddc5f2fe82e6))
 
 ## [15.1.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v15.0.2...v15.1.0) (2023-03-22)
 
