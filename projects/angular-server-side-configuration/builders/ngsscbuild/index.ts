@@ -59,7 +59,9 @@ export async function detectVariables(
 
   const projectMetadata = await context.getProjectMetadata(projectName);
   const sourceRoot = projectMetadata.sourceRoot as string | undefined;
-  const defaultSearchPattern = sourceRoot ? `${sourceRoot}/**/!(*server*).ts` : '**/!(*server*).ts';
+  const defaultSearchPattern = sourceRoot
+    ? `${sourceRoot}/**/environments/environment*.ts`
+    : '**/environments/environment*.ts';
 
   const detector = new VariableDetector(context.logger);
   const typeScriptFiles = await glob(searchPattern || defaultSearchPattern, {

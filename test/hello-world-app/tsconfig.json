@@ -1,6 +1,10 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "paths": {
+      "angular-server-side-configuration": ["../../dist/angular-server-side-configuration"],
+      "angular-server-side-configuration/*": ["../../dist/angular-server-side-configuration/*"]
+    },
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "sourceMap": true,

@@ -8,7 +8,6 @@ import {
 } from '@angular-devkit/schematics';
 import { InsertChange } from '@schematics/angular/utility/change';
 import { getWorkspace, updateWorkspace } from '@schematics/angular/utility/workspace';
-import type { FileReplacement } from '@angular-devkit/build-angular';
 import { Schema } from './schema';
 
 export function ngAdd(options: Schema): Rule {
