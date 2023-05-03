@@ -28,16 +28,18 @@ exports.config = {
   jasmineNodeOpts: {
     showColors: true,
     defaultTimeoutInterval: 30000,
-    print: function() {},
+    print: function () {},
   },
   onPrepare() {
     require('ts-node').register({
       project: resolve(__dirname, './e2e/tsconfig.e2e.json'),
     });
-    jasmine.getEnv().addReporter(new SpecReporter({
-      spec: {
-        displayStacktrace: StacktraceOption.PRETTY
-      }
-    }));
+    jasmine.getEnv().addReporter(
+      new SpecReporter({
+        spec: {
+          displayStacktrace: StacktraceOption.PRETTY,
+        },
+      })
+    );
   },
 };

@@ -28,12 +28,17 @@ describe('ng-add', () => {
 
   beforeEach(async () => {
     runner = new SchematicTestRunner('schematics', collectionPath);
-    appTree = await runner
-      .runExternalSchematicAsync('@schematics/angular', 'workspace', workspaceOptions)
-      .toPromise();
-    appTree = await runner
-      .runExternalSchematicAsync('@schematics/angular', 'application', appOptions, appTree)
-      .toPromise();
+    appTree = await runner.runExternalSchematic(
+      '@schematics/angular',
+      'workspace',
+      workspaceOptions
+    );
+    appTree = await runner.runExternalSchematic(
+      '@schematics/angular',
+      'application',
+      appOptions,
+      appTree
+    );
   });
 
   async function assertAppliedConfig(
@@ -74,21 +79,17 @@ describe('ng-add', () => {
   });
 
   it('should add ngssc content to correct files', async () => {
-    const tree = await runner
-      .runSchematicAsync('ng-add', { project: appOptions.name }, appTree)
-      .toPromise();
+    const tree = await runner.runSchematic('ng-add', { project: appOptions.name }, appTree);
     await assertAppliedConfig(tree);
   });
 
   it('should add ngssc content to correct files and split additional environment variables', async () => {
     const expected = 'OTHER_VARIABLES,OTHER_VARIABLES2';
-    const tree = await runner
-      .runSchematicAsync(
-        'ng-add',
-        { project: appOptions.name, additionalEnvironmentVariables: expected },
-        appTree
-      )
-      .toPromise();
+    const tree = await runner.runSchematic(
+      'ng-add',
+      { project: appOptions.name, additionalEnvironmentVariables: expected },
+      appTree
+    );
     await assertAppliedConfig(tree);
     const workspace = await getWorkspace(tree);
     expect(
@@ -103,34 +104,28 @@ describe('ng-add', () => {
   it('should add ngssc content to correct files, with missing title tag', async () => {
     const htmlContent = appTree.readContent(htmlPath);
     appTree.overwrite(htmlPath, htmlContent.replace(/<title>[^<]+<\/title>/, ''));
-    const tree = await runner
-      .runSchematicAsync('ng-add', { project: appOptions.name }, appTree)
-      .toPromise();
+    const tree = await runner.runSchematic('ng-add', { project: appOptions.name }, appTree);
     await assertAppliedConfig(tree);
   });
 
   it('should skip adding content when run twice', async () => {
-    const initialTree = await runner
-      .runSchematicAsync('ng-add', { project: appOptions.name }, appTree)
-      .toPromise();
+    const initialTree = await runner.runSchematic('ng-add', { project: appOptions.name }, appTree);
     const logs: string[] = [];
     runner.logger.subscribe((m) => logs.push(m.message));
-    await runner.runSchematicAsync('ng-add', { project: appOptions.name }, initialTree).toPromise();
+    await runner.runSchematic('ng-add', { project: appOptions.name }, initialTree);
 
     expect(logs.filter((l) => l.includes('Skipping')).length).toBe(4);
   });
 
   it('should replace builders when choosing experimental builders', async () => {
-    const tree = await runner
-      .runSchematicAsync(
-        'ng-add',
-        {
-          project: appOptions.name,
-          experimentalBuilders: true,
-        },
-        appTree
-      )
-      .toPromise();
+    const tree = await runner.runSchematic(
+      'ng-add',
+      {
+        project: appOptions.name,
+        experimentalBuilders: true,
+      },
+      appTree
+    );
 
     const workspace = await getWorkspace(tree);
     const project = workspace.projects.get(appOptions.name)!;

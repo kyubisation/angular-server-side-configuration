@@ -9,7 +9,7 @@ import { IndexHtmlTransform } from '@angular-devkit/build-angular/src/utils/inde
 import { WebpackLoggingCallback } from '@angular-devkit/build-webpack';
 import { json } from '@angular-devkit/core';
 import webpack from 'webpack';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 import { detectVariablesAndBuildNgsscJson, NgsscBuildSchema } from '../ngsscbuild/index';

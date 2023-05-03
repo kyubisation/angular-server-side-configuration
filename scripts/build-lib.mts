@@ -1,25 +1,20 @@
 import { execSync } from 'child_process';
-import { lstatSync, readdirSync, writeFileSync } from 'fs';
+import { lstatSync, readdirSync, readFileSync, writeFileSync } from 'fs';
 import { copyFile, mkdir, readFile, writeFile } from 'fs/promises';
-import { dirname, join, relative, resolve } from 'path';
+import { dirname, join, relative } from 'path';
 
-if (module === require.main) {
-  // We always build as a snapshot bu8ild, unless the script is invoked directly by the
-  // release publish script. The snapshot release configuration ensures that the current
-  // Git `HEAD` sha is included for the version placeholders.
-  finalizePackage();
-}
+await finalizePackage();
 
 interface Schema {
   properties: Record<string, any>;
 }
 
 async function finalizePackage() {
-  const rootDir = resolve(join(__dirname, '..'));
+  const rootDir = new URL('..', import.meta.url).pathname;
   const sourceDir = join(rootDir, 'projects/angular-server-side-configuration');
   const targetDir = join(rootDir, 'dist/angular-server-side-configuration');
   const schemaDirs = ['builders', 'schematics'].map((d) => join(sourceDir, d));
-  execSync('npx ng build angular-server-side-configuration', { cwd: rootDir, stdio: 'inherit' });
+  execSync('yarn ng build angular-server-side-configuration', { cwd: rootDir, stdio: 'inherit' });
 
   console.log(`Copying required assets:`);
   for (const file of ['README.md', 'LICENSE']) {
@@ -63,13 +58,15 @@ async function finalizePackage() {
   for (const schemaDir of schemaDirs) {
     const relativeSchemaDir = relative(rootDir, schemaDir);
     console.log(`Building ${relativeSchemaDir}`);
-    execSync(`npx tsc --project ${relativeSchemaDir}/tsconfig.json`, {
+    execSync(`yarn tsc --project ${relativeSchemaDir}/tsconfig.json`, {
       cwd: rootDir,
       stdio: 'inherit',
     });
   }
 
-  const distPackageJson = require('../dist/angular-server-side-configuration/package.json');
+  const distPackageJson = JSON.parse(
+    readFileSync(join(rootDir, 'dist/angular-server-side-configuration/package.json'), 'utf8')
+  );
   distPackageJson.sideEffects = [
     './esm2020/ng-env/public_api.mjs',
     './esm2020/process/public_api.mjs',
@@ -79,7 +76,7 @@ async function finalizePackage() {
     './fesm2020/angular-server-side-configuration-process.mjs',
   ];
   writeFileSync(
-    join(__dirname, '../dist/angular-server-side-configuration/package.json'),
+    join(rootDir, 'dist/angular-server-side-configuration/package.json'),
     JSON.stringify(distPackageJson, null, 2),
     'utf8'
   );

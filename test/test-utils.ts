@@ -41,9 +41,7 @@ export async function createArchitect(workspaceRoot: Path) {
   );
   await architectHost.addBuilderFromPackage('..');
   //require('ts-node').register(require('../projects/angular-server-side-configuration/builders/tsconfig.json'));
-  await architectHost.addBuilderFromPackage(
-    '../../../../dist/angular-server-side-configuration'
-  );
+  await architectHost.addBuilderFromPackage('../../../../dist/angular-server-side-configuration');
   const architect = new Architect(architectHost, registry);
 
   return {

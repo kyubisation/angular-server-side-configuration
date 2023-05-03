@@ -24,6 +24,14 @@ export async function ngsscBuild(options: NgsscBuildSchema, context: BuilderCont
   );
   const scheduledTarget = await context.scheduleTarget(browserTarget);
   const result = await scheduledTarget.result;
+  if (!result.success) {
+    const buildConfig = browserTarget.configuration ? `:${browserTarget.configuration}` : '';
+    context.logger.warn(
+      `ngssc: Failed build of ${browserTarget.app}:${browserTarget.target}${buildConfig}. Skipping ngssc build.`
+    );
+    return result;
+  }
+
   await detectVariablesAndBuildNgsscJson(options, browserOptions, context);
   return result;
 }

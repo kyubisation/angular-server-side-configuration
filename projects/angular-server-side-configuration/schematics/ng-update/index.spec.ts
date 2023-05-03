@@ -7,7 +7,7 @@ import { updateWorkspace } from '@schematics/angular/utility/workspace';
 const workspaceOptions: WorkspaceOptions = {
   name: 'workspace',
   newProjectRoot: 'projects',
-  version: '15.0.0',
+  version: '16.0.0',
 };
 
 const appOptions: ApplicationOptions = {
@@ -27,25 +27,33 @@ describe('ng-update', () => {
 
   beforeEach(async () => {
     runner = new SchematicTestRunner('migrations', collectionPath);
-    appTree = await runner
-      .runExternalSchematicAsync('@schematics/angular', 'workspace', workspaceOptions)
-      .toPromise();
-    appTree = await runner
-      .runExternalSchematicAsync('@schematics/angular', 'application', appOptions, appTree)
-      .toPromise();
+    appTree = await runner.runExternalSchematic(
+      '@schematics/angular',
+      'workspace',
+      workspaceOptions
+    );
+    appTree = await runner.runExternalSchematic(
+      '@schematics/angular',
+      'application',
+      appOptions,
+      appTree
+    );
   });
 
   it('should remove ngsscEnvironmentFile on v9 update', async () => {
     runner.registerCollection('schematics', join(__dirname, '../collection.json'));
-    const tree = await runner
-      .runExternalSchematicAsync('schematics', 'ng-add', { project: appOptions.name }, appTree)
-      .toPromise();
+    const tree = await runner.runExternalSchematic(
+      'schematics',
+      'ng-add',
+      { project: appOptions.name },
+      appTree
+    );
     await updateWorkspace((workspace) => {
       workspace.projects.get(appOptions.name)!.targets.get('ngsscbuild')!.options![
         'ngsscEnvironmentFile'
       ] = 'projects/dummy/src/environments/environment.prod.ts';
     })(tree, undefined as any);
-    const migratedTree = await runner.runSchematicAsync('migration-v15', {}, tree).toPromise();
+    const migratedTree = await runner.runSchematic('migration-v15', {}, tree);
     const angularJson = JSON.parse(migratedTree.readContent('angular.json'));
     expect(
       'ngsscEnvironmentFile' in angularJson.projects[appOptions.name].architect.ngsscbuild.options
@@ -65,7 +73,7 @@ RUN chmod +x ./start.sh
 CMD ["./start.sh"]
 `
     );
-    const tree = await runner.runSchematicAsync('dockerfile', {}, appTree).toPromise();
+    const tree = await runner.runSchematic('dockerfile', {}, appTree);
 
     const dockerfileContent = tree.read('Dockerfile')!.toString();
     const version = require('../../package.json').version;

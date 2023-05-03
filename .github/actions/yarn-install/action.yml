@@ -17,5 +17,8 @@ runs:
         restore-keys: |
           ${{ runner.os }}-yarn-
 
+    - run: yarn global add @angular/cli
+      shell: bash
+
     - run: yarn install --frozen-lockfile --non-interactive
       shell: bash
