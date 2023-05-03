@@ -12,7 +12,7 @@
 const path = require('path');
 process.env.CHROME_BIN = require('puppeteer').executablePath();
 
-module.exports = function(config) {
+module.exports = function (config) {
   config.set({
     basePath: '',
     frameworks: ['jasmine', '@angular-devkit/build-angular'],
@@ -27,14 +27,12 @@ module.exports = function(config) {
       clearContext: false, // leave Jasmine Spec Runner output visible in browser
     },
     jasmineHtmlReporter: {
-      suppressAll: true // removes the duplicated traces
+      suppressAll: true, // removes the duplicated traces
     },
     coverageReporter: {
       dir: path.join(__dirname, './coverage'),
       subdir: '.',
-      reporters: [
-        {type: 'lcov'},
-      ],
+      reporters: [{ type: 'lcov' }],
     },
     reporters: ['progress', 'kjhtml'],
     port: 9876,

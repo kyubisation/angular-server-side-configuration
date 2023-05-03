@@ -5,7 +5,5 @@
     "baseUrl": "./",
     "types": ["@angular/localize", "node"]
   },
-  "files": [
-    "main.server.ts"
-  ]
+  "files": ["main.server.ts"]
 }
