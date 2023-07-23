@@ -1,9 +1,12 @@
-package main
+package ngsscjson
 
 import (
+	"crypto/sha256"
+	"crypto/sha512"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"hash"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -14,10 +17,11 @@ import (
 
 // NgsscConfig corresponds to the JSON structure of ngssc.json
 type NgsscConfig struct {
-	FilePath             string
-	Variant              string
-	EnvironmentVariables map[string]*string
-	FilePattern          string
+	FilePath                      string
+	Variant                       string
+	EnvironmentVariables          []string
+	PopulatedEnvironmentVariables map[string]*string
+	FilePattern                   string
 }
 
 type ngsscJSON struct {
@@ -56,7 +60,7 @@ func NgsscJsonConfigFromPath(ngsscFile string) (ngsscConfig NgsscConfig, err err
 
 // readNgsscJson NgsscConfig instance from a file
 func readNgsscJson(path string) (ngsscConfig NgsscConfig, err error) {
-	data, err := ioutil.ReadFile(path)
+	data, err := os.ReadFile(path)
 	if err != nil {
 		return ngsscConfig, fmt.Errorf("failed to read %v\n%v", path, err)
 	}
@@ -73,31 +77,28 @@ func readNgsscJson(path string) (ngsscConfig NgsscConfig, err error) {
 		return ngsscConfig, fmt.Errorf("invalid ngssc.json at %v (variant must either be process or NG_ENV)", path)
 	}
 
-	if ngssc.Variant == "NG_ENV" {
-		fmt.Println("Variant NG_ENV is deprecated and will be removed with version 14. Please change usage to `process.env`.")
-	}
-
 	if ngssc.FilePattern == nil {
 		filePatternDefault := "**/index.html"
 		ngssc.FilePattern = &filePatternDefault
 	}
 
 	ngsscConfig = NgsscConfig{
-		FilePath:             path,
-		Variant:              ngssc.Variant,
-		EnvironmentVariables: populateEnvironmentVariables(ngssc.EnvironmentVariables),
-		FilePattern:          *ngssc.FilePattern,
+		FilePath:                      path,
+		Variant:                       ngssc.Variant,
+		EnvironmentVariables:          ngssc.EnvironmentVariables,
+		PopulatedEnvironmentVariables: populateEnvironmentVariables(ngssc.EnvironmentVariables),
+		FilePattern:                   *ngssc.FilePattern,
 	}
 
 	return ngsscConfig, nil
 }
 
 func (base NgsscConfig) VariantAndVariablesMatch(other NgsscConfig) bool {
-	return base.Variant == other.Variant && reflect.DeepEqual(base.EnvironmentVariables, other.EnvironmentVariables)
+	return base.Variant == other.Variant && reflect.DeepEqual(base.PopulatedEnvironmentVariables, other.PopulatedEnvironmentVariables)
 }
 
 func (ngsscConfig NgsscConfig) BuildIifeScriptContent() string {
-	jsonBytes, err := json.Marshal(ngsscConfig.EnvironmentVariables)
+	jsonBytes, err := json.Marshal(ngsscConfig.PopulatedEnvironmentVariables)
 	if err != nil {
 		fmt.Print(err)
 	}
@@ -108,7 +109,7 @@ func (ngsscConfig NgsscConfig) BuildIifeScriptContent() string {
 		iife = fmt.Sprintf("self.NG_ENV=%v", envMapJSON)
 	} else if ngsscConfig.Variant == "global" {
 		iife = fmt.Sprintf("Object.assign(self,%v)", envMapJSON)
-		} else {
+	} else {
 		iife = fmt.Sprintf(`self.process={"env":%v}`, envMapJSON)
 	}
 
@@ -127,4 +128,43 @@ func populateEnvironmentVariables(environmentVariables []string) map[string]*str
 	}
 
 	return envMap
+}
+
+func (ngsscConfig NgsscConfig) GenerateIifeScriptHash(hashAlgorithmString string) string {
+	hashAlgorithm, hashName := resolveHashAlgorithm(hashAlgorithmString)
+	hashAlgorithm.Write([]byte(ngsscConfig.BuildIifeScriptContent()))
+	hashSum := hashAlgorithm.Sum(nil)
+	hashBase64 := base64.StdEncoding.EncodeToString(hashSum)
+	hashResult := fmt.Sprintf(`'%v-%v'`, hashName, hashBase64)
+	return hashResult
+}
+
+func resolveHashAlgorithm(hashAlgorithmString string) (hash.Hash, string) {
+	hashAlgorithm := strings.ToLower(hashAlgorithmString)
+	if hashAlgorithm == "" || hashAlgorithm == "sha512" {
+		return sha512.New(), "sha512"
+	} else if hashAlgorithm == "sha384" {
+		return sha512.New384(), "sha384"
+	} else if hashAlgorithm == "sha256" {
+		return sha256.New(), "sha256"
+	} else {
+		fmt.Printf("Unknown hash algorithm %v. Using sha512 instead.", hashAlgorithmString)
+		return sha512.New(), "sha512"
+	}
+}
+
+func (ngsscConfig NgsscConfig) MergeVariables(variables map[string]*string) {
+	for k := range ngsscConfig.PopulatedEnvironmentVariables {
+		value, ok := variables[k]
+		if ok {
+			ngsscConfig.PopulatedEnvironmentVariables[k] = value
+		} else {
+			value, ok := os.LookupEnv(k)
+			if ok {
+				ngsscConfig.PopulatedEnvironmentVariables[k] = &value
+			} else {
+				ngsscConfig.PopulatedEnvironmentVariables[k] = nil
+			}
+		}
+	}
 }

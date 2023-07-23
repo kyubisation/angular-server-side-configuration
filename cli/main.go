@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"log"
+	"ngssc/cli/insert"
+	"ngssc/cli/substitute"
 	"os"
 	"strings"
 
@@ -49,7 +51,7 @@ func run(args []string) error {
 					Usage: "Perform the insert without actually inserting the variables.",
 				},
 			},
-			Action: InsertCommand,
+			Action: insert.InsertCommand,
 		},
 		{
 			Before: title,
@@ -108,7 +110,7 @@ func run(args []string) error {
 					Usage: "Perform the insert without actually inserting the variables.",
 				},
 			},
-			Action: SubstituteCommand,
+			Action: substitute.SubstituteCommand,
 		},
 	}
 

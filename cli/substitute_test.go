@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"ngssc/cli/test"
 	"os"
 	"path/filepath"
 	"testing"
@@ -10,165 +10,165 @@ import (
 
 func TestSubstitutionWithCwdAndSingleNgsscRecursivelyFound(t *testing.T) {
 	context := createDefaultContextAndCwd(t)
-	tmpEnv(t, "TEST_VALUE", "example value")
-	result := runWithArgs("substitute")
-	assertSuccess(t, result)
-	assertEqual(t, context.ReadFile("default.conf"), sha512ConfContent, "Expected ${NGSSC_CSP_HASH} to be substituted.")
+	t.Setenv("TEST_VALUE", "example value")
+	result := test.RunWithArgs(run, "substitute")
+	test.AssertSuccess(t, result)
+	test.AssertEqual(t, context.ReadFile("default.conf"), sha512ConfContent, "Expected ${NGSSC_CSP_HASH} to be substituted.")
 }
 
 func TestSubstitutionWithCwdAndMultipleNgsscRecursivelyFoundWithSameConfig(t *testing.T) {
-	context := newTestDir(t)
+	context := test.NewTestDir(t)
 	context.CreateDirectory("de").CreateFile("ngssc.json", `{"variant":"process","environmentVariables":["TEST_VALUE"]}`)
 	context.CreateDirectory("en").CreateFile("ngssc.json", `{"variant":"process","environmentVariables":["TEST_VALUE"]}`)
 	context.CreateFile("default.conf.template", defaultConfContent)
 
-	chdir(t, context.path)
-	tmpEnv(t, "TEST_VALUE", "example value")
-	result := runWithArgs("substitute")
-	assertSuccess(t, result)
-	assertEqual(t, context.ReadFile("default.conf"), sha512ConfContent, "Expected ${NGSSC_CSP_HASH} to be substituted.")
+	test.Chdir(t, context.Path)
+	t.Setenv("TEST_VALUE", "example value")
+	result := test.RunWithArgs(run, "substitute")
+	test.AssertSuccess(t, result)
+	test.AssertEqual(t, context.ReadFile("default.conf"), sha512ConfContent, "Expected ${NGSSC_CSP_HASH} to be substituted.")
 }
 
 func TestSubstitutionWithCwdAndMissingNgssc(t *testing.T) {
-	context := newTestDir(t)
+	context := test.NewTestDir(t)
 	context.CreateFile("default.conf.template", defaultConfContent)
 
-	chdir(t, context.path)
-	result := runWithArgs("substitute")
-	assertFailure(t, result)
-	assertContains(t, result.err.Error(), "no ngssc.json files found with", "")
+	test.Chdir(t, context.Path)
+	result := test.RunWithArgs(run, "substitute")
+	test.AssertFailure(t, result)
+	test.AssertContains(t, result.Error().Error(), "no ngssc.json files found with", "")
 }
 
 func TestSubstitutionWithCwdAndMultipleNgsscWithDifferentConfigs(t *testing.T) {
-	context := newTestDir(t)
+	context := test.NewTestDir(t)
 	context.CreateDirectory("de").CreateFile("ngssc.json", `{"variant":"process","environmentVariables":["TEST_VALUE"]}`)
 	context.CreateDirectory("en").CreateFile("ngssc.json", `{"variant":"process","environmentVariables":["TEST_VALUE2"]}`)
 	context.CreateFile("default.conf.template", defaultConfContent)
 
-	chdir(t, context.path)
-	result := runWithArgs("substitute")
-	assertFailure(t, result)
-	assertContains(t, result.err.Error(), "all recursively found ngssc.json must have same variant and environment variables configuration", "")
+	test.Chdir(t, context.Path)
+	result := test.RunWithArgs(run, "substitute")
+	test.AssertFailure(t, result)
+	test.AssertContains(t, result.Error().Error(), "all recursively found ngssc.json must have same variant and environment variables configuration", "")
 }
 
 func TestSubstitutionWithCwdAndSingleNgsscViaParameter(t *testing.T) {
 	context := createDefaultContextAndCwd(t)
-	tmpEnv(t, "TEST_VALUE", "example value")
-	result := runWithArgs("substitute", "--ngssc-path=ngssc.json")
-	assertSuccess(t, result)
-	assertEqual(t, context.ReadFile("default.conf"), sha512ConfContent, "Expected ${NGSSC_CSP_HASH} to be substituted.")
+	t.Setenv("TEST_VALUE", "example value")
+	result := test.RunWithArgs(run, "substitute", "--ngssc-path=ngssc.json")
+	test.AssertSuccess(t, result)
+	test.AssertEqual(t, context.ReadFile("default.conf"), sha512ConfContent, "Expected ${NGSSC_CSP_HASH} to be substituted.")
 }
 
 func TestSubstitutionWithCwdAndSingleNgsscViaDirectoryParameter(t *testing.T) {
 	context := createDefaultContextAndCwd(t)
-	tmpEnv(t, "TEST_VALUE", "example value")
-	result := runWithArgs("substitute", "--ngssc-path=.")
-	assertSuccess(t, result)
-	assertEqual(t, context.ReadFile("default.conf"), sha512ConfContent, "Expected ${NGSSC_CSP_HASH} to be substituted.")
+	t.Setenv("TEST_VALUE", "example value")
+	result := test.RunWithArgs(run, "substitute", "--ngssc-path=.")
+	test.AssertSuccess(t, result)
+	test.AssertEqual(t, context.ReadFile("default.conf"), sha512ConfContent, "Expected ${NGSSC_CSP_HASH} to be substituted.")
 }
 
 func TestSubstitutionWithCwdAndSingleNgsscViaAbsolutePathParameter(t *testing.T) {
 	context := createDefaultContextAndCwd(t)
-	tmpEnv(t, "TEST_VALUE", "example value")
-	result := runWithArgs("substitute", "--ngssc-path="+filepath.Join(context.path, "ngssc.json"))
-	assertSuccess(t, result)
-	assertEqual(t, context.ReadFile("default.conf"), sha512ConfContent, "Expected ${NGSSC_CSP_HASH} to be substituted.")
+	t.Setenv("TEST_VALUE", "example value")
+	result := test.RunWithArgs(run, "substitute", "--ngssc-path="+filepath.Join(context.Path, "ngssc.json"))
+	test.AssertSuccess(t, result)
+	test.AssertEqual(t, context.ReadFile("default.conf"), sha512ConfContent, "Expected ${NGSSC_CSP_HASH} to be substituted.")
 }
 
 func TestSubstitutionWithMissingFile(t *testing.T) {
-	context := newTestDir(t)
+	context := test.NewTestDir(t)
 	context.CreateFile("ngssc.json", `{"variant":"process","environmentVariables":["TEST_VALUE"]}`)
 
-	chdir(t, context.path)
-	result := runWithArgs("substitute")
-	assertFailure(t, result)
-	assertContains(t, result.err.Error(), "no files found with", "")
+	test.Chdir(t, context.Path)
+	result := test.RunWithArgs(run, "substitute")
+	test.AssertFailure(t, result)
+	test.AssertContains(t, result.Error().Error(), "no files found with", "")
 }
 
 func TestSubstitutionWithCwdWithOutAndSingleNgsscRecursivelyFound(t *testing.T) {
 	context := createDefaultContextAndCwd(t)
-	tmpEnv(t, "TEST_VALUE", "example value")
-	result := runWithArgs("substitute", "--out=out")
-	assertSuccess(t, result)
-	assertEqual(t, context.ReadFile("out/default.conf"), sha512ConfContent, "Expected ${NGSSC_CSP_HASH} to be substituted.")
+	t.Setenv("TEST_VALUE", "example value")
+	result := test.RunWithArgs(run, "substitute", "--out=out")
+	test.AssertSuccess(t, result)
+	test.AssertEqual(t, context.ReadFile("out/default.conf"), sha512ConfContent, "Expected ${NGSSC_CSP_HASH} to be substituted.")
 }
 
 func TestSubstitutionWithCwdWithAbsoluteOutAndSingleNgsscRecursivelyFound(t *testing.T) {
 	createDefaultContextAndCwd(t)
 	outDir := t.TempDir()
-	tmpEnv(t, "TEST_VALUE", "example value")
-	result := runWithArgs("substitute", fmt.Sprintf(`--out=%v`, outDir))
-	assertSuccess(t, result)
+	t.Setenv("TEST_VALUE", "example value")
+	result := test.RunWithArgs(run, "substitute", fmt.Sprintf(`--out=%v`, outDir))
+	test.AssertSuccess(t, result)
 	outPath := filepath.Join(outDir, "default.conf")
-	fileContent, err := ioutil.ReadFile(outPath)
+	fileContent, err := os.ReadFile(outPath)
 	if err != nil {
 		panic(err)
 	}
-	assertEqual(t, string(fileContent), sha512ConfContent, "Expected ${NGSSC_CSP_HASH} to be substituted.")
+	test.AssertEqual(t, string(fileContent), sha512ConfContent, "Expected ${NGSSC_CSP_HASH} to be substituted.")
 }
 
 func TestSubstitutionWithAbsolutePathAndSingleNgsscViaAbsolutePathParameter(t *testing.T) {
 	context := createDefaultContext(t)
 
-	tmpEnv(t, "TEST_VALUE", "example value")
-	result := runWithArgs("substitute", "--ngssc-path="+filepath.Join(context.path, "ngssc.json"), context.path)
-	assertSuccess(t, result)
-	assertEqual(t, context.ReadFile("default.conf"), sha512ConfContent, "Expected ${NGSSC_CSP_HASH} to be substituted.")
+	t.Setenv("TEST_VALUE", "example value")
+	result := test.RunWithArgs(run, "substitute", "--ngssc-path="+filepath.Join(context.Path, "ngssc.json"), context.Path)
+	test.AssertSuccess(t, result)
+	test.AssertEqual(t, context.ReadFile("default.conf"), sha512ConfContent, "Expected ${NGSSC_CSP_HASH} to be substituted.")
 }
 
 func TestSubstitutionWithCwdAndSingleNgsscRecursivelyFoundWithSha384(t *testing.T) {
 	context := createDefaultContextAndCwd(t)
-	tmpEnv(t, "TEST_VALUE", "example value")
-	result := runWithArgs("substitute", "--hash-algorithm=sha384")
-	assertSuccess(t, result)
-	assertEqual(t, context.ReadFile("default.conf"), sha384ConfContent, "Expected ${NGSSC_CSP_HASH} to be substituted.")
+	t.Setenv("TEST_VALUE", "example value")
+	result := test.RunWithArgs(run, "substitute", "--hash-algorithm=sha384")
+	test.AssertSuccess(t, result)
+	test.AssertEqual(t, context.ReadFile("default.conf"), sha384ConfContent, "Expected ${NGSSC_CSP_HASH} to be substituted.")
 }
 
 func TestSubstitutionWithCwdAndSingleNgsscRecursivelyFoundWithSha384UpperCase(t *testing.T) {
 	context := createDefaultContextAndCwd(t)
-	tmpEnv(t, "TEST_VALUE", "example value")
-	result := runWithArgs("substitute", "--hash-algorithm=SHA384")
-	assertSuccess(t, result)
-	assertEqual(t, context.ReadFile("default.conf"), sha384ConfContent, "Expected ${NGSSC_CSP_HASH} to be substituted.")
+	t.Setenv("TEST_VALUE", "example value")
+	result := test.RunWithArgs(run, "substitute", "--hash-algorithm=SHA384")
+	test.AssertSuccess(t, result)
+	test.AssertEqual(t, context.ReadFile("default.conf"), sha384ConfContent, "Expected ${NGSSC_CSP_HASH} to be substituted.")
 }
 
 func TestSubstitutionWithCwdAndSingleNgsscRecursivelyFoundWithSha256(t *testing.T) {
 	context := createDefaultContextAndCwd(t)
-	tmpEnv(t, "TEST_VALUE", "example value")
-	result := runWithArgs("substitute", "--hash-algorithm=sha256")
-	assertSuccess(t, result)
-	assertEqual(t, context.ReadFile("default.conf"), sha256ConfContent, "Expected ${NGSSC_CSP_HASH} to be substituted.")
+	t.Setenv("TEST_VALUE", "example value")
+	result := test.RunWithArgs(run, "substitute", "--hash-algorithm=sha256")
+	test.AssertSuccess(t, result)
+	test.AssertEqual(t, context.ReadFile("default.conf"), sha256ConfContent, "Expected ${NGSSC_CSP_HASH} to be substituted.")
 }
 
 func TestSubstitutionWithCwdAndSingleNgsscRecursivelyFoundWithSha256UpperCase(t *testing.T) {
 	context := createDefaultContextAndCwd(t)
-	tmpEnv(t, "TEST_VALUE", "example value")
-	result := runWithArgs("substitute", "--hash-algorithm=SHA256")
-	assertSuccess(t, result)
-	assertEqual(t, context.ReadFile("default.conf"), sha256ConfContent, "Expected ${NGSSC_CSP_HASH} to be substituted.")
+	t.Setenv("TEST_VALUE", "example value")
+	result := test.RunWithArgs(run, "substitute", "--hash-algorithm=SHA256")
+	test.AssertSuccess(t, result)
+	test.AssertEqual(t, context.ReadFile("default.conf"), sha256ConfContent, "Expected ${NGSSC_CSP_HASH} to be substituted.")
 }
 
 func TestSubstitutionWithCwdAndSingleNgsscRecursivelyFoundWithInvalidHash(t *testing.T) {
 	context := createDefaultContextAndCwd(t)
-	tmpEnv(t, "TEST_VALUE", "example value")
-	result := runWithArgs("substitute", "--hash-algorithm=invalid")
-	assertSuccess(t, result)
-	assertEqual(t, context.ReadFile("default.conf"), sha512ConfContent, "Expected ${NGSSC_CSP_HASH} to be substituted.")
-	assertContains(t, result.Stdout(), "Unknown hash algorithm invalid. Using sha512 instead.", "")
+	t.Setenv("TEST_VALUE", "example value")
+	result := test.RunWithArgs(run, "substitute", "--hash-algorithm=invalid")
+	test.AssertSuccess(t, result)
+	test.AssertEqual(t, context.ReadFile("default.conf"), sha512ConfContent, "Expected ${NGSSC_CSP_HASH} to be substituted.")
+	test.AssertContains(t, result.Stdout(), "Unknown hash algorithm invalid. Using sha512 instead.", "")
 }
 
 func TestSubstitutionWithIncludingEnvironmentVariables(t *testing.T) {
-	context := newTestDir(t)
+	context := test.NewTestDir(t)
 	context.CreateFile("ngssc.json", `{"variant":"process","environmentVariables":["TEST_VALUE"]}`)
 	context.CreateFile(
 		"default.conf.template",
 		"test $NGSSC_CSP_HASH some text ${NGSSC_CSP_HASH} other ${TEST_VALUE} some text $TEST_VALUE ${MISSING_VALUE}")
 
-	chdir(t, context.path)
-	tmpEnv(t, "TEST_VALUE", "example value")
-	result := runWithArgs("substitute", "--include-env")
-	assertSuccess(t, result)
-	assertEqual(
+	test.Chdir(t, context.Path)
+	t.Setenv("TEST_VALUE", "example value")
+	result := test.RunWithArgs(run, "substitute", "--include-env")
+	test.AssertSuccess(t, result)
+	test.AssertEqual(
 		t,
 		context.ReadFile("default.conf"),
 		"test $NGSSC_CSP_HASH some text 'sha512-21jOIuJ7NOssNu09erK1ht/C+K5ebRhhCGtsIfs5W5F4GkJ5mHbXk4lRA6i/cAM/3FNcyHnR0heOe6ZVrOzmgQ=='"+
@@ -178,44 +178,44 @@ func TestSubstitutionWithIncludingEnvironmentVariables(t *testing.T) {
 
 func TestSubstitutionDryRun(t *testing.T) {
 	context := createDefaultContextAndCwd(t)
-	tmpEnv(t, "TEST_VALUE", "example value")
-	result := runWithArgs("substitute", "--dry")
-	assertSuccess(t, result)
-	_, err := os.Stat(filepath.Join(context.path, "default.conf"))
-	assertTrue(t, os.IsNotExist(err), "Expected default.conf to not have been created")
+	t.Setenv("TEST_VALUE", "example value")
+	result := test.RunWithArgs(run, "substitute", "--dry")
+	test.AssertSuccess(t, result)
+	_, err := os.Stat(filepath.Join(context.Path, "default.conf"))
+	test.AssertTrue(t, os.IsNotExist(err), "Expected default.conf to not have been created")
 }
 
 func TestSubstitutionMissingTemplateDirectory(t *testing.T) {
-	context := newTestDir(t)
-	result := runWithArgs("substitute", filepath.Join(context.path, "missing"))
-	assertFailure(t, result)
-	assertContains(t, result.err.Error(), "template directory does not exist:", "")
+	context := test.NewTestDir(t)
+	result := test.RunWithArgs(run, "substitute", filepath.Join(context.Path, "missing"))
+	test.AssertFailure(t, result)
+	test.AssertContains(t, result.Error().Error(), "template directory does not exist:", "")
 }
 
 func TestSubstitutionMissingNgssc(t *testing.T) {
-	context := newTestDir(t)
-	result := runWithArgs("substitute", "--ngssc-path="+filepath.Join(context.path, "missing"))
-	assertFailure(t, result)
-	assertContains(t, result.err.Error(), "no ngssc.json files found", "")
+	context := test.NewTestDir(t)
+	result := test.RunWithArgs(run, "substitute", "--ngssc-path="+filepath.Join(context.Path, "missing"))
+	test.AssertFailure(t, result)
+	test.AssertContains(t, result.Error().Error(), "no ngssc.json files found", "")
 }
 
 func TestSubstitutionWithNoVariables(t *testing.T) {
 	context := createDefaultContextAndCwd(t)
 	context.CreateFile("default.conf.template", "no variables")
-	tmpEnv(t, "TEST_VALUE", "example value")
-	result := runWithArgs("substitute")
-	assertSuccess(t, result)
-	assertEqual(t, context.ReadFile("default.conf"), "no variables", "")
+	t.Setenv("TEST_VALUE", "example value")
+	result := test.RunWithArgs(run, "substitute")
+	test.AssertSuccess(t, result)
+	test.AssertEqual(t, context.ReadFile("default.conf"), "no variables", "")
 }
 
-func createDefaultContextAndCwd(t *testing.T) TestDir {
+func createDefaultContextAndCwd(t *testing.T) test.TestDir {
 	context := createDefaultContext(t)
-	chdir(t, context.path)
+	test.Chdir(t, context.Path)
 	return context
 }
 
-func createDefaultContext(t *testing.T) TestDir {
-	context := newTestDir(t)
+func createDefaultContext(t *testing.T) test.TestDir {
+	context := test.NewTestDir(t)
 	context.CreateFile("ngssc.json", `{"variant":"process","environmentVariables":["TEST_VALUE"]}`)
 	context.CreateFile("default.conf.template", defaultConfContent)
 	return context

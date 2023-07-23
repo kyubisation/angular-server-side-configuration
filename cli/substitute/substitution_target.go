@@ -1,8 +1,8 @@
-package main
+package substitute
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"regexp"
 	"sort"
@@ -31,7 +31,7 @@ func createSubstitutionTarget(templateFile string, outDir string, envMap map[str
 }
 
 func (target SubstitutionTarget) Substitute() error {
-	content, err := ioutil.ReadFile(target.templateFile)
+	content, err := os.ReadFile(target.templateFile)
 	if err != nil {
 		return fmt.Errorf("failed to read %v\n%v", target.templateFile, err)
 	}
@@ -49,7 +49,7 @@ func (target SubstitutionTarget) Substitute() error {
 	for key, value := range substitutionMap {
 		stringContent = strings.ReplaceAll(stringContent, key, value)
 	}
-	ioutil.WriteFile(target.targetFile, []byte(stringContent), 0644)
+	os.WriteFile(target.targetFile, []byte(stringContent), 0644)
 	return nil
 }
 

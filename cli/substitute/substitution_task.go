@@ -1,11 +1,8 @@
-package main
+package substitute
 
 import (
-	"crypto/sha256"
-	"crypto/sha512"
-	"encoding/base64"
 	"fmt"
-	"hash"
+	"ngssc/cli/ngsscjson"
 	"os"
 	"path/filepath"
 	"strings"
@@ -36,7 +33,7 @@ func (task SubstitutionTask) Substitute() error {
 	}
 	fmt.Printf("Resolved ngssc.json config:\n  %v\n", ngsscConfig.FilePath)
 
-	scriptHash := generateIifeScriptHash(ngsscConfig, task.hashAlgorithm)
+	scriptHash := ngsscConfig.GenerateIifeScriptHash(task.hashAlgorithm)
 	substitutionFiles, err := resolveSubstitutionFiles(task.templateDirectory)
 	if err != nil {
 		return err
@@ -58,39 +55,16 @@ func (task SubstitutionTask) Substitute() error {
 	return substituteVariables(substitutionFiles, outDir, variableMap, task.dryRun)
 }
 
-func generateIifeScriptHash(ngsscConfig NgsscConfig, hashAlgorithmString string) string {
-	hashAlgorithm, hashName := resolveHashAlgorithm(hashAlgorithmString)
-	hashAlgorithm.Write([]byte(ngsscConfig.BuildIifeScriptContent()))
-	hashSum := hashAlgorithm.Sum(nil)
-	hashBase64 := base64.StdEncoding.EncodeToString(hashSum)
-	hashResult := fmt.Sprintf(`'%v-%v'`, hashName, hashBase64)
-	return hashResult
-}
-
-func resolveHashAlgorithm(hashAlgorithmString string) (hash.Hash, string) {
-	hashAlgorithm := strings.ToLower(hashAlgorithmString)
-	if hashAlgorithm == "" || hashAlgorithm == "sha512" {
-		return sha512.New(), "sha512"
-	} else if hashAlgorithm == "sha384" {
-		return sha512.New384(), "sha384"
-	} else if hashAlgorithm == "sha256" {
-		return sha256.New(), "sha256"
-	} else {
-		fmt.Printf("Unknown hash algorithm %v. Using sha512 instead.", hashAlgorithmString)
-		return sha512.New(), "sha512"
-	}
-}
-
-func resolveNgsscConfig(ngsscPath string, workingDirectory string) (ngsscConfig NgsscConfig, err error) {
+func resolveNgsscConfig(ngsscPath string, workingDirectory string) (ngsscConfig ngsscjson.NgsscConfig, err error) {
 	if ngsscPath == "" {
 		ngsscPath = filepath.Join(workingDirectory, "**", "ngssc.json")
 	} else if filepath.Base(ngsscPath) != "ngssc.json" {
 		ngsscPath = filepath.Join(ngsscPath, "ngssc.json")
 	}
 
-	configs, err := FindNgsscJsonConfigs(ngsscPath)
+	configs, err := ngsscjson.FindNgsscJsonConfigs(ngsscPath)
 	if err != nil {
-		return NgsscConfig{}, err
+		return ngsscjson.NgsscConfig{}, err
 	} else if len(configs) == 1 {
 		return configs[0], nil
 	}
@@ -98,7 +72,7 @@ func resolveNgsscConfig(ngsscPath string, workingDirectory string) (ngsscConfig 
 	pivot := configs[0]
 	for _, ngsscConfig := range configs {
 		if !pivot.VariantAndVariablesMatch(ngsscConfig) {
-			return NgsscConfig{},
+			return ngsscjson.NgsscConfig{},
 				fmt.Errorf(
 					"all recursively found ngssc.json must have same variant and environment variables configuration. (See %v and %v)",
 					pivot.FilePath,

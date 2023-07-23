@@ -1,10 +1,12 @@
-package main
+package insert
 
 import (
 	"fmt"
 	"path/filepath"
 
 	"github.com/bmatcuk/doublestar"
+
+	"ngssc/cli/ngsscjson"
 )
 
 // InsertionTask represents an insertion task
@@ -15,7 +17,7 @@ type InsertionTask struct {
 
 // Single will perform the insertion for a single ngssc.json
 func (task InsertionTask) Single() error {
-	ngsscConfig, err := NgsscJsonConfigFromPath(task.path)
+	ngsscConfig, err := ngsscjson.NgsscJsonConfigFromPath(task.path)
 	if err != nil {
 		return err
 	}
@@ -25,7 +27,7 @@ func (task InsertionTask) Single() error {
 // Recursive will perform the insertion for all ngssc.json below given path
 func (task InsertionTask) Recursive() error {
 	pattern := filepath.Join(task.path, "**", "ngssc.json")
-	configs, err := FindNgsscJsonConfigs(pattern)
+	configs, err := ngsscjson.FindNgsscJsonConfigs(pattern)
 	if err != nil {
 		return err
 	}
@@ -40,7 +42,7 @@ func (task InsertionTask) Recursive() error {
 	return nil
 }
 
-func (task InsertionTask) insertWithNgssc(ngsscConfig NgsscConfig) error {
+func (task InsertionTask) insertWithNgssc(ngsscConfig ngsscjson.NgsscConfig) error {
 	pattern := filepath.Join(filepath.Dir(ngsscConfig.FilePath), ngsscConfig.FilePattern)
 	files, err := doublestar.Glob(pattern)
 	if err != nil {
@@ -63,7 +65,7 @@ func (task InsertionTask) insertWithNgssc(ngsscConfig NgsscConfig) error {
 	return nil
 }
 
-func logInsertionDetails(files []string, ngsscConfig NgsscConfig) {
+func logInsertionDetails(files []string, ngsscConfig ngsscjson.NgsscConfig) {
 	fmt.Println("Inserting variables:")
 	fmt.Println("  Files:")
 	for _, file := range files {
@@ -71,7 +73,7 @@ func logInsertionDetails(files []string, ngsscConfig NgsscConfig) {
 	}
 	fmt.Printf("  Variant: %v\n", ngsscConfig.Variant)
 	fmt.Printf("  Variables:\n")
-	for key, value := range ngsscConfig.EnvironmentVariables {
+	for key, value := range ngsscConfig.PopulatedEnvironmentVariables {
 		if value != nil {
 			fmt.Printf("    %v: %v\n", key, *value)
 		} else {

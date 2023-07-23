@@ -1,9 +1,9 @@
-package main
+package insert
 
 import (
 	"crypto/sha1"
 	"fmt"
-	"io/ioutil"
+	"ngssc/cli/ngsscjson"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -13,20 +13,34 @@ import (
 // InsertionTarget represents an html file target
 type InsertionTarget struct {
 	filePath    string
-	ngsscConfig NgsscConfig
+	ngsscConfig ngsscjson.NgsscConfig
 }
 
 // Insert the environment variables into the targeted file
 func (target InsertionTarget) Insert() error {
-	htmlBytes, err := ioutil.ReadFile(target.filePath)
+	htmlBytes, err := os.ReadFile(target.filePath)
 	if err != nil {
-		return fmt.Errorf("failed to read %v\n%v", target.filePath, err)
+		return err
 	}
 
+	newHTML := Apply(htmlBytes, target.ngsscConfig)
+	newHTMLBytes := []byte(newHTML)
+	err = os.WriteFile(target.filePath, newHTMLBytes, 0644)
+	if err != nil {
+		return fmt.Errorf("failed to update %v\n%v", target.filePath, err)
+	}
+
+	replaceIndexHashInNgsw(target, htmlBytes, newHTMLBytes)
+
+	return nil
+}
+
+// Insert the environment variables into the targeted file
+func Apply(htmlBytes []byte, ngsscConfig ngsscjson.NgsscConfig) string {
 	html := string(htmlBytes)
 	iifeScript := fmt.Sprintf(
 		"<!--ngssc--><script>%v</script><!--/ngssc-->",
-		target.ngsscConfig.BuildIifeScriptContent())
+		ngsscConfig.BuildIifeScriptContent())
 	var newHTML string
 	ngsscRegex := regexp.MustCompile(`<!--ngssc-->[\w\W]*<!--/ngssc-->`)
 	configRegex := regexp.MustCompile(`<!--\s*CONFIG\s*-->`)
@@ -40,15 +54,7 @@ func (target InsertionTarget) Insert() error {
 		newHTML = strings.Replace(html, "</head>", iifeScript+"</head>", 1)
 	}
 
-	newHTMLBytes := []byte(newHTML)
-	err = ioutil.WriteFile(target.filePath, newHTMLBytes, 0644)
-	if err != nil {
-		return fmt.Errorf("failed to update %v\n%v", target.filePath, err)
-	}
-
-	replaceIndexHashInNgsw(target, htmlBytes, newHTMLBytes)
-
-	return nil
+	return newHTML
 }
 
 func replaceIndexHashInNgsw(target InsertionTarget, originalHash []byte, replacedHash []byte) {
@@ -58,7 +64,7 @@ func replaceIndexHashInNgsw(target InsertionTarget, originalHash []byte, replace
 		return
 	}
 
-	ngswBytes, err := ioutil.ReadFile(filePath)
+	ngswBytes, err := os.ReadFile(filePath)
 	if err != nil {
 		fmt.Printf("Detected ngsw.json, but failed to read it at %v\n", filePath)
 		return
@@ -73,7 +79,7 @@ func replaceIndexHashInNgsw(target InsertionTarget, originalHash []byte, replace
 
 	replacedWrappedHexHash := createQuotedHash(replacedHash)
 	replacedNgswContent := strings.Replace(ngswContent, wrappedHexHash, replacedWrappedHexHash, 1)
-	err = ioutil.WriteFile(filePath, []byte(replacedNgswContent), info.Mode())
+	err = os.WriteFile(filePath, []byte(replacedNgswContent), info.Mode())
 	if err != nil {
 		fmt.Printf("Detected ngsw.json, but failed to update it at %v\n", filePath)
 		return
