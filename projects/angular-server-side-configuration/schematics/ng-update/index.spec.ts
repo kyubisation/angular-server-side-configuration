@@ -40,7 +40,7 @@ describe('ng-update', () => {
     );
   });
 
-  it('should remove ngsscEnvironmentFile on v9 update', async () => {
+  it('should remove ngsscEnvironmentFile on v15 update', async () => {
     runner.registerCollection('schematics', join(__dirname, '../collection.json'));
     const tree = await runner.runExternalSchematic(
       'schematics',
@@ -58,6 +58,29 @@ describe('ng-update', () => {
     expect(
       'ngsscEnvironmentFile' in angularJson.projects[appOptions.name].architect.ngsscbuild.options,
     ).toBeFalse();
+  });
+
+  it('should remove ngsscEnvironmentFile on v15 update', async () => {
+    runner.registerCollection('schematics', join(__dirname, '../collection.json'));
+    const tree = await runner.runExternalSchematic(
+      'schematics',
+      'ng-add',
+      { project: appOptions.name },
+      appTree,
+    );
+    await updateWorkspace((workspace) => {
+      const options = workspace.projects.get(appOptions.name)!.targets.get('ngsscbuild')!.options!;
+      options['browserTarget'] = options['buildTarget'];
+      delete options['buildTarget'];
+    })(tree, undefined as any);
+    const migratedTree = await runner.runSchematic('migration-v17', {}, tree);
+    const angularJson = JSON.parse(migratedTree.readContent('angular.json'));
+    expect(
+      'browserTarget' in angularJson.projects[appOptions.name].architect.ngsscbuild.options,
+    ).toBeFalse();
+    expect(
+      angularJson.projects[appOptions.name].architect.ngsscbuild.options['buildTarget'],
+    ).toEqual('dummy:build');
   });
 
   it('should update Dockerfile', async () => {

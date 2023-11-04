@@ -109,11 +109,11 @@
           "builder": "./dist/angular-server-side-configuration:ngsscbuild",
           "options": {
             "additionalEnvironmentVariables": ["MANUAL_VALUE"],
-            "browserTarget": "ngssc-app:build"
+            "buildTarget": "ngssc-app:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "ngssc-app:build:production"
+              "buildTarget": "ngssc-app:build:production"
             }
           }
         }
@@ -202,10 +202,10 @@
           "builder": "./dist/angular-server-side-configuration:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "ngssc-builders-app:build:production"
+              "buildTarget": "ngssc-builders-app:build:production"
             },
             "development": {
-              "browserTarget": "ngssc-builders-app:build:development"
+              "buildTarget": "ngssc-builders-app:build:development"
             }
           },
           "defaultConfiguration": "development"

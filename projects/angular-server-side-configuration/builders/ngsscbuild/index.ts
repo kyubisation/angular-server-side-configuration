@@ -15,19 +15,19 @@ const readFileAsync = promises.readFile;
 const writeFileAsync = promises.writeFile;
 
 export async function ngsscBuild(options: NgsscBuildSchema, context: BuilderContext) {
-  const browserTarget = targetFromTargetString(options.browserTarget);
-  const rawBrowserOptions = await context.getTargetOptions(browserTarget);
-  const browserName = await context.getBuilderNameForTarget(browserTarget);
+  const buildTarget = targetFromTargetString(options.buildTarget || options.browserTarget);
+  const rawBrowserOptions = await context.getTargetOptions(buildTarget);
+  const browserName = await context.getBuilderNameForTarget(buildTarget);
   const browserOptions = await context.validateOptions<json.JsonObject & BrowserBuilderOptions>(
     rawBrowserOptions,
     browserName,
   );
-  const scheduledTarget = await context.scheduleTarget(browserTarget);
+  const scheduledTarget = await context.scheduleTarget(buildTarget);
   const result = await scheduledTarget.result;
   if (!result.success) {
-    const buildConfig = browserTarget.configuration ? `:${browserTarget.configuration}` : '';
+    const buildConfig = buildTarget.configuration ? `:${buildTarget.configuration}` : '';
     context.logger.warn(
-      `ngssc: Failed build of ${browserTarget.app}:${browserTarget.target}${buildConfig}. Skipping ngssc build.`,
+      `ngssc: Failed build of ${buildTarget.app}:${buildTarget.target}${buildConfig}. Skipping ngssc build.`,
     );
     return result;
   }

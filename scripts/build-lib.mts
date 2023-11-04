@@ -32,6 +32,7 @@ async function finalizePackage() {
   const ngsscSchema: Schema = JSON.parse(
     await readFile(join(sourceDir, 'builders/ngsscbuild/schema.json'), 'utf8')
   );
+  delete ngsscSchema.properties['buildTarget'];
   delete ngsscSchema.properties['browserTarget'];
   for (const schemaVariant of ['browser', 'dev-server']) {
     const sourceFile = join(

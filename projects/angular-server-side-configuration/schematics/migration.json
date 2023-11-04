@@ -6,6 +6,11 @@
       "description": "Updates angular-server-side-configuration to v15",
       "factory": "./ng-update/index#updateToV15"
     },
+    "migration-v17": {
+      "version": "17-next",
+      "description": "Updates angular-server-side-configuration to v17",
+      "factory": "./ng-update/index#updateToV17"
+    },
     "dockerfile": {
       "version": "16.0.0",
       "description": "Updates the download url for ngssc",

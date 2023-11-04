@@ -84,7 +84,7 @@ by replacing `production` with your configuration name in the previous command.
 
 The builder will analyze `.ts` files in the project to detect
 used environment variables and generate an [ngssc.json](#ngsscjson) in the defined
-`outputPath` in the referenced `browserTarget`.
+`outputPath` in the referenced `buildTarget` (previously `browserTargeet`).
 
 ```json
 ...
@@ -98,7 +98,7 @@ used environment variables and generate an [ngssc.json](#ngsscjson) in the defin
           "builder": "angular-server-side-configuration:ngsscbuild",
           "options": {
             "additionalEnvironmentVariables": ["MANUAL_ENTRIES"],
-            "browserTarget": "your-project-name:build",
+            "buildTarget": "your-project-name:build",
             // Optional
             // (Defaults to the basename of the index option of the browser target)
             "filePattern": "index.html",
@@ -107,7 +107,7 @@ used environment variables and generate an [ngssc.json](#ngsscjson) in the defin
           },
           "configurations": {
             "production": {
-              "browserTarget": "your-project-name:build:production"
+              "buildTarget": "your-project-name:build:production"
             }
           }
         }
