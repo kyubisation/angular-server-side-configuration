@@ -1,6 +1,6 @@
 {
   "name": "angular-server-side-configuration",
-  "version": "17.0.0-next.0",
+  "version": "17.0.0-next.1",
   "description": "Configure an angular application on the server",
   "scripts": {
     "build:lib": "ts-node --project scripts/tsconfig.json --esm ./scripts/build-lib.mts",
