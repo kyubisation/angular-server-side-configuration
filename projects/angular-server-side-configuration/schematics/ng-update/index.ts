@@ -27,6 +27,32 @@ export function updateToV15(): Rule {
   };
 }
 
+export function updateToV17(): Rule {
+  return (_tree: Tree, context: SchematicContext) => {
+    return updateWorkspace((workspace) => {
+      context.logger.info(`Renaming 'browserTarget' to 'buildTarget'.`);
+      workspace.projects.forEach((project, name) => {
+        const ngsscbuild = project.targets.get('ngsscbuild');
+        if (!ngsscbuild || !ngsscbuild.options) {
+          return;
+        }
+
+        if ('browserTarget' in ngsscbuild.options) {
+          ngsscbuild.options['buildTarget'] = ngsscbuild.options['browserTarget'];
+          delete ngsscbuild.options['browserTarget'];
+        }
+        Object.keys(ngsscbuild.configurations || {})
+          .filter((c) => 'browserTarget' in ngsscbuild.configurations![c]!)
+          .forEach((c) => {
+            ngsscbuild.configurations![c]!['buildTarget'] =
+              ngsscbuild.configurations![c]!['browserTarget'];
+            delete ngsscbuild.configurations![c]!['browserTarget'];
+          });
+      });
+    });
+  };
+}
+
 export function dockerfile(): Rule {
   return (tree: Tree) => {
     const downloadUrlRegex =

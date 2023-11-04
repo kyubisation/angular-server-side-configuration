@@ -62,11 +62,11 @@ function addNgsscTargetToWorkspace(options: Schema): Rule {
         builder: 'angular-server-side-configuration:ngsscbuild',
         options: {
           ...ngsscOptions,
-          browserTarget: `${options.project}:build`,
+          buildTarget: `${options.project}:build`,
         },
         configurations: {
           production: {
-            browserTarget: `${options.project}:build:production`,
+            buildTarget: `${options.project}:build:production`,
           },
         },
       });
