@@ -45,7 +45,7 @@ export class VariableDetector {
     });
     if (ngEnvVariables.length && processVariables.length) {
       this._logger?.warn(
-        `Detected both process.env.* and NG_ENV.* variables with selected variant ${variant}. Only the variables matching the current variant will be used.`
+        `Detected both process.env.* and NG_ENV.* variables with selected variant ${variant}. Only the variables matching the current variant will be used.`,
       );
     }
     const variables = (variant === 'process' ? processVariables : ngEnvVariables).sort();
@@ -65,7 +65,7 @@ export class VariableDetector {
     }
 
     this._logger?.warn(
-      `Unable to resolve variable from ${node.getText()}. Please use direct assignment.`
+      `Unable to resolve variable from ${node.getText()}. Please use direct assignment.`,
     );
     return undefined;
   }

@@ -52,7 +52,7 @@ function addNgsscTargetToWorkspace(options: Schema): Rule {
       const target = project.targets.get('ngsscbuild');
       if (target) {
         context.logger.info(
-          `Skipping adding ngsscbuild target to angular.json, as it already exists in project ${options.project}.`
+          `Skipping adding ngsscbuild target to angular.json, as it already exists in project ${options.project}.`,
         );
         return;
       }
@@ -79,7 +79,11 @@ function addDescriptionToMainFile(options: Schema): Rule {
   return async (host: Tree, context: SchematicContext) => {
     const { project } = await resolveWorkspace(options, host);
     const buildTarget = project.targets.get('build')!;
-    const mainFile = normalize((buildTarget?.options?.['main'] as string) ?? '');
+    const mainFile = normalize(
+      (buildTarget?.options?.['main'] as string) ??
+        (buildTarget?.options?.['browser'] as string) ??
+        '',
+    );
     if (!mainFile) {
       context.logger.warn(noAppropriateInsertFileWarning);
       return;
@@ -88,6 +92,7 @@ function addDescriptionToMainFile(options: Schema): Rule {
     const insertFile = [
       join(dirname(mainFile), 'environments/environment.prod.ts'),
       join(dirname(mainFile), 'environments/environment.ts'),
+      join(dirname(mainFile), 'app/app.config.ts'),
       join(dirname(mainFile), 'app/app.module.ts'),
       join(dirname(mainFile), 'app/app.component.ts'),
       mainFile,
@@ -102,7 +107,7 @@ function addDescriptionToMainFile(options: Schema): Rule {
       return;
     } else if (file.content.includes('angular-server-side-configuration')) {
       context.logger.info(
-        `Skipping adding import to ${file.path}, since import was already detected.`
+        `Skipping adding import to ${file.path}, since import was already detected.`,
       );
       return;
     }
@@ -121,7 +126,7 @@ function addDescriptionToMainFile(options: Schema): Rule {
  * const booleanValue = process.env['BOOLEAN_VALUE'] === 'true';
  * const booleanValueInverted = process.env['BOOLEAN_VALUE_INVERTED'] !== 'false';
  * const complexValue = JSON.parse(process.env['COMPLEX_JSON_VALUE]);
- * 
+ *
  * Please note that process.env[variable] cannot be resolved. Please directly use strings.
  */
 
@@ -174,7 +179,7 @@ function addPlaceholderToIndexHtml(options: Schema): Rule {
     const indexHtmlContent = indexHtml.content.toString();
     if (/<!--\s*CONFIG\s*-->/.test(indexHtmlContent)) {
       context.logger.info(
-        `Skipping adding placeholder to ${indexHtml.path}, as it already contains it.`
+        `Skipping adding placeholder to ${indexHtml.path}, as it already contains it.`,
       );
       return;
     }

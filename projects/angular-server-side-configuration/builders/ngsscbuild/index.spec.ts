@@ -33,7 +33,7 @@ describe('Ngssc Builder', () => {
 
   function readNgsscJson(): Ngssc {
     const content = virtualFs.fileBufferToString(
-      host.scopedSync().read(normalize('dist/ngssc.json'))
+      host.scopedSync().read(normalize('dist/ngssc.json')),
     );
 
     return JSON.parse(content);
@@ -54,7 +54,7 @@ describe('Ngssc Builder', () => {
     host.replaceInFile(
       'angular.json',
       '"additionalEnvironmentVariables": [],',
-      `"additionalEnvironmentVariables": ["${expected}"],`
+      `"additionalEnvironmentVariables": ["${expected}"],`,
     );
     const output = await runNgsscbuild();
 

@@ -165,7 +165,7 @@ This is optional, as the environment variables can be configured to be inserted 
 It is however the safest option.
 
 ```html
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />

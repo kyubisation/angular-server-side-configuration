@@ -31,26 +31,26 @@ describe('ng-add', () => {
     appTree = await runner.runExternalSchematic(
       '@schematics/angular',
       'workspace',
-      workspaceOptions
+      workspaceOptions,
     );
     appTree = await runner.runExternalSchematic(
       '@schematics/angular',
       'application',
       appOptions,
-      appTree
+      appTree,
     );
   });
 
   async function assertAppliedConfig(
     tree: UnitTestTree,
-    importString = `import 'angular-server-side-configuration/process';`
+    importString = `import 'angular-server-side-configuration/process';`,
   ) {
     const workspace = await getWorkspace(tree);
     expect(workspace.projects.get(appOptions.name)!.targets.get('ngsscbuild')!.builder).toBe(
-      'angular-server-side-configuration:ngsscbuild'
+      'angular-server-side-configuration:ngsscbuild',
     );
 
-    const environmentContent = tree.readContent('projects/dummy/src/app/app.module.ts');
+    const environmentContent = tree.readContent('projects/dummy/src/app/app.config.ts');
     expect(environmentContent).toContain(importString);
 
     const indexContent = tree.readContent(htmlPath);
@@ -63,7 +63,7 @@ describe('ng-add', () => {
   it('should fail with missing package.json', async () => {
     appTree.delete('package.json');
     try {
-      await runner.runSchematicAsync('ng-add', { project: appOptions.name }, appTree).toPromise();
+      await runner.runSchematic('ng-add', { project: appOptions.name }, appTree);
       fail();
       // tslint:disable-next-line: no-empty
     } catch {}
@@ -72,7 +72,7 @@ describe('ng-add', () => {
   it('should fail with missing index.html', async () => {
     appTree.delete(htmlPath);
     try {
-      await runner.runSchematicAsync('ng-add', { project: appOptions.name }, appTree).toPromise();
+      await runner.runSchematic('ng-add', { project: appOptions.name }, appTree);
       fail();
       // tslint:disable-next-line: no-empty
     } catch {}
@@ -88,7 +88,7 @@ describe('ng-add', () => {
     const tree = await runner.runSchematic(
       'ng-add',
       { project: appOptions.name, additionalEnvironmentVariables: expected },
-      appTree
+      appTree,
     );
     await assertAppliedConfig(tree);
     const workspace = await getWorkspace(tree);
@@ -96,8 +96,8 @@ describe('ng-add', () => {
       JSON.stringify(
         workspace.projects.get(appOptions.name)!.targets.get('ngsscbuild')!.options![
           'additionalEnvironmentVariables'
-        ]
-      )
+        ],
+      ),
     ).toEqual(JSON.stringify(expected.split(',')));
   });
 
@@ -124,7 +124,7 @@ describe('ng-add', () => {
         project: appOptions.name,
         experimentalBuilders: true,
       },
-      appTree
+      appTree,
     );
 
     const workspace = await getWorkspace(tree);
@@ -132,7 +132,7 @@ describe('ng-add', () => {
     const buildTarget = project.targets.get('build')!;
     expect(buildTarget.builder).toBe('angular-server-side-configuration:browser');
     expect(project.targets.get('serve')!.builder).toBe(
-      'angular-server-side-configuration:dev-server'
+      'angular-server-side-configuration:dev-server',
     );
     expect(project.targets.get('ngsscbuild')).toBeUndefined();
   });

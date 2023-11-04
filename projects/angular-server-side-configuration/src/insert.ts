@@ -5,7 +5,7 @@ import { globToRegExp } from './glob-to-regexp';
 import { Ngssc, Variant } from './ngssc';
 
 export function insert(
-  options: { dryRun?: boolean; recursive?: boolean; directory?: string } = {}
+  options: { dryRun?: boolean; recursive?: boolean; directory?: string } = {},
 ) {
   const directory = options.directory || process.cwd();
   if (options.recursive) {
@@ -46,7 +46,7 @@ function insertWithNgssc(directory: string, dryRun: boolean) {
 function populateVariables(variables: string[]) {
   const populatedVariables: { [key: string]: string | null } = {};
   variables.forEach(
-    (v) => (populatedVariables[v] = v in process.env ? process.env[v] || '' : null)
+    (v) => (populatedVariables[v] = v in process.env ? process.env[v] || '' : null),
   );
   return populatedVariables;
 }
