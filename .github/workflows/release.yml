@@ -24,11 +24,12 @@ jobs:
             const fs = require('fs').promises;
 
             const { owner, repo } = context.repo;
-            console.log(`Creating release for ${owner} in ${repo} at ${context.ref_name}`);
+            const tagName = context.ref.split('/')[2];
+            console.log(`Creating release for ${owner} in ${repo} at ${tagName}`);
             const release = await github.rest.repos.createRelease({
               owner,
               repo,
-              tag_name: context.ref_name,
+              tag_name: tagName,
               generate_release_notes: true,
               draft: true,
             });
