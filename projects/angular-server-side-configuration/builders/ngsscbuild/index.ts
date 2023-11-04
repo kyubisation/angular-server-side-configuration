@@ -20,14 +20,14 @@ export async function ngsscBuild(options: NgsscBuildSchema, context: BuilderCont
   const browserName = await context.getBuilderNameForTarget(browserTarget);
   const browserOptions = await context.validateOptions<json.JsonObject & BrowserBuilderOptions>(
     rawBrowserOptions,
-    browserName
+    browserName,
   );
   const scheduledTarget = await context.scheduleTarget(browserTarget);
   const result = await scheduledTarget.result;
   if (!result.success) {
     const buildConfig = browserTarget.configuration ? `:${browserTarget.configuration}` : '';
     context.logger.warn(
-      `ngssc: Failed build of ${browserTarget.app}:${browserTarget.target}${buildConfig}. Skipping ngssc build.`
+      `ngssc: Failed build of ${browserTarget.app}:${browserTarget.target}${buildConfig}. Skipping ngssc build.`,
     );
     return result;
   }
@@ -40,7 +40,7 @@ export async function detectVariablesAndBuildNgsscJson(
   options: NgsscBuildSchema,
   browserOptions: BrowserBuilderOptions,
   context: BuilderContext,
-  multiple: boolean = false
+  multiple: boolean = false,
 ) {
   const ngsscContext = await detectVariables(context, options.searchPattern);
   const outputPath = join(context.workspaceRoot, browserOptions.outputPath);
@@ -50,7 +50,7 @@ export async function detectVariablesAndBuildNgsscJson(
 
 export async function detectVariables(
   context: BuilderContext,
-  searchPattern?: string | null
+  searchPattern?: string | null,
 ): Promise<NgsscContext> {
   const projectName = context.target && context.target.project;
   if (!projectName) {
@@ -81,11 +81,11 @@ export async function detectVariables(
     }
     if (ngsscContext.variant !== innerNgsscContext.variant) {
       context.logger.info(
-        `ngssc: Detected conflicting variants (${ngsscContext.variant} and ${innerNgsscContext.variant}) being used`
+        `ngssc: Detected conflicting variants (${ngsscContext.variant} and ${innerNgsscContext.variant}) being used`,
       );
     }
     ngsscContext.variables.push(
-      ...innerNgsscContext.variables.filter((v) => !ngsscContext!.variables.includes(v))
+      ...innerNgsscContext.variables.filter((v) => !ngsscContext!.variables.includes(v)),
     );
   }
   if (!ngsscContext) {
@@ -94,7 +94,7 @@ export async function detectVariables(
 
   context.logger.info(
     `ngssc: Detected variant '${ngsscContext.variant}' with variables ` +
-      `'${ngsscContext.variables.join(', ')}'`
+      `'${ngsscContext.variables.join(', ')}'`,
   );
 
   return ngsscContext;
@@ -104,7 +104,7 @@ export function buildNgssc(
   ngsscContext: NgsscContext,
   options: NgsscBuildSchema,
   browserOptions?: BrowserBuilderOptions,
-  multiple: boolean = false
+  multiple: boolean = false,
 ): Ngssc {
   return {
     environmentVariables: [

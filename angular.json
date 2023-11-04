@@ -66,10 +66,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "ngssc-app:build:production"
+              "buildTarget": "ngssc-app:build:production"
             },
             "development": {
-              "browserTarget": "ngssc-app:build:development"
+              "buildTarget": "ngssc-app:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -77,9 +77,9 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ngssc-app:build",
             "format": "json",
-            "outputPath": "src/locales"
+            "outputPath": "src/locales",
+            "buildTarget": "ngssc-app:build"
           }
         },
         "test": {

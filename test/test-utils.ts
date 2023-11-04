@@ -32,12 +32,12 @@ export async function createArchitect(workspaceRoot: Path) {
 
   const { workspace } = await workspaces.readWorkspace(
     workspaceSysPath,
-    workspaces.createWorkspaceHost(host)
+    workspaces.createWorkspaceHost(host),
   );
   const architectHost = new TestingArchitectHost(
     workspaceSysPath,
     workspaceSysPath,
-    new WorkspaceNodeModulesArchitectHost(workspace, workspaceSysPath)
+    new WorkspaceNodeModulesArchitectHost(workspace, workspaceSysPath),
   );
   await architectHost.addBuilderFromPackage('..');
   //require('ts-node').register(require('../projects/angular-server-side-configuration/builders/tsconfig.json'));

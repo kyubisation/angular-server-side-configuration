@@ -30,7 +30,7 @@ export function ngsscServeWebpackBrowser(
     webpackConfiguration?: ExecutionTransformer<webpack.Configuration>;
     logging?: WebpackLoggingCallback;
     indexHtml?: IndexHtmlTransform;
-  } = {}
+  } = {},
 ): Observable<DevServerBuilderOutput> {
   transforms.indexHtml = async (content: string) => {
     const ngsscContext = await detectVariables(context, options.searchPattern);
@@ -38,8 +38,8 @@ export function ngsscServeWebpackBrowser(
     const populatedVariables = populateVariables(ngssc.environmentVariables);
     context.logger.info(
       `Populated environment variables (Variant: ${ngssc.variant})\n${Object.entries(
-        populatedVariables
-      ).map(([key, value]) => `  ${key}: ${value}`)}`
+        populatedVariables,
+      ).map(([key, value]) => `  ${key}: ${value}`)}`,
     );
     const iife = generateIife(ngssc.variant, populatedVariables);
     return insertIife(content, iife);
@@ -50,14 +50,14 @@ export function ngsscServeWebpackBrowser(
 function populateVariables(variables: string[]) {
   const populatedVariables: { [key: string]: string | null } = {};
   variables.forEach(
-    (v) => (populatedVariables[v] = v in process.env ? process.env[v] || '' : null)
+    (v) => (populatedVariables[v] = v in process.env ? process.env[v] || '' : null),
   );
   return populatedVariables;
 }
 
 function generateIife(
   variant: 'process' | 'global' | 'NG_ENV',
-  populatedVariables: { [key: string]: string | null }
+  populatedVariables: { [key: string]: string | null },
 ) {
   const iife =
     variant === 'NG_ENV'
@@ -79,5 +79,5 @@ function insertIife(fileContent: string, iife: string) {
 }
 
 export default createBuilder<NgsscDevServerBuilderOptions, DevServerBuilderOutput>(
-  ngsscServeWebpackBrowser
+  ngsscServeWebpackBrowser,
 );

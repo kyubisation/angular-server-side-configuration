@@ -42,7 +42,7 @@ export function dockerfile(): Rule {
           .toString()
           .replace(
             new RegExp(downloadUrlRegex.source, 'g'),
-            `https://github.com/kyubisation/angular-server-side-configuration/releases/download/v${version}`
+            `https://github.com/kyubisation/angular-server-side-configuration/releases/download/v${version}`,
           );
         tree.overwrite(path, content);
       }

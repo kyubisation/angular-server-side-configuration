@@ -26,7 +26,7 @@ export function ngsscBuildWebpackBrowser(
     webpackConfiguration?: ExecutionTransformer<webpack.Configuration>;
     logging?: WebpackLoggingCallback;
     indexHtml?: IndexHtmlTransform;
-  } = {}
+  } = {},
 ): Observable<BrowserBuilderOutput> {
   return executeBrowserBuilder(options, context, transforms).pipe(
     switchMap(async (result) => {
@@ -35,14 +35,14 @@ export function ngsscBuildWebpackBrowser(
           options,
           options,
           context,
-          result.outputPaths.length > 1
+          result.outputPaths.length > 1,
         );
       }
       return result;
-    })
+    }),
   );
 }
 
 export default createBuilder<json.JsonObject & NgsscBrowserBuilderOptions>(
-  ngsscBuildWebpackBrowser
+  ngsscBuildWebpackBrowser,
 );

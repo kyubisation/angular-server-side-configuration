@@ -36,7 +36,7 @@ describe('insert', () => {
     writeFileSync(
       join(directory, 'fr/ngssc.json'),
       JSON.stringify({ ...innerNgssc, filePattern: undefined }),
-      'utf8'
+      'utf8',
     );
   }
 
@@ -66,7 +66,7 @@ describe('insert', () => {
     writeFileSync(
       join(directory, 'ngssc.json'),
       JSON.stringify({ ...ngssc, filePattern: '**/index.html' }),
-      'utf8'
+      'utf8',
     );
     insert({ directory });
     for (const file of subdirectories.map((d) => join(d, 'index.html'))) {

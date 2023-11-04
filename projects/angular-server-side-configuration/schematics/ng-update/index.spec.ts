@@ -30,13 +30,13 @@ describe('ng-update', () => {
     appTree = await runner.runExternalSchematic(
       '@schematics/angular',
       'workspace',
-      workspaceOptions
+      workspaceOptions,
     );
     appTree = await runner.runExternalSchematic(
       '@schematics/angular',
       'application',
       appOptions,
-      appTree
+      appTree,
     );
   });
 
@@ -46,7 +46,7 @@ describe('ng-update', () => {
       'schematics',
       'ng-add',
       { project: appOptions.name },
-      appTree
+      appTree,
     );
     await updateWorkspace((workspace) => {
       workspace.projects.get(appOptions.name)!.targets.get('ngsscbuild')!.options![
@@ -56,7 +56,7 @@ describe('ng-update', () => {
     const migratedTree = await runner.runSchematic('migration-v15', {}, tree);
     const angularJson = JSON.parse(migratedTree.readContent('angular.json'));
     expect(
-      'ngsscEnvironmentFile' in angularJson.projects[appOptions.name].architect.ngsscbuild.options
+      'ngsscEnvironmentFile' in angularJson.projects[appOptions.name].architect.ngsscbuild.options,
     ).toBeFalse();
   });
 
@@ -71,14 +71,14 @@ COPY dist /usr/share/nginx/html
 COPY start.sh start.sh
 RUN chmod +x ./start.sh
 CMD ["./start.sh"]
-`
+`,
     );
     const tree = await runner.runSchematic('dockerfile', {}, appTree);
 
     const dockerfileContent = tree.read('Dockerfile')!.toString();
     const version = require('../../package.json').version;
     expect(dockerfileContent).toContain(
-      `https://github.com/kyubisation/angular-server-side-configuration/releases/download/v${version}/ngssc_64bit`
+      `https://github.com/kyubisation/angular-server-side-configuration/releases/download/v${version}/ngssc_64bit`,
     );
   });
 });
