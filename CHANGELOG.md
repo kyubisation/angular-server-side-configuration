@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [17.0.0-next.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v16.0.0...v17.0.0-next.0) (2023-11-04)
+
+
+### ⚠ BREAKING CHANGES
+
+* Upgrade to Angular 17
+
+### Features
+
+* rename `browserTarget` to `buildTarget` and add migration ([#86](https://github.com/kyubisation/angular-server-side-configuration/issues/86)) ([9ff1e18](https://github.com/kyubisation/angular-server-side-configuration/commit/9ff1e1892fcf4c6a904348d491a3a8c1f6b6c47d))
+* upgrade to Angular 17 ([#85](https://github.com/kyubisation/angular-server-side-configuration/issues/85)) ([6e45fe9](https://github.com/kyubisation/angular-server-side-configuration/commit/6e45fe9b07dff4e5897e786c67bcdea6050c185a))
+
 ## [16.0.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v15.1.0...v16.0.0) (2023-05-03)
 
 ### ⚠ BREAKING CHANGES
