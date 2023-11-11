@@ -1,6 +1,7 @@
 import { execSync } from 'child_process';
 import { lstatSync, readdirSync, readFileSync, writeFileSync } from 'fs';
 import { copyFile, mkdir, readFile, writeFile } from 'fs/promises';
+import * as glob from 'glob';
 import { dirname, join, relative } from 'path';
 
 await finalizePackage();
@@ -30,7 +31,7 @@ async function finalizePackage() {
   }
 
   const ngsscSchema: Schema = JSON.parse(
-    await readFile(join(sourceDir, 'builders/ngsscbuild/schema.json'), 'utf8')
+    await readFile(join(sourceDir, 'builders/ngsscbuild/schema.json'), 'utf8'),
   );
   delete ngsscSchema.properties['buildTarget'];
   delete ngsscSchema.properties['browserTarget'];
@@ -39,7 +40,7 @@ async function finalizePackage() {
       rootDir,
       'node_modules/@angular-devkit/build-angular/src/builders',
       schemaVariant,
-      'schema.json'
+      'schema.json',
     );
     const schema: Schema = JSON.parse(await readFile(sourceFile, 'utf8'));
     schema.properties = { ...schema.properties, ...ngsscSchema.properties };
@@ -52,7 +53,7 @@ async function finalizePackage() {
     await writeFile(
       join(sourceDir, 'builders', schemaVariant, 'schema.json'),
       JSON.stringify(schema, null, 2),
-      'utf8'
+      'utf8',
     );
   }
 
@@ -66,20 +67,18 @@ async function finalizePackage() {
   }
 
   const distPackageJson = JSON.parse(
-    readFileSync(join(rootDir, 'dist/angular-server-side-configuration/package.json'), 'utf8')
+    readFileSync(join(rootDir, 'dist/angular-server-side-configuration/package.json'), 'utf8'),
   );
-  distPackageJson.sideEffects = [
-    './esm2020/ng-env/public_api.mjs',
-    './esm2020/process/public_api.mjs',
-    './fesm2015/angular-server-side-configuration-ng-env.mjs',
-    './fesm2015/angular-server-side-configuration-process.mjs',
-    './fesm2020/angular-server-side-configuration-ng-env.mjs',
-    './fesm2020/angular-server-side-configuration-process.mjs',
-  ];
+  distPackageJson.sideEffects = glob
+    .sync(['esm*/**/public_api.{mjs,js}', 'fesm*/*{ng-env,process}.{mjs,js}'], {
+      cwd: 'dist/angular-server-side-configuration',
+      dotRelative: true,
+    })
+    .sort();
   writeFileSync(
     join(rootDir, 'dist/angular-server-side-configuration/package.json'),
     JSON.stringify(distPackageJson, null, 2),
-    'utf8'
+    'utf8',
   );
 }
 
