@@ -66,20 +66,15 @@ async function finalizePackage() {
     });
   }
 
-  const distPackageJson = JSON.parse(
-    readFileSync(join(rootDir, 'dist/angular-server-side-configuration/package.json'), 'utf8'),
-  );
+  const packageJsonPath = join(targetDir, 'package.json');
+  const distPackageJson = JSON.parse(readFileSync(join(rootDir, packageJsonPath), 'utf8'));
   distPackageJson.sideEffects = glob
     .sync(['esm*/**/public_api.{mjs,js}', 'fesm*/*{ng-env,process}.{mjs,js}'], {
-      cwd: 'dist/angular-server-side-configuration',
+      cwd: targetDir,
       dotRelative: true,
     })
     .sort();
-  writeFileSync(
-    join(rootDir, 'dist/angular-server-side-configuration/package.json'),
-    JSON.stringify(distPackageJson, null, 2),
-    'utf8',
-  );
+  writeFileSync(join(rootDir, packageJsonPath), JSON.stringify(distPackageJson, null, 2), 'utf8');
 }
 
 function walk(root: string | string[], fileRegex: RegExp): string[] {
