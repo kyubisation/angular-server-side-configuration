@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [17.0.2](https://github.com/kyubisation/angular-server-side-configuration/compare/v17.0.1...v17.0.2) (2023-11-12)
+
+
+### Bug Fixes
+
+* adapt to `@angular-devkit/build-angular:application` builder ([#88](https://github.com/kyubisation/angular-server-side-configuration/issues/88)) ([8d06efe](https://github.com/kyubisation/angular-server-side-configuration/commit/8d06efed30d8e209ee49315ea30da55d5037c93c)), closes [#87](https://github.com/kyubisation/angular-server-side-configuration/issues/87)
+* correct sideEffects path ([aeaf3bf](https://github.com/kyubisation/angular-server-side-configuration/commit/aeaf3bf679dcece07cc46b3ebf38f8a328cc4e77))
+
 ### [17.0.1](https://github.com/kyubisation/angular-server-side-configuration/compare/v17.0.0...v17.0.1) (2023-11-08)
 
 
