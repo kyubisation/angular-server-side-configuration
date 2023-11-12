@@ -1,26 +1,25 @@
-import { promises } from 'fs';
+import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { basename, join } from 'path';
 import { BuilderContext, createBuilder, targetFromTargetString } from '@angular-devkit/architect';
-import { BrowserBuilderOptions } from '@angular-devkit/build-angular';
+import { ApplicationBuilderOptions, BrowserBuilderOptions } from '@angular-devkit/build-angular';
 import { json, JsonObject } from '@angular-devkit/core';
 import { Ngssc } from 'angular-server-side-configuration';
-import { glob } from 'glob';
+import * as glob from 'glob';
 import { Schema } from './schema';
 import { VariableDetector } from './variable-detector';
 import { NgsscContext } from './ngssc-context';
 
 export type NgsscBuildSchema = Schema;
-
-const readFileAsync = promises.readFile;
-const writeFileAsync = promises.writeFile;
+type BuilderOptions = ApplicationBuilderOptions | BrowserBuilderOptions;
+type ApplicationBuilderVariant = undefined | 'browser-only' | 'server';
 
 export async function ngsscBuild(options: NgsscBuildSchema, context: BuilderContext) {
   const buildTarget = targetFromTargetString(options.buildTarget || options.browserTarget);
-  const rawBrowserOptions = await context.getTargetOptions(buildTarget);
-  const browserName = await context.getBuilderNameForTarget(buildTarget);
-  const browserOptions = await context.validateOptions<json.JsonObject & BrowserBuilderOptions>(
-    rawBrowserOptions,
-    browserName,
+  const rawBuilderOptions = await context.getTargetOptions(buildTarget);
+  const builderName = await context.getBuilderNameForTarget(buildTarget);
+  const builderOptions = await context.validateOptions<json.JsonObject & BuilderOptions>(
+    rawBuilderOptions,
+    builderName,
   );
   const scheduledTarget = await context.scheduleTarget(buildTarget);
   const result = await scheduledTarget.result;
@@ -32,20 +31,43 @@ export async function ngsscBuild(options: NgsscBuildSchema, context: BuilderCont
     return result;
   }
 
-  await detectVariablesAndBuildNgsscJson(options, browserOptions, context);
+  await detectVariablesAndBuildNgsscJson(
+    options,
+    builderOptions,
+    context,
+    false,
+    builderName !== '@angular-devkit/build-angular:application'
+      ? undefined
+      : 'server' in builderOptions && builderOptions.server
+      ? 'server'
+      : 'browser-only',
+  );
+
   return result;
 }
 
 export async function detectVariablesAndBuildNgsscJson(
   options: NgsscBuildSchema,
-  browserOptions: BrowserBuilderOptions,
+  builderOptions: BuilderOptions,
   context: BuilderContext,
   multiple: boolean = false,
+  applicationBuilderVariant: ApplicationBuilderVariant = undefined,
 ) {
   const ngsscContext = await detectVariables(context, options.searchPattern);
-  const outputPath = join(context.workspaceRoot, browserOptions.outputPath);
-  const ngssc = buildNgssc(ngsscContext, options, browserOptions, multiple);
-  await writeFileAsync(join(outputPath, 'ngssc.json'), JSON.stringify(ngssc, null, 2), 'utf8');
+  let outputPath = join(context.workspaceRoot, builderOptions.outputPath);
+  const ngssc = buildNgssc(
+    ngsscContext,
+    options,
+    builderOptions,
+    multiple,
+    applicationBuilderVariant,
+  );
+
+  const browserOutputPath = join(outputPath, 'browser');
+  if (applicationBuilderVariant === 'browser-only' && existsSync(browserOutputPath)) {
+    outputPath = browserOutputPath;
+  }
+  writeFileSync(join(outputPath, 'ngssc.json'), JSON.stringify(ngssc, null, 2), 'utf8');
 }
 
 export async function detectVariables(
@@ -64,14 +86,14 @@ export async function detectVariables(
     : '**/environments/environment*.ts';
 
   const detector = new VariableDetector(context.logger);
-  const typeScriptFiles = await glob(searchPattern || defaultSearchPattern, {
+  const typeScriptFiles = await glob.glob(searchPattern || defaultSearchPattern, {
     absolute: true,
     cwd: context.workspaceRoot,
     ignore: ['**/node_modules/**', '**/*.spec.ts', '**/*.d.ts'],
   });
   let ngsscContext: NgsscContext | null = null;
   for (const file of typeScriptFiles) {
-    const fileContent = await readFileAsync(file, 'utf8');
+    const fileContent = readFileSync(file, 'utf8');
     const innerNgsscContext = detector.detect(fileContent);
     if (!innerNgsscContext.variables.length) {
       continue;
@@ -103,22 +125,34 @@ export async function detectVariables(
 export function buildNgssc(
   ngsscContext: NgsscContext,
   options: NgsscBuildSchema,
-  browserOptions?: BrowserBuilderOptions,
+  builderOptions?: BuilderOptions,
   multiple: boolean = false,
+  applicationBuilderVariant: ApplicationBuilderVariant = undefined,
 ): Ngssc {
   return {
     environmentVariables: [
       ...ngsscContext.variables,
       ...(options.additionalEnvironmentVariables || []),
     ],
-    filePattern: options.filePattern || extractFilePattern(browserOptions?.index, multiple),
+    filePattern:
+      options.filePattern ||
+      extractFilePattern(builderOptions, multiple, applicationBuilderVariant),
     variant: ngsscContext.variant,
   };
 }
 
-function extractFilePattern(index: BrowserBuilderOptions['index'] | undefined, multiple: boolean) {
+function extractFilePattern(
+  builderOptions: BuilderOptions | undefined,
+  multiple: boolean,
+  applicationBuilderVariant: ApplicationBuilderVariant = undefined,
+) {
+  if (builderOptions && applicationBuilderVariant === 'server') {
+    return '**/index{.,.server.}html';
+  }
+
+  const index = builderOptions?.index;
   let result = '**/index.html';
-  if (!index) {
+  if (!index || typeof index === 'boolean') {
     return result;
   } else if (typeof index === 'string') {
     result = basename(index);

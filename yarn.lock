@@ -285,11 +285,27 @@
   dependencies:
     tslib "^2.3.0"
 
+"@angular/platform-server@^17.0.1":
+  version "17.0.2"
+  resolved "https://registry.yarnpkg.com/@angular/platform-server/-/platform-server-17.0.2.tgz#1055867181b84ab3e6119a3587f90dff4b4dbb92"
+  integrity sha512-+1uCnAw7Ql2r4BDnfaRvQrXI1H5qUB/1f8CwCjaVoIn7kLJs/ps4I0WbOVtujJ2VPnxIggfVtenXRRMlungZlg==
+  dependencies:
+    tslib "^2.3.0"
+    xhr2 "^0.2.0"
+
 "@angular/router@^17.0.1":
   version "17.0.1"
   resolved "https://registry.yarnpkg.com/@angular/router/-/router-17.0.1.tgz#c9807df1f705bc48b7ef4d9bd0801f45f59ed082"
   integrity sha512-73PCDDsRAjemODMRndZhwEN6Tb9rVVbDfMWgLQ4HgfgKnjek8P9BoYf8rOf3qV5fXf3c1Sm9MmKtaPv+l5lU9Q==
   dependencies:
+    tslib "^2.3.0"
+
+"@angular/ssr@^17.0.0":
+  version "17.0.0"
+  resolved "https://registry.yarnpkg.com/@angular/ssr/-/ssr-17.0.0.tgz#99694e9a602ab87e64415b8bbf35597551140d31"
+  integrity sha512-yctZuIR9AA9aaAQe6JzBNbBoRUy37449tYYpwdxmI1Fp5rsrzrlJ1HeFidrmca4k3RWXw3VZNpklPWStlZBm2Q==
+  dependencies:
+    critters "0.0.20"
     tslib "^2.3.0"
 
 "@assemblyscript/loader@^0.10.1":
@@ -9087,6 +9103,11 @@ ws@~8.11.0:
   version "8.11.0"
   resolved "https://registry.yarnpkg.com/ws/-/ws-8.11.0.tgz#6a0d36b8edfd9f96d8b25683db2f8d7de6e8e143"
   integrity sha512-HPG3wQd9sNQoT9xHyNCXoDUa+Xw/VevmY9FoHyQ+g+rrMn4j6FB4np7Z0OhdTgjx6MgQLK7jwSy1YecU1+4Asg==
+
+xhr2@^0.2.0:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/xhr2/-/xhr2-0.2.1.tgz#4e73adc4f9cfec9cbd2157f73efdce3a5f108a93"
+  integrity sha512-sID0rrVCqkVNUn8t6xuv9+6FViXjUVXq8H5rWOH2rz9fDNQEd4g0EA2XlcEdJXRz5BMEn4O1pJFdT+z4YHhoWw==
 
 xmlhttprequest-ssl@~2.0.0:
   version "2.0.0"

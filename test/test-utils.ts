@@ -14,8 +14,10 @@ import { Path, getSystemPath, join, normalize, schema, workspaces } from '@angul
 // Default timeout for large specs is 2.5 minutes.
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 150000;
 
-export const workspaceRoot = join(normalize(__dirname), `hello-world-app/`);
-export const host = new TestProjectHost(workspaceRoot);
+export const legacyWorkspaceRoot = join(normalize(__dirname), `hello-world-app/`);
+export const legacyHost = new TestProjectHost(legacyWorkspaceRoot);
+export const applicationWorkspaceRoot = join(normalize(__dirname), `ng-application-app/`);
+export const applicationHost = new TestProjectHost(applicationWorkspaceRoot);
 export const outputPath: Path = normalize('dist');
 
 export const browserTargetSpec = { project: 'app', target: 'build' };
@@ -25,7 +27,7 @@ export const karmaTargetSpec = { project: 'app', target: 'test' };
 export const tslintTargetSpec = { project: 'app', target: 'lint' };
 export const protractorTargetSpec = { project: 'app-e2e', target: 'e2e' };
 
-export async function createArchitect(workspaceRoot: Path) {
+export async function createArchitect(workspaceRoot: Path, host: TestProjectHost) {
   const registry = new schema.CoreSchemaRegistry();
   registry.addPostTransform(schema.transforms.addUndefinedDefaults);
   const workspaceSysPath = getSystemPath(workspaceRoot);
