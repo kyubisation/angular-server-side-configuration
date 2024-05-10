@@ -54,7 +54,8 @@ export async function detectVariablesAndBuildNgsscJson(
   applicationBuilderVariant: ApplicationBuilderVariant = undefined,
 ) {
   const ngsscContext = await detectVariables(context, options.searchPattern);
-  let outputPath = join(context.workspaceRoot, builderOptions.outputPath);
+  // TODO: Fix possible outputPath options.
+  let outputPath = join(context.workspaceRoot, builderOptions.outputPath as string);
   const ngssc = buildNgssc(
     ngsscContext,
     options,
