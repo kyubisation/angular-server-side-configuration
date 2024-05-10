@@ -95,9 +95,6 @@
     "ts-node": "^10.9.2",
     "typescript": "~5.2.2"
   },
-  "resolutions": {
-    "cliui": "^7.0.0"
-  },
   "prettier": {
     "singleQuote": true,
     "endOfLine": "lf",
