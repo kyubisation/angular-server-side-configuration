@@ -2,7 +2,7 @@ import { Architect } from '@angular-devkit/architect';
 import { TestProjectHost } from '@angular-devkit/architect/testing';
 import { normalize, virtualFs } from '@angular-devkit/core';
 
-import { Ngssc } from 'angular-server-side-configuration';
+import type { Ngssc } from 'angular-server-side-configuration';
 
 import { applicationHost, createArchitect, legacyHost } from '../../../../test/test-utils';
 
