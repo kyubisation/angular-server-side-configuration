@@ -77,7 +77,7 @@ describe('Ngssc Builder', () => {
 
       expect(output.success).toBe(true);
 
-      const ngssc = readNgsscJson(applicationHost);
+      const ngssc = readNgsscJson(applicationHost, 'dist/browser/ngssc.json');
       expect(ngssc.variant).toEqual('process');
       expect(ngssc.filePattern).toEqual('**/index{.,.server.}html');
     });
@@ -93,7 +93,7 @@ describe('Ngssc Builder', () => {
 
       expect(output.success).toBe(true);
 
-      const ngssc = readNgsscJson(applicationHost);
+      const ngssc = readNgsscJson(applicationHost, 'dist/browser/ngssc.json');
       expect(ngssc.environmentVariables).toContain(expected);
     });
 
@@ -110,6 +110,20 @@ describe('Ngssc Builder', () => {
       const ngssc = readNgsscJson(applicationHost, 'dist/browser/ngssc.json');
       expect(ngssc.variant).toEqual('process');
       expect(ngssc.filePattern).toEqual('index.html');
+    });
+
+    it('should handle object outputPath', async () => {
+      applicationHost.replaceInFile(
+        'angular.json',
+        '"outputPath": "dist",',
+        `"outputPath": { "base": "dist", "browser": "html" },`,
+      );
+      const output = await runNgsscbuild(applicationHost);
+
+      expect(output.success).toBe(true);
+
+      const ngssc = readNgsscJson(applicationHost, 'dist/html/ngssc.json');
+      expect(ngssc.variant).toEqual('process');
     });
   });
 });
