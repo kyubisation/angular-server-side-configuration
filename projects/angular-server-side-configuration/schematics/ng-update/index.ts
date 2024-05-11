@@ -55,22 +55,29 @@ export function updateToV17(): Rule {
 
 export function dockerfile(): Rule {
   return (tree: Tree) => {
-    const downloadUrlRegex =
-      /https:\/\/github.com\/kyubisation\/angular-server-side-configuration\/releases\/download\/v((0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)/;
+    const downloadUrlRegexes = new Map<RegExp, string>()
+      .set(
+        /https:\/\/github.com\/kyubisation\/angular-server-side-configuration\/releases\/download\/v((0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)/,
+        'https://github.com/kyubisation/angular-server-side-configuration/releases/download/v',
+      )
+      .set(
+        /https:\/\/bin.sbb.ch\/artifactory\/angular-server-side-configuration\/download\/v((0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)/,
+        'https://bin.sbb.ch/artifactory/angular-server-side-configuration/download/v',
+      );
     const version = require('../../package.json').version;
     tree.visit((path, entry) => {
-      if (
-        basename(path).indexOf('Dockerfile') >= 0 &&
-        entry &&
-        entry.content.toString().match(downloadUrlRegex)
-      ) {
-        const content = entry.content
-          .toString()
-          .replace(
-            new RegExp(downloadUrlRegex.source, 'g'),
-            `https://github.com/kyubisation/angular-server-side-configuration/releases/download/v${version}`,
-          );
-        tree.overwrite(path, content);
+      if (basename(path).indexOf('Dockerfile') >= 0 && entry) {
+        downloadUrlRegexes.forEach((downloadUrlTemplate, downloadUrlRegex) => {
+          if (entry.content.toString().match(downloadUrlRegex)) {
+            const content = entry.content
+              .toString()
+              .replace(
+                new RegExp(downloadUrlRegex.source, 'g'),
+                `${downloadUrlTemplate}${version}`,
+              );
+            tree.overwrite(path, content);
+          }
+        });
       }
     });
   };
