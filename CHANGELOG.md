@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [17.0.3](https://github.com/kyubisation/angular-server-side-configuration/compare/v17.0.2...v17.0.3) (2024-05-11)
+
+
+### Bug Fixes
+
+* support object outputPath for Angular application builder ([#96](https://github.com/kyubisation/angular-server-side-configuration/issues/96)) ([6002f8a](https://github.com/kyubisation/angular-server-side-configuration/commit/6002f8a6433166e0c6ff9bc3b01deb85811ac265))
+* upgrade golang version and npm dependencies to reduce CVE ([#95](https://github.com/kyubisation/angular-server-side-configuration/issues/95)) ([0989712](https://github.com/kyubisation/angular-server-side-configuration/commit/0989712c8b68df717ce9aa2d4e5604703039ad50))
+
 ### [17.0.2](https://github.com/kyubisation/angular-server-side-configuration/compare/v17.0.1...v17.0.2) (2023-11-12)
 
 ### Bug Fixes
