@@ -39,8 +39,8 @@ export async function ngsscBuild(options: NgsscBuildSchema, context: BuilderCont
     builderName !== '@angular-devkit/build-angular:application'
       ? undefined
       : 'server' in builderOptions && builderOptions.server
-      ? 'server'
-      : 'browser-only',
+        ? 'server'
+        : 'browser-only',
   );
 
   return result;
@@ -54,8 +54,11 @@ export async function detectVariablesAndBuildNgsscJson(
   applicationBuilderVariant: ApplicationBuilderVariant = undefined,
 ) {
   const ngsscContext = await detectVariables(context, options.searchPattern);
-  // TODO: Fix possible outputPath options.
-  let outputPath = join(context.workspaceRoot, builderOptions.outputPath as string);
+  const builderOutputPath =
+    typeof builderOptions.outputPath === 'string'
+      ? builderOptions.outputPath
+      : builderOptions.outputPath.base;
+  let outputPath = join(context.workspaceRoot, builderOutputPath);
   const ngssc = buildNgssc(
     ngsscContext,
     options,
@@ -64,10 +67,11 @@ export async function detectVariablesAndBuildNgsscJson(
     applicationBuilderVariant,
   );
 
-  const browserOutputPath = join(outputPath, 'browser');
-  if (applicationBuilderVariant === 'browser-only' && existsSync(browserOutputPath)) {
-    outputPath = browserOutputPath;
+  const browserOutputPaths = [join(outputPath, 'browser')];
+  if (typeof builderOptions.outputPath !== 'string' && builderOptions.outputPath.browser) {
+    browserOutputPaths.unshift(join(outputPath, builderOptions.outputPath.browser));
   }
+  outputPath = browserOutputPaths.find(existsSync) ?? outputPath;
   writeFileSync(join(outputPath, 'ngssc.json'), JSON.stringify(ngssc, null, 2), 'utf8');
 }
 
