@@ -1,20 +1,16 @@
-FROM nginxinc/nginx-unprivileged:stable-alpine
+FROM ghcr.io/nginxinc/nginx-unprivileged:stable-alpine
 
-USER root
+ENV TITLE="container title"
 
 # Install ngssc binary
-ADD dist/cli/ngssc_64bit /usr/sbin/ngssc
-RUN chmod +x /usr/sbin/ngssc
+ADD --chmod=0755 dist/cli/ngssc_64bit /usr/sbin/ngssc
 
 # Add configuration template
 #COPY test/default.conf.template /etc/nginx/conf.d/
 COPY test/default.conf.template /etc/nginx/ngssc-templates/
 
 # Add ngssc init script
-COPY test/ngssc.sh /docker-entrypoint.d/ngssc.sh
-RUN chmod +x /docker-entrypoint.d/ngssc.sh
-
-USER $UID
+COPY --chmod=0755 test/ngssc.sh /docker-entrypoint.d/ngssc.sh
 
 # Copy app
-COPY dist/ngssc-builders-app /usr/share/nginx/html
+COPY --chmod=0666 dist/ngssc-app/browser /usr/share/nginx/html

@@ -22,7 +22,7 @@
             "outputPath": "dist",
             "index": "src/index.html",
             "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": ["zone.js"],
             "tsConfig": "src/tsconfig.app.json",
             "progress": false,
             "sourceMap": false,
@@ -107,7 +107,6 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "polyfills": ["zone.js", "zone.js/testing"],
-
             "tsConfig": "src/tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "browsers": "ChromeHeadlessCI",
