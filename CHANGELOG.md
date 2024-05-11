@@ -4,18 +4,16 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [17.0.2](https://github.com/kyubisation/angular-server-side-configuration/compare/v17.0.1...v17.0.2) (2023-11-12)
 
-
 ### Bug Fixes
 
-* adapt to `@angular-devkit/build-angular:application` builder ([#88](https://github.com/kyubisation/angular-server-side-configuration/issues/88)) ([8d06efe](https://github.com/kyubisation/angular-server-side-configuration/commit/8d06efed30d8e209ee49315ea30da55d5037c93c)), closes [#87](https://github.com/kyubisation/angular-server-side-configuration/issues/87)
-* correct sideEffects path ([aeaf3bf](https://github.com/kyubisation/angular-server-side-configuration/commit/aeaf3bf679dcece07cc46b3ebf38f8a328cc4e77))
+- adapt to `@angular-devkit/build-angular:application` builder ([#88](https://github.com/kyubisation/angular-server-side-configuration/issues/88)) ([8d06efe](https://github.com/kyubisation/angular-server-side-configuration/commit/8d06efed30d8e209ee49315ea30da55d5037c93c)), closes [#87](https://github.com/kyubisation/angular-server-side-configuration/issues/87)
+- correct sideEffects path ([aeaf3bf](https://github.com/kyubisation/angular-server-side-configuration/commit/aeaf3bf679dcece07cc46b3ebf38f8a328cc4e77))
 
 ### [17.0.1](https://github.com/kyubisation/angular-server-side-configuration/compare/v17.0.0...v17.0.1) (2023-11-08)
 
-
 ### Bug Fixes
 
-* align @schematics/angular version ([4468665](https://github.com/kyubisation/angular-server-side-configuration/commit/446866530cf025710c5e80d382868d4152f4e5e7))
+- align @schematics/angular version ([4468665](https://github.com/kyubisation/angular-server-side-configuration/commit/446866530cf025710c5e80d382868d4152f4e5e7))
 
 ## [17.0.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v17.0.0-next.1...v17.0.0) (2023-11-08)
 
@@ -23,15 +21,14 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## [17.0.0-next.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v16.0.0...v17.0.0-next.0) (2023-11-04)
 
-
 ### ⚠ BREAKING CHANGES
 
-* Upgrade to Angular 17
+- Upgrade to Angular 17
 
 ### Features
 
-* rename `browserTarget` to `buildTarget` and add migration ([#86](https://github.com/kyubisation/angular-server-side-configuration/issues/86)) ([9ff1e18](https://github.com/kyubisation/angular-server-side-configuration/commit/9ff1e1892fcf4c6a904348d491a3a8c1f6b6c47d))
-* upgrade to Angular 17 ([#85](https://github.com/kyubisation/angular-server-side-configuration/issues/85)) ([6e45fe9](https://github.com/kyubisation/angular-server-side-configuration/commit/6e45fe9b07dff4e5897e786c67bcdea6050c185a))
+- rename `browserTarget` to `buildTarget` and add migration ([#86](https://github.com/kyubisation/angular-server-side-configuration/issues/86)) ([9ff1e18](https://github.com/kyubisation/angular-server-side-configuration/commit/9ff1e1892fcf4c6a904348d491a3a8c1f6b6c47d))
+- upgrade to Angular 17 ([#85](https://github.com/kyubisation/angular-server-side-configuration/issues/85)) ([6e45fe9](https://github.com/kyubisation/angular-server-side-configuration/commit/6e45fe9b07dff4e5897e786c67bcdea6050c185a))
 
 ## [16.0.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v15.1.0...v16.0.0) (2023-05-03)
 
