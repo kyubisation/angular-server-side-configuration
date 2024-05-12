@@ -253,7 +253,7 @@ Dockerfile
 FROM nginx:alpine
 
 # Install ngssc binary
-ADD https://github.com/kyubisation/angular-server-side-configuration/releases/download/v17.0.3/ngssc_64bit /usr/sbin/ngssc
+ADD https://github.com/kyubisation/angular-server-side-configuration/releases/download/v17.0.4/ngssc_64bit /usr/sbin/ngssc
 RUN chmod +x /usr/sbin/ngssc
 
 # Add ngssc init script
