@@ -6,10 +6,21 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import { Architect, BuilderOutput } from '@angular-devkit/architect';
+import { Architect, BuilderOutput, ScheduleOptions, Target } from '@angular-devkit/architect';
 import { WorkspaceNodeModulesArchitectHost } from '@angular-devkit/architect/node';
 import { TestProjectHost, TestingArchitectHost } from '@angular-devkit/architect/testing';
-import { Path, getSystemPath, join, normalize, schema, workspaces } from '@angular-devkit/core';
+import { BrowserBuilderOutput } from '@angular-devkit/build-angular';
+import {
+  Path,
+  getSystemPath,
+  join,
+  json,
+  normalize,
+  schema,
+  virtualFs,
+  workspaces,
+} from '@angular-devkit/core';
+import { firstValueFrom } from 'rxjs';
 
 // Default timeout for large specs is 2.5 minutes.
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 150000;
@@ -42,7 +53,6 @@ export async function createArchitect(workspaceRoot: Path, host: TestProjectHost
     new WorkspaceNodeModulesArchitectHost(workspace, workspaceSysPath),
   );
   await architectHost.addBuilderFromPackage('..');
-  //require('ts-node').register(require('../projects/angular-server-side-configuration/builders/tsconfig.json'));
   await architectHost.addBuilderFromPackage('../../../../dist/angular-server-side-configuration');
   const architect = new Architect(architectHost, registry);
 
@@ -56,4 +66,59 @@ export async function createArchitect(workspaceRoot: Path, host: TestProjectHost
 export interface BrowserBuildOutput {
   output: BuilderOutput;
   files: { [file: string]: Promise<string> };
+}
+
+export async function browserBuild(
+  architect: Architect,
+  host: virtualFs.Host,
+  target: Target,
+  overrides?: json.JsonObject,
+  scheduleOptions?: ScheduleOptions,
+): Promise<BrowserBuildOutput> {
+  const run = await architect.scheduleTarget(target, overrides, scheduleOptions);
+  const output = (await run.result) as BrowserBuilderOutput;
+  expect(output.success).toBe(true);
+
+  if (!output.success) {
+    await run.stop();
+
+    return {
+      output,
+      files: {},
+    };
+  }
+
+  const [{ path }] = output.outputs;
+  expect(path).toBeTruthy();
+  const outputPath = normalize(path);
+
+  const fileNames = await firstValueFrom(host.list(outputPath));
+  const files = fileNames.reduce((acc: { [name: string]: Promise<string> }, path) => {
+    let cache: Promise<string> | null = null;
+    Object.defineProperty(acc, path, {
+      enumerable: true,
+      get() {
+        if (cache) {
+          return cache;
+        }
+        if (!fileNames.includes(path)) {
+          return Promise.reject('No file named ' + path);
+        }
+        cache = firstValueFrom(host.read(join(outputPath, path))).then((content) =>
+          virtualFs.fileBufferToString(content),
+        );
+
+        return cache;
+      },
+    });
+
+    return acc;
+  }, {});
+
+  await run.stop();
+
+  return {
+    output,
+    files,
+  };
 }

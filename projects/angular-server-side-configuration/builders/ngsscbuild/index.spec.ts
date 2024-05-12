@@ -4,47 +4,31 @@ import { normalize, virtualFs } from '@angular-devkit/core';
 
 import type { Ngssc } from 'angular-server-side-configuration';
 
-import { applicationHost, createArchitect, legacyHost } from '../../../../test/test-utils';
+import {
+  applicationHost,
+  browserBuild,
+  createArchitect,
+  legacyHost,
+} from '../../../../test/test-utils';
 
 describe('Ngssc Builder', () => {
   const targetSpec = { project: 'app', target: 'ngsscbuild' };
   let architect: Architect | undefined;
 
-  async function runNgsscbuild(host: TestProjectHost) {
-    architect = (await createArchitect(host.root(), host)).architect;
-
-    // A "run" can have multiple outputs, and contains progress information.
-    const run = await architect.scheduleTarget(targetSpec);
-
-    // The "result" member (of type BuilderOutput) is the next output.
-    const output = await run.result;
-
-    // Stop the builder from running. This stops Architect from keeping
-    // the builder-associated states in memory, since builders keep waiting
-    // to be scheduled.
-    await run.stop();
-    return output;
-  }
-
-  function readNgsscJson(host: TestProjectHost, ngsscPath = 'dist/ngssc.json'): Ngssc {
-    const content = virtualFs.fileBufferToString(host.scopedSync().read(normalize(ngsscPath)));
-
-    return JSON.parse(content);
-  }
-
   describe('@angular-devkit/build-angular:browser', () => {
     beforeEach(async () => {
-      architect = undefined;
       await legacyHost.initialize().toPromise();
+      architect = undefined;
     });
     afterEach(async () => legacyHost.restore().toPromise());
 
     it('should build with process variant', async () => {
-      const output = await runNgsscbuild(legacyHost);
+      architect = (await createArchitect(legacyHost.root(), legacyHost)).architect;
+      const { output, files } = await browserBuild(architect!, legacyHost, targetSpec);
 
       expect(output.success).toBe(true);
 
-      const ngssc = readNgsscJson(legacyHost);
+      const ngssc = JSON.parse(await files['ngssc.json']);
       expect(ngssc.variant).toEqual('process');
       expect(ngssc.filePattern).toEqual('index.html');
     });
@@ -56,24 +40,46 @@ describe('Ngssc Builder', () => {
         '"additionalEnvironmentVariables": [],',
         `"additionalEnvironmentVariables": ["${expected}"],`,
       );
-      const output = await runNgsscbuild(legacyHost);
+      architect = (await createArchitect(legacyHost.root(), legacyHost)).architect;
+      const { output, files } = await browserBuild(architect!, legacyHost, targetSpec);
 
       expect(output.success).toBe(true);
 
-      const ngssc = readNgsscJson(legacyHost);
+      const ngssc = JSON.parse(await files['ngssc.json']);
       expect(ngssc.environmentVariables).toContain(expected);
     });
   });
 
   describe('@angular-devkit/build-angular:application', () => {
     beforeEach(async () => {
-      architect = undefined;
       await applicationHost.initialize().toPromise();
+      architect = undefined;
     });
     afterEach(async () => applicationHost.restore().toPromise());
 
+    async function runNgsscbuild() {
+      architect = (await createArchitect(applicationHost.root(), applicationHost)).architect;
+
+      // A "run" can have multiple outputs, and contains progress information.
+      const run = await architect!.scheduleTarget(targetSpec);
+
+      // The "result" member (of type BuilderOutput) is the next output.
+      const output = await run.result;
+
+      // Stop the builder from running. This stops Architect from keeping
+      // the builder-associated states in memory, since builders keep waiting
+      // to be scheduled.
+      await run.stop();
+      return output;
+    }
+
+    function readNgsscJson(host: TestProjectHost, ngsscPath = 'dist/ngssc.json'): Ngssc {
+      const content = virtualFs.fileBufferToString(host.scopedSync().read(normalize(ngsscPath)));
+      return JSON.parse(content);
+    }
+
     it('should build with process variant', async () => {
-      const output = await runNgsscbuild(applicationHost);
+      const output = await runNgsscbuild();
 
       expect(output.success).toBe(true);
 
@@ -89,7 +95,7 @@ describe('Ngssc Builder', () => {
         '"additionalEnvironmentVariables": [],',
         `"additionalEnvironmentVariables": ["${expected}"],`,
       );
-      const output = await runNgsscbuild(applicationHost);
+      const output = await runNgsscbuild();
 
       expect(output.success).toBe(true);
 
@@ -103,7 +109,7 @@ describe('Ngssc Builder', () => {
         /("server":\s+"src\/main.server.ts",|"prerender":\s+true,|"ssr":\s+\{\s+"entry":\s+"server.ts"\s+\})/g,
         '',
       );
-      const output = await runNgsscbuild(applicationHost);
+      const output = await runNgsscbuild();
 
       expect(output.success).toBe(true);
 
@@ -118,7 +124,7 @@ describe('Ngssc Builder', () => {
         '"outputPath": "dist",',
         `"outputPath": { "base": "dist", "browser": "html" },`,
       );
-      const output = await runNgsscbuild(applicationHost);
+      const output = await runNgsscbuild();
 
       expect(output.success).toBe(true);
 
