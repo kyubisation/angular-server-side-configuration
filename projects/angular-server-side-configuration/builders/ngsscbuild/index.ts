@@ -26,7 +26,7 @@ export async function ngsscBuild(options: NgsscBuildSchema, context: BuilderCont
   if (!result.success) {
     const buildConfig = buildTarget.configuration ? `:${buildTarget.configuration}` : '';
     context.logger.warn(
-      `ngssc: Failed build of ${buildTarget.app}:${buildTarget.target}${buildConfig}. Skipping ngssc build.`,
+      `ngssc: Failed build of ${buildTarget.project}:${buildTarget.target}${buildConfig}. Skipping ngssc build.`,
     );
     return result;
   }
