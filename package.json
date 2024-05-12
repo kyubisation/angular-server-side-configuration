@@ -11,7 +11,7 @@
     "build:demo-i18n": "ng build ngssc-app -c i18n",
     "build": "run-s build:*",
     "format": "prettier --write **/*.{js,ts,css,scss,json,md,html}",
-    "_pretest:lib": "yarn -s build:lib",
+    "pretest:lib": "yarn -s build:lib",
     "test:lib": "node test/jasmine.js",
     "test:app": "ng test ngssc-app --configuration=ci",
     "test:cli": "cd cli && go test",
