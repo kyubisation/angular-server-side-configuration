@@ -36,7 +36,12 @@ await Promise.all(
 
     if (buildUpx) {
       const [fileName, extension] = binary.fileName.split('.');
-      const minBinaryDist = join(root, 'dist', 'cli', `${fileName}_min.${extension ?? ''}`);
+      const minBinaryDist = join(
+        root,
+        'dist',
+        'cli',
+        `${fileName}_min${extension ? `.${extension}` : ''}`,
+      );
       console.log(`Building upx binary for ${binary.os} ${binary.arch}`);
       await cp(binaryDist, minBinaryDist);
       await asyncExec(`upx --brute ${minBinaryDist}`);
