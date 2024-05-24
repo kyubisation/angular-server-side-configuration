@@ -5,13 +5,13 @@ import {
   isIdentifier,
   isPropertyAccessExpression,
   isStringLiteralLike,
-  Node,
+  type Node,
   ScriptTarget,
   isImportDeclaration,
 } from 'typescript';
-import { Variant } from 'angular-server-side-configuration';
-import { logging } from '@angular-devkit/core';
-import { NgsscContext } from './ngssc-context';
+import type { Variant } from 'angular-server-side-configuration';
+import type { logging } from '@angular-devkit/core';
+import type { NgsscContext } from './ngssc-context';
 
 /** Detect environment variables in given file. */
 export class VariableDetector {

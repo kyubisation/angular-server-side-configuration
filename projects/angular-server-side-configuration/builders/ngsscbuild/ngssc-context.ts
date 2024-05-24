@@ -1,4 +1,4 @@
-import { Variant } from 'angular-server-side-configuration';
+import type { Variant } from 'angular-server-side-configuration';
 
 /** The context for ngssc. */
 export interface NgsscContext {

@@ -204,7 +204,7 @@
   dependencies:
     tslib "^2.3.0"
 
-"@angular/build@18.0.1":
+"@angular/build@18.0.1", "@angular/build@^18.0.1":
   version "18.0.1"
   resolved "https://registry.yarnpkg.com/@angular/build/-/build-18.0.1.tgz#b544a23afe5f893aafb481adca6144633d52cced"
   integrity sha512-n2So6inJ4Prw3NOPC6keyVyFDryFNCJ4UUzmjtPOS8FyYqThWBcuXFzsUsUCFbXSUqVBZh9vxEqHqggnCAs9Og==
