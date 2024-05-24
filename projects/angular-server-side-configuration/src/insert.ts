@@ -2,7 +2,7 @@ import { existsSync, lstatSync, readdirSync, readFileSync, writeFileSync } from 
 import { dirname, join } from 'path';
 
 import { globToRegExp } from './glob-to-regexp';
-import { Ngssc, Variant } from './ngssc';
+import type { Ngssc, Variant } from './ngssc';
 
 export function insert(
   options: { dryRun?: boolean; recursive?: boolean; directory?: string } = {},

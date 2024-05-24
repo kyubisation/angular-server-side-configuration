@@ -1,14 +1,14 @@
 import { dirname, join, normalize } from '@angular-devkit/core';
 import {
   chain,
-  Rule,
-  SchematicContext,
+  type Rule,
+  type SchematicContext,
   SchematicsException,
-  Tree,
+  type Tree,
 } from '@angular-devkit/schematics';
 import { InsertChange } from '@schematics/angular/utility/change';
 import { getWorkspace, updateWorkspace } from '@schematics/angular/utility/workspace';
-import { Schema } from './schema';
+import type { Schema } from './schema';
 
 export function ngAdd(options: Schema): Rule {
   return chain([

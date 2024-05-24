@@ -1,13 +1,17 @@
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { basename, join } from 'path';
-import { BuilderContext, createBuilder, targetFromTargetString } from '@angular-devkit/architect';
-import { ApplicationBuilderOptions, BrowserBuilderOptions } from '@angular-devkit/build-angular';
-import { json, JsonObject } from '@angular-devkit/core';
-import { Ngssc } from 'angular-server-side-configuration';
+import {
+  type BuilderContext,
+  createBuilder,
+  targetFromTargetString,
+} from '@angular-devkit/architect';
+import type { ApplicationBuilderOptions, BrowserBuilderOptions } from '@angular-devkit/build-angular';
+import type { json, JsonObject } from '@angular-devkit/core';
+import type { Ngssc } from 'angular-server-side-configuration';
 import * as glob from 'glob';
-import { Schema } from './schema';
+import type { Schema } from './schema';
 import { VariableDetector } from './variable-detector';
-import { NgsscContext } from './ngssc-context';
+import type { NgsscContext } from './ngssc-context';
 
 export type NgsscBuildSchema = Schema;
 type BuilderOptions = ApplicationBuilderOptions | BrowserBuilderOptions;

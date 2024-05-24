@@ -125,7 +125,9 @@
             }
           },
           "additionalProperties": false,
-          "required": ["exclude"]
+          "required": [
+            "exclude"
+          ]
         }
       ]
     },
@@ -147,10 +149,14 @@
   "additionalProperties": false,
   "anyOf": [
     {
-      "required": ["buildTarget"]
+      "required": [
+        "buildTarget"
+      ]
     },
     {
-      "required": ["browserTarget"]
+      "required": [
+        "browserTarget"
+      ]
     }
   ]
 }
