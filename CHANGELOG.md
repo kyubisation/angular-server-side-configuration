@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [18.0.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v17.0.5...v18.0.0) (2024-05-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* Upgrade to Angular 18
+
+### Features
+
+* upgrade to Angular 18 ([#101](https://github.com/kyubisation/angular-server-side-configuration/issues/101)) ([8dca692](https://github.com/kyubisation/angular-server-side-configuration/commit/8dca6923946e2b45fdf6380bfcf0cd652d38b201))
+
 ### [17.0.5](https://github.com/kyubisation/angular-server-side-configuration/compare/v17.0.4...v17.0.5) (2024-05-12)
 
 ### [17.0.4](https://github.com/kyubisation/angular-server-side-configuration/compare/v17.0.3...v17.0.4) (2024-05-12)
