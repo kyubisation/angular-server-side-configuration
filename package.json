@@ -109,7 +109,7 @@
       },
       {
         "filename": "projects/angular-server-side-configuration/package.json",
-        "type": "json"
+        "updater": "scripts/standard-version-updater.js"
       },
       {
         "filename": "projects/angular-server-side-configuration/schematics/migration.json",

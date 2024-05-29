@@ -1,12 +1,23 @@
 module.exports.readVersion = function (_contents) {
-  const pkg = require('../package.json');
-  return pkg.version;
+  return require('../package.json').version;
 };
 
 module.exports.writeVersion = function (contents, version) {
   try {
     const json = JSON.parse(contents);
-    json.schematics.dockerfile.version = version;
+    if (json.name && json.version) {
+      // projects/angular-server-side-configuration/package.json
+      json.version = version;
+      const majorVersionRange = `^${version.split('.')[0]}.0.0`;
+      for (const name of Object.keys(json.peerDependencies).filter((n) =>
+        n.startsWith('@angular/'),
+      )) {
+        json.peerDependencies[name] = majorVersionRange;
+      }
+    } else {
+      // projects/angular-server-side-configuration/schematics/migration.json
+      json.schematics.dockerfile.version = version;
+    }
     return JSON.stringify(json, null, 2);
   } catch {
     return contents.replace(
