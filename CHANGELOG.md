@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [18.0.1](https://github.com/kyubisation/angular-server-side-configuration/compare/v18.0.0...v18.0.1) (2024-05-29)
+
+
+### Bug Fixes
+
+* ensure correct peer dependency version range ([a967ef7](https://github.com/kyubisation/angular-server-side-configuration/commit/a967ef727beb834607c2c7a4d09ecff48058a1ba))
+
 ## [18.0.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v17.0.5...v18.0.0) (2024-05-24)
 
 
