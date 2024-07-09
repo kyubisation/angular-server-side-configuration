@@ -12,7 +12,9 @@ const binaries: { os: string; arch: string; fileName: string }[] = [
   { os: 'windows', arch: 'amd64', fileName: 'ngssc_64bit.exe' },
   { os: 'linux', arch: '386', fileName: 'ngssc_32bit' },
   { os: 'linux', arch: 'amd64', fileName: 'ngssc_64bit' },
+  { os: 'linux', arch: 'arm64', fileName: 'ngssc_arm_64bit' },
   { os: 'darwin', arch: 'amd64', fileName: 'ngssc_darwin_64bit' },
+  { os: 'darwin', arch: 'arm64', fileName: 'ngssc_darwin_arm_64bit' },
 ];
 const buildUpx = process.argv[2] === 'upx';
 
