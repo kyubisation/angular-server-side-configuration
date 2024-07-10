@@ -5,7 +5,10 @@ import {
   createBuilder,
   targetFromTargetString,
 } from '@angular-devkit/architect';
-import type { ApplicationBuilderOptions, BrowserBuilderOptions } from '@angular-devkit/build-angular';
+import type {
+  ApplicationBuilderOptions,
+  BrowserBuilderOptions,
+} from '@angular-devkit/build-angular';
 import type { json, JsonObject } from '@angular-devkit/core';
 import type { Ngssc } from 'angular-server-side-configuration';
 import * as glob from 'glob';
