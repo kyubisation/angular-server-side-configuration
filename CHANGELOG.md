@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [18.1.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v18.0.1...v18.1.0) (2024-07-10)
+
+
+### Features
+
+* add arm support ([#103](https://github.com/kyubisation/angular-server-side-configuration/issues/103)) ([4323913](https://github.com/kyubisation/angular-server-side-configuration/commit/43239133ded8ad7b76909be4bb7ffffb8457313c))
+
 ### [18.0.1](https://github.com/kyubisation/angular-server-side-configuration/compare/v18.0.0...v18.0.1) (2024-05-29)
 
 
