@@ -4,28 +4,25 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## [18.1.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v18.0.1...v18.1.0) (2024-07-10)
 
-
 ### Features
 
-* add arm support ([#103](https://github.com/kyubisation/angular-server-side-configuration/issues/103)) ([4323913](https://github.com/kyubisation/angular-server-side-configuration/commit/43239133ded8ad7b76909be4bb7ffffb8457313c))
+- add arm support ([#103](https://github.com/kyubisation/angular-server-side-configuration/issues/103)) ([4323913](https://github.com/kyubisation/angular-server-side-configuration/commit/43239133ded8ad7b76909be4bb7ffffb8457313c))
 
 ### [18.0.1](https://github.com/kyubisation/angular-server-side-configuration/compare/v18.0.0...v18.0.1) (2024-05-29)
 
-
 ### Bug Fixes
 
-* ensure correct peer dependency version range ([a967ef7](https://github.com/kyubisation/angular-server-side-configuration/commit/a967ef727beb834607c2c7a4d09ecff48058a1ba))
+- ensure correct peer dependency version range ([a967ef7](https://github.com/kyubisation/angular-server-side-configuration/commit/a967ef727beb834607c2c7a4d09ecff48058a1ba))
 
 ## [18.0.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v17.0.5...v18.0.0) (2024-05-24)
 
-
 ### ⚠ BREAKING CHANGES
 
-* Upgrade to Angular 18
+- Upgrade to Angular 18
 
 ### Features
 
-* upgrade to Angular 18 ([#101](https://github.com/kyubisation/angular-server-side-configuration/issues/101)) ([8dca692](https://github.com/kyubisation/angular-server-side-configuration/commit/8dca6923946e2b45fdf6380bfcf0cd652d38b201))
+- upgrade to Angular 18 ([#101](https://github.com/kyubisation/angular-server-side-configuration/issues/101)) ([8dca692](https://github.com/kyubisation/angular-server-side-configuration/commit/8dca6923946e2b45fdf6380bfcf0cd652d38b201))
 
 ### [17.0.5](https://github.com/kyubisation/angular-server-side-configuration/compare/v17.0.4...v17.0.5) (2024-05-12)
 
