@@ -189,6 +189,17 @@ func TestNgsscProcessWithNgsw(t *testing.T) {
 		"Expected ngsw.json to be updated:\n "+result.Stdout())
 }
 
+func TestNonce(t *testing.T) {
+	context := newTestDir(t)
+	context.CreateFile("index.html", configHTMLTemplate)
+	context.CreateFile("ngssc.json", `{"variant":"process","environmentVariables":["TEST_VALUE"]}`)
+
+	result := runWithArgs("insert", context.path, "--nonce=CSP_NONCE")
+	assertSuccess(t, result)
+	expect := `<script nonce="CSP_NONCE">(function(self){self.process={"env":{"TEST_VALUE":null}};})(window)</script>`
+	assertContains(t, context.ReadFile("index.html"), expect, "Expected html to contain iife.")
+}
+
 var configHTMLTemplate = `<!DOCTYPE html>
  <html lang="en">
  

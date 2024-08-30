@@ -48,6 +48,10 @@ func run(args []string) error {
 					Name:  "dry",
 					Usage: "Perform the insert without actually inserting the variables.",
 				},
+				cli.StringFlag{
+					Name:  "nonce",
+					Usage: "Generates a nonce in the script tag with the given placeholder.",
+				},
 			},
 			Action: InsertCommand,
 		},

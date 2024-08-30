@@ -64,7 +64,9 @@
               }
             },
             "additionalProperties": false,
-            "required": ["input"]
+            "required": [
+              "input"
+            ]
           },
           {
             "type": "string",
@@ -100,7 +102,9 @@
               }
             },
             "additionalProperties": false,
-            "required": ["input"]
+            "required": [
+              "input"
+            ]
           },
           {
             "type": "string",
@@ -114,7 +118,12 @@
       "description": "The stylesheet language to use for the application's inline component styles.",
       "type": "string",
       "default": "css",
-      "enum": ["css", "less", "sass", "scss"]
+      "enum": [
+        "css",
+        "less",
+        "sass",
+        "scss"
+      ]
     },
     "stylePreprocessorOptions": {
       "description": "Options to pass to style preprocessors.",
@@ -132,7 +141,7 @@
       "additionalProperties": false
     },
     "optimization": {
-      "description": "Enables optimization of the build output. Including minification of scripts and styles, tree-shaking, dead-code elimination, inlining of critical CSS and fonts inlining. For more information, see https://angular.io/guide/workspace-config#optimization-configuration.",
+      "description": "Enables optimization of the build output. Including minification of scripts and styles, tree-shaking, dead-code elimination, inlining of critical CSS and fonts inlining. For more information, see https://angular.dev/reference/configs/workspace-config#optimization-configuration.",
       "default": true,
       "x-user-analytics": "ep.ng_optimization",
       "oneOf": [
@@ -220,7 +229,7 @@
       "default": true
     },
     "sourceMap": {
-      "description": "Output source maps for scripts and styles. For more information, see https://angular.io/guide/workspace-config#source-map-configuration.",
+      "description": "Output source maps for scripts and styles. For more information, see https://angular.dev/reference/configs/workspace-config#source-map-configuration.",
       "default": false,
       "oneOf": [
         {
@@ -285,13 +294,21 @@
     "i18nMissingTranslation": {
       "type": "string",
       "description": "How to handle missing translations for i18n.",
-      "enum": ["warning", "error", "ignore"],
+      "enum": [
+        "warning",
+        "error",
+        "ignore"
+      ],
       "default": "warning"
     },
     "i18nDuplicateTranslation": {
       "type": "string",
       "description": "How to handle duplicate translations for i18n.",
-      "enum": ["warning", "error", "ignore"],
+      "enum": [
+        "warning",
+        "error",
+        "ignore"
+      ],
       "default": "warning"
     },
     "localize": {
@@ -321,7 +338,12 @@
       "type": "string",
       "description": "Define the output filename cache-busting hashing mode.",
       "default": "none",
-      "enum": ["none", "all", "media", "bundles"]
+      "enum": [
+        "none",
+        "all",
+        "media",
+        "bundles"
+      ]
     },
     "poll": {
       "type": "number",
@@ -388,7 +410,9 @@
               "description": "The output path of the application's generated HTML index file. The full provided path will be used and will be considered relative to the application's configured output path."
             }
           },
-          "required": ["input"]
+          "required": [
+            "input"
+          ]
         }
       ]
     },
@@ -413,7 +437,11 @@
       "type": "string",
       "description": "Define the crossorigin attribute setting of elements that provide CORS support.",
       "default": "none",
-      "enum": ["none", "anonymous", "use-credentials"]
+      "enum": [
+        "none",
+        "anonymous",
+        "use-credentials"
+      ]
     },
     "allowedCommonJsDependencies": {
       "description": "A list of CommonJS or AMD packages that are allowed to be used without a build time warning. Use `'*'` to allow all.",
@@ -439,7 +467,12 @@
     }
   },
   "additionalProperties": false,
-  "required": ["outputPath", "index", "main", "tsConfig"],
+  "required": [
+    "outputPath",
+    "index",
+    "main",
+    "tsConfig"
+  ],
   "definitions": {
     "assetPattern": {
       "oneOf": [
@@ -473,7 +506,10 @@
             }
           },
           "additionalProperties": false,
-          "required": ["glob", "input"]
+          "required": [
+            "glob",
+            "input"
+          ]
         },
         {
           "type": "string"
@@ -495,7 +531,10 @@
             }
           },
           "additionalProperties": false,
-          "required": ["src", "replaceWith"]
+          "required": [
+            "src",
+            "replaceWith"
+          ]
         },
         {
           "type": "object",
@@ -510,7 +549,10 @@
             }
           },
           "additionalProperties": false,
-          "required": ["replace", "with"]
+          "required": [
+            "replace",
+            "with"
+          ]
         }
       ]
     },
@@ -520,7 +562,15 @@
         "type": {
           "type": "string",
           "description": "The type of budget.",
-          "enum": ["all", "allScript", "any", "anyScript", "anyComponentStyle", "bundle", "initial"]
+          "enum": [
+            "all",
+            "allScript",
+            "any",
+            "anyScript",
+            "anyComponentStyle",
+            "bundle",
+            "initial"
+          ]
         },
         "name": {
           "type": "string",
@@ -556,7 +606,9 @@
         }
       },
       "additionalProperties": false,
-      "required": ["type"]
+      "required": [
+        "type"
+      ]
     }
   }
 }

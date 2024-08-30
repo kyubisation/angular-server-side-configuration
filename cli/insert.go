@@ -12,6 +12,7 @@ import (
 func InsertCommand(c *cli.Context) error {
 	// Init Flags
 	nginxFlag := c.Bool("nginx")
+	noncePlaceholder := c.String("nonce")
 	dryRunFlag := c.Bool("dry")
 	recursive := c.Bool("recursive")
 	if !recursive && nginxFlag {
@@ -50,8 +51,9 @@ func InsertCommand(c *cli.Context) error {
 	}
 
 	task := InsertionTask{
-		path:   workingDirectory,
-		dryRun: dryRunFlag,
+		path:             workingDirectory,
+		noncePlaceholder: noncePlaceholder,
+		dryRun:           dryRunFlag,
 	}
 	if recursive {
 		return task.Recursive()
