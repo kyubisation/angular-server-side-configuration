@@ -9,8 +9,9 @@ import (
 
 // InsertionTask represents an insertion task
 type InsertionTask struct {
-	path   string
-	dryRun bool
+	path             string
+	noncePlaceholder string
+	dryRun           bool
 }
 
 // Single will perform the insertion for a single ngssc.json
@@ -53,8 +54,9 @@ func (task InsertionTask) insertWithNgssc(ngsscConfig NgsscConfig) error {
 	if !task.dryRun {
 		for _, insertionFile := range files {
 			target := InsertionTarget{
-				filePath:    insertionFile,
-				ngsscConfig: ngsscConfig,
+				filePath:         insertionFile,
+				noncePlaceholder: task.noncePlaceholder,
+				ngsscConfig:      ngsscConfig,
 			}
 			target.Insert()
 		}

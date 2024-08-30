@@ -200,11 +200,12 @@ given directory. Directory defaults to current working directory.
 
 Usage: ngssc insert [options] [directory]
 
-| Options           | Description                                                                                                                                |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| `--recursive, -r` | Recursively searches for ngssc.json files and applies the contained configuration.                                                         |
-| `--nginx`         | Applies default configuration for ngssc insert to work with nginx. Sets working directory to /usr/share/nginx/html/ and recursive to true. |
-| `--dry`           | Perform the insert without actually inserting the variables.                                                                               |
+| Options             | Description                                                                                                                                |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `--recursive, -r`   | Recursively searches for ngssc.json files and applies the contained configuration.                                                         |
+| `--nginx`           | Applies default configuration for ngssc insert to work with nginx. Sets working directory to /usr/share/nginx/html/ and recursive to true. |
+| `--dry`             | Perform the insert without actually inserting the variables.                                                                               |
+| `--nonce="example"` | Generates a nonce in the script tag with the given placeholder.                                                                            |
 
 #### ngssc substitute
 
