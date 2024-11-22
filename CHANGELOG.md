@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [19.0.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v19.0.0-next.0...v19.0.0) (2024-11-22)
+
 ## [19.0.0-next.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v18.2.0...v19.0.0-next.0) (2024-11-22)
 
 
