@@ -5,7 +5,6 @@
   "scripts": {
     "build:lib": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only ./scripts/build-lib.mts",
     "build:cli": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only ./scripts/build-cli.mts",
-    "build:cli:upx": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only ./scripts/build-cli.mts upx",
     "build:ngssc": "ng run ngssc-app:ngsscbuild:production",
     "build:demo": "ng build ngssc-app",
     "build:demo-i18n": "ng build ngssc-app -c i18n",
