@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [19.0.0-next.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v18.2.0...v19.0.0-next.0) (2024-11-22)
+
+
+### ⚠ BREAKING CHANGES
+
+* The minified and 32bit binaries are removed.
+
+* remove unused binaries ([#110](https://github.com/kyubisation/angular-server-side-configuration/issues/110)) ([4620484](https://github.com/kyubisation/angular-server-side-configuration/commit/4620484d71b281239f57ce42b7f2d303e1997a2c))
+
+
+### Features
+
+* update to Angular 19 ([#108](https://github.com/kyubisation/angular-server-side-configuration/issues/108)) ([6d3d153](https://github.com/kyubisation/angular-server-side-configuration/commit/6d3d1533414e9e8a3492f3e40215c07f6a4b9312))
+
 ## [18.2.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v18.1.0...v18.2.0) (2024-08-30)
 
 ### Features

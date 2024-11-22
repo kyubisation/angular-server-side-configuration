@@ -1,6 +1,6 @@
 {
   "name": "angular-server-side-configuration",
-  "version": "18.2.0",
+  "version": "19.0.0-next.0",
   "description": "Configure an angular application on the server",
   "repository": {
     "type": "git",
@@ -27,7 +27,7 @@
     "migrations": "./schematics/migration.json"
   },
   "peerDependencies": {
-    "@angular/core": "^18.0.0"
+    "@angular/core": "^19.0.0"
   },
   "dependencies": {
     "glob": "^10.0.0"
