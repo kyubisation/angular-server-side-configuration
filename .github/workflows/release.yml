@@ -23,7 +23,7 @@ jobs:
       - run: go version
 
       - name: 'Build cli'
-        run: yarn build:cli:upx
+        run: yarn build:cli
 
       - uses: actions/github-script@v6
         with:
