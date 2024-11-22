@@ -4,10 +4,9 @@ All notable changes to this project will be documented in this file. See [commit
 
 ## [18.2.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v18.1.0...v18.2.0) (2024-08-30)
 
-
 ### Features
 
-* add nonce placeholder option to cli insert command ([#105](https://github.com/kyubisation/angular-server-side-configuration/issues/105)) ([b7aab37](https://github.com/kyubisation/angular-server-side-configuration/commit/b7aab372f2b711397ad288b3b04824a6296d4033))
+- add nonce placeholder option to cli insert command ([#105](https://github.com/kyubisation/angular-server-side-configuration/issues/105)) ([b7aab37](https://github.com/kyubisation/angular-server-side-configuration/commit/b7aab372f2b711397ad288b3b04824a6296d4033))
 
 ## [18.1.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v18.0.1...v18.1.0) (2024-07-10)
 
