@@ -73,10 +73,6 @@ func readNgsscJson(path string) (ngsscConfig NgsscConfig, err error) {
 		return ngsscConfig, fmt.Errorf("invalid ngssc.json at %v (variant must either be process or NG_ENV)", path)
 	}
 
-	if ngssc.Variant == "NG_ENV" {
-		fmt.Println("Variant NG_ENV is deprecated and will be removed with version 14. Please change usage to `process.env`.")
-	}
-
 	if ngssc.FilePattern == nil {
 		filePatternDefault := "**/index.html"
 		ngssc.FilePattern = &filePatternDefault
@@ -108,7 +104,7 @@ func (ngsscConfig NgsscConfig) BuildIifeScriptContent() string {
 		iife = fmt.Sprintf("self.NG_ENV=%v", envMapJSON)
 	} else if ngsscConfig.Variant == "global" {
 		iife = fmt.Sprintf("Object.assign(self,%v)", envMapJSON)
-		} else {
+	} else {
 		iife = fmt.Sprintf(`self.process={"env":%v}`, envMapJSON)
 	}
 
