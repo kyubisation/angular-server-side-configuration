@@ -4,26 +4,23 @@ All notable changes to this project will be documented in this file. See [commit
 
 ## [19.0.1](https://github.com/kyubisation/angular-server-side-configuration/compare/v19.0.0...v19.0.1) (2024-11-27)
 
-
 ### Bug Fixes
 
-* remove deprecation notice for NG_ENV ([#112](https://github.com/kyubisation/angular-server-side-configuration/issues/112)) ([2cfd956](https://github.com/kyubisation/angular-server-side-configuration/commit/2cfd95663d31deb10f808255d64bcbd6e4f56cf6)), closes [#111](https://github.com/kyubisation/angular-server-side-configuration/issues/111)
+- remove deprecation notice for NG_ENV ([#112](https://github.com/kyubisation/angular-server-side-configuration/issues/112)) ([2cfd956](https://github.com/kyubisation/angular-server-side-configuration/commit/2cfd95663d31deb10f808255d64bcbd6e4f56cf6)), closes [#111](https://github.com/kyubisation/angular-server-side-configuration/issues/111)
 
 ## [19.0.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v19.0.0-next.0...v19.0.0) (2024-11-22)
 
 ## [19.0.0-next.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v18.2.0...v19.0.0-next.0) (2024-11-22)
 
-
 ### ⚠ BREAKING CHANGES
 
-* The minified and 32bit binaries are removed.
+- The minified and 32bit binaries are removed.
 
-* remove unused binaries ([#110](https://github.com/kyubisation/angular-server-side-configuration/issues/110)) ([4620484](https://github.com/kyubisation/angular-server-side-configuration/commit/4620484d71b281239f57ce42b7f2d303e1997a2c))
-
+- remove unused binaries ([#110](https://github.com/kyubisation/angular-server-side-configuration/issues/110)) ([4620484](https://github.com/kyubisation/angular-server-side-configuration/commit/4620484d71b281239f57ce42b7f2d303e1997a2c))
 
 ### Features
 
-* update to Angular 19 ([#108](https://github.com/kyubisation/angular-server-side-configuration/issues/108)) ([6d3d153](https://github.com/kyubisation/angular-server-side-configuration/commit/6d3d1533414e9e8a3492f3e40215c07f6a4b9312))
+- update to Angular 19 ([#108](https://github.com/kyubisation/angular-server-side-configuration/issues/108)) ([6d3d153](https://github.com/kyubisation/angular-server-side-configuration/commit/6d3d1533414e9e8a3492f3e40215c07f6a4b9312))
 
 ## [18.2.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v18.1.0...v18.2.0) (2024-08-30)
 

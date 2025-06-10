@@ -7,7 +7,7 @@ import { Schema as WorkspaceOptions } from '@schematics/angular/workspace/schema
 const workspaceOptions: WorkspaceOptions = {
   name: 'workspace',
   newProjectRoot: 'projects',
-  version: '15.0.0',
+  version: '20.0.0',
 };
 
 const appOptions: ApplicationOptions = {
@@ -115,25 +115,5 @@ describe('ng-add', () => {
     await runner.runSchematic('ng-add', { project: appOptions.name }, initialTree);
 
     expect(logs.filter((l) => l.includes('Skipping')).length).toBe(4);
-  });
-
-  it('should replace builders when choosing experimental builders', async () => {
-    const tree = await runner.runSchematic(
-      'ng-add',
-      {
-        project: appOptions.name,
-        experimentalBuilders: true,
-      },
-      appTree,
-    );
-
-    const workspace = await getWorkspace(tree);
-    const project = workspace.projects.get(appOptions.name)!;
-    const buildTarget = project.targets.get('build')!;
-    expect(buildTarget.builder).toBe('angular-server-side-configuration:browser');
-    expect(project.targets.get('serve')!.builder).toBe(
-      'angular-server-side-configuration:dev-server',
-    );
-    expect(project.targets.get('ngsscbuild')).toBeUndefined();
   });
 });

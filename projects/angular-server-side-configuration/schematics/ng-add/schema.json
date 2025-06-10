@@ -15,12 +15,6 @@
       "description": "Additional environment variables that should be added to ngssc.json",
       "type": "string",
       "x-prompt": "Add additional environment variables (comma-separated):"
-    },
-    "experimentalBuilders": {
-      "description": "Use the experimental builders",
-      "type": "boolean",
-      "default": false,
-      "x-prompt": "Would you like to use the experimental builders for build and serve?"
     }
   }
 }

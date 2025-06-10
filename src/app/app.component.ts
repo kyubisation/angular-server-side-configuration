@@ -6,7 +6,6 @@ export const TITLE_TOKEN = new InjectionToken<string>('injection-token');
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  standalone: false,
 })
 export class AppComponent {
   constructor(@Inject(TITLE_TOKEN) public title: string) {}

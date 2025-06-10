@@ -27,7 +27,7 @@
     "migrations": "./schematics/migration.json"
   },
   "peerDependencies": {
-    "@angular/core": "^19.0.0"
+    "@angular/core": "^20.0.0"
   },
   "dependencies": {
     "glob": "^10.0.0"

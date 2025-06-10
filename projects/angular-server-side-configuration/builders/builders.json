@@ -4,16 +4,6 @@
       "implementation": "./ngsscbuild",
       "schema": "./ngsscbuild/schema.json",
       "description": "Build angular with defined builder and generates ngssc.json."
-    },
-    "browser": {
-      "implementation": "./browser",
-      "schema": "./browser/schema.json",
-      "description": "Build a browser application."
-    },
-    "dev-server": {
-      "implementation": "./dev-server",
-      "schema": "./dev-server/schema.json",
-      "description": "Serve a browser application."
     }
   }
 }

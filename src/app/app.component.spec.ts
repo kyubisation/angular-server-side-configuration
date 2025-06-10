@@ -4,7 +4,7 @@ import { AppComponent, TITLE_TOKEN } from './app.component';
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [AppComponent],
+      imports: [AppComponent],
       providers: [{ provide: TITLE_TOKEN, useValue: 'static' }],
     }).compileComponents();
   });
