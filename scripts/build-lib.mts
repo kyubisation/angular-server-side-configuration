@@ -35,27 +35,6 @@ async function finalizePackage() {
   );
   delete ngsscSchema.properties['buildTarget'];
   delete ngsscSchema.properties['browserTarget'];
-  for (const schemaVariant of ['browser', 'dev-server']) {
-    const sourceFile = join(
-      rootDir,
-      'node_modules/@angular-devkit/build-angular/src/builders',
-      schemaVariant,
-      'schema.json',
-    );
-    const schema: Schema = JSON.parse(await readFile(sourceFile, 'utf8'));
-    schema.properties = { ...schema.properties, ...ngsscSchema.properties };
-    const targetFile = join(targetDir, 'builders', schemaVariant, 'schema.json');
-    const relativePath = relative(targetDir, targetFile);
-    console.log(` - ${relativePath}`);
-    await mkdir(dirname(targetFile), { recursive: true });
-    await writeFile(targetFile, JSON.stringify(schema, null, 2), 'utf8');
-
-    await writeFile(
-      join(sourceDir, 'builders', schemaVariant, 'schema.json'),
-      JSON.stringify(schema, null, 2),
-      'utf8',
-    );
-  }
 
   for (const schemaDir of schemaDirs) {
     const relativeSchemaDir = relative(rootDir, schemaDir);

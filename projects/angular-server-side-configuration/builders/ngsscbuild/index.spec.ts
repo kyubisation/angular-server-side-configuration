@@ -4,51 +4,11 @@ import { normalize, virtualFs } from '@angular-devkit/core';
 
 import type { Ngssc } from 'angular-server-side-configuration';
 
-import {
-  applicationHost,
-  browserBuild,
-  createArchitect,
-  legacyHost,
-} from '../../../../test/test-utils';
+import { applicationHost, browserBuild, createArchitect } from '../../../../test/test-utils';
 
 describe('Ngssc Builder', () => {
   const targetSpec = { project: 'app', target: 'ngsscbuild' };
   let architect: Architect | undefined;
-
-  describe('@angular-devkit/build-angular:browser', () => {
-    beforeEach(async () => {
-      await legacyHost.initialize().toPromise();
-      architect = undefined;
-    });
-    afterEach(async () => legacyHost.restore().toPromise());
-
-    it('should build with process variant', async () => {
-      architect = (await createArchitect(legacyHost.root(), legacyHost)).architect;
-      const { output, files } = await browserBuild(architect!, legacyHost, targetSpec);
-
-      expect(output.success).toBe(true);
-
-      const ngssc = JSON.parse(await files['ngssc.json']);
-      expect(ngssc.variant).toEqual('process');
-      expect(ngssc.filePattern).toEqual('index.html');
-    });
-
-    it('should aggregate environment variables', async () => {
-      const expected = 'OTHER_VARIABLE';
-      legacyHost.replaceInFile(
-        'angular.json',
-        '"additionalEnvironmentVariables": [],',
-        `"additionalEnvironmentVariables": ["${expected}"],`,
-      );
-      architect = (await createArchitect(legacyHost.root(), legacyHost)).architect;
-      const { output, files } = await browserBuild(architect!, legacyHost, targetSpec);
-
-      expect(output.success).toBe(true);
-
-      const ngssc = JSON.parse(await files['ngssc.json']);
-      expect(ngssc.environmentVariables).toContain(expected);
-    });
-  });
 
   describe('@angular-devkit/build-angular:application', () => {
     beforeEach(async () => {
@@ -85,7 +45,7 @@ describe('Ngssc Builder', () => {
 
       const ngssc = readNgsscJson(applicationHost, 'dist/browser/ngssc.json');
       expect(ngssc.variant).toEqual('process');
-      expect(ngssc.filePattern).toEqual('**/index{.,.server.}html');
+      expect(ngssc.filePattern).toEqual('index.html');
     });
 
     it('should aggregate environment variables', async () => {

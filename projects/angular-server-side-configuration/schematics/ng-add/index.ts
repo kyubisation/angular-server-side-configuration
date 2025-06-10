@@ -33,22 +33,6 @@ function addNgsscTargetToWorkspace(options: Schema): Rule {
           : [],
       };
 
-      if (options.experimentalBuilders) {
-        const buildTarget = project.targets.get('build')!;
-        buildTarget.builder = 'angular-server-side-configuration:browser';
-        buildTarget.options = { ...buildTarget.options, ...ngsscOptions };
-
-        const serveTarget = project.targets.get('serve')!;
-        serveTarget.builder = 'angular-server-side-configuration:dev-server';
-
-        const target = project.targets.get('ngsscbuild');
-        if (target) {
-          project.targets.delete('ngsscbuild');
-        }
-
-        return;
-      }
-
       const target = project.targets.get('ngsscbuild');
       if (target) {
         context.logger.info(
@@ -141,10 +125,6 @@ function addDescriptionToMainFile(options: Schema): Rule {
 
 function addNgsscToPackageScripts(options: Schema): Rule {
   return (host: Tree, context: SchematicContext) => {
-    if (options.experimentalBuilders) {
-      return;
-    }
-
     const pkgPath = '/package.json';
     const buffer = host.read(pkgPath);
     if (buffer === null) {
@@ -170,7 +150,9 @@ function addPlaceholderToIndexHtml(options: Schema): Rule {
       throw new SchematicsException(`Expected a build target in project ${options.project}!`);
     }
 
-    const indexPath = (build.options?.['index'] as string) || 'src/index.html';
+    const indexPath =
+      (build.options?.['index'] as string) ||
+      (project.root ? `${project.root}/src/index.html` : 'src/index.html');
     const indexHtml = host.get(indexPath);
     if (!indexHtml) {
       throw new SchematicsException(`Expected index html ${indexPath} to exist!`);
