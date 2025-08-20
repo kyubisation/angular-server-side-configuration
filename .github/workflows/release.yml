@@ -85,5 +85,6 @@ jobs:
           REF: ${{ github.ref }}
       - name: 'Publish: angular-server-side-configuration'
         run: |
+          npm install --global npm@latest
           cd dist/angular-server-side-configuration
           npm publish --tag ${{ steps.npm_tag.outputs.npm_tag }}
