@@ -1,6 +1,6 @@
 {
   "name": "angular-server-side-configuration",
-  "version": "20.0.0",
+  "version": "21.0.0",
   "description": "Configure an angular application on the server",
   "repository": {
     "type": "git",
