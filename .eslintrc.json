@@ -11,7 +11,7 @@
       "extends": [
         "plugin:@angular-eslint/recommended",
         "plugin:@angular-eslint/template/process-inline-templates",
-        "plugin:import/recommended"
+        "plugin:import-x/recommended"
       ],
       "rules": {
         "@angular-eslint/directive-selector": [
@@ -30,8 +30,8 @@
             "style": "kebab-case"
           }
         ],
-        "import/no-unresolved": "off",
-        "import/order": "error"
+        "import-x/no-unresolved": "off",
+        "import-x/order": "error"
       }
     },
     {

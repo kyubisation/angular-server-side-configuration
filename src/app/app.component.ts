@@ -1,4 +1,4 @@
-import { Component, Inject, InjectionToken } from '@angular/core';
+import { Component, inject, InjectionToken } from '@angular/core';
 
 export const TITLE_TOKEN = new InjectionToken<string>('injection-token');
 
@@ -8,5 +8,5 @@ export const TITLE_TOKEN = new InjectionToken<string>('injection-token');
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  constructor(@Inject(TITLE_TOKEN) public title: string) {}
+  public title: string = inject(TITLE_TOKEN);
 }

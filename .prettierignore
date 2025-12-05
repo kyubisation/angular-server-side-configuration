@@ -1,3 +1,4 @@
 .angular
 coverage
 dist
+modules/testing/builder/projects

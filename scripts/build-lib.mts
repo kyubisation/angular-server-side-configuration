@@ -1,6 +1,6 @@
 import { execSync } from 'child_process';
 import { lstatSync, readdirSync, readFileSync, writeFileSync } from 'fs';
-import { copyFile, mkdir, readFile, writeFile } from 'fs/promises';
+import { copyFile, mkdir, readFile } from 'fs/promises';
 import * as glob from 'glob';
 import { dirname, join, relative } from 'path';
 

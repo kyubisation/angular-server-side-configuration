@@ -4,14 +4,13 @@ All notable changes to this project will be documented in this file. See [commit
 
 ## [20.0.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v19.0.1...v20.0.0) (2025-06-10)
 
-
 ### ⚠ BREAKING CHANGES
 
-* Upgrade to Angular 20 and removal of the experimental build and dev-server builders
+- Upgrade to Angular 20 and removal of the experimental build and dev-server builders
 
 ### Features
 
-* upgrade to Angular 20 ([#114](https://github.com/kyubisation/angular-server-side-configuration/issues/114)) ([8c6617e](https://github.com/kyubisation/angular-server-side-configuration/commit/8c6617ea594e2ac897e278313a42c92c952c5792))
+- upgrade to Angular 20 ([#114](https://github.com/kyubisation/angular-server-side-configuration/issues/114)) ([8c6617e](https://github.com/kyubisation/angular-server-side-configuration/commit/8c6617ea594e2ac897e278313a42c92c952c5792))
 
 ## [19.0.1](https://github.com/kyubisation/angular-server-side-configuration/compare/v19.0.0...v19.0.1) (2024-11-27)
 

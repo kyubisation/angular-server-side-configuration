@@ -71,6 +71,7 @@ typings/
 .vscode
 .nx
 dist
+out-tsc
 junit.xml
 
 # Go
