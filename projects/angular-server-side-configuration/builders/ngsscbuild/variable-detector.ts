@@ -15,7 +15,11 @@ import type { NgsscContext } from './ngssc-context';
 
 /** Detect environment variables in given file. */
 export class VariableDetector {
-  constructor(private _logger?: logging.LoggerApi) {}
+  private _logger?: logging.LoggerApi;
+
+  constructor(logger?: logging.LoggerApi) {
+    this._logger = logger;
+  }
 
   detect(fileContent: string): NgsscContext {
     const sourceFile = createSourceFile('environment.ts', fileContent, ScriptTarget.ESNext, true);

@@ -88,7 +88,7 @@ export async function detectVariables(
   }
 
   const projectMetadata = await context.getProjectMetadata(projectName);
-  const sourceRoot = projectMetadata.sourceRoot as string | undefined;
+  const sourceRoot = projectMetadata['sourceRoot'] as string | undefined;
   const defaultSearchPattern = sourceRoot
     ? `${sourceRoot}/**/environments/environment*.ts`
     : '**/environments/environment*.ts';

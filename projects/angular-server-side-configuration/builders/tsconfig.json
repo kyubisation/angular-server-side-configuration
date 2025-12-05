@@ -2,7 +2,7 @@
   "extends": "../../../tsconfig.node.json",
   "compilerOptions": {
     "outDir": "../../../dist/angular-server-side-configuration/builders",
-    "rootDir": ".",
+    "rootDir": "."
   },
   "exclude": ["**/files/**/*", "**/*.spec.ts"]
 }
