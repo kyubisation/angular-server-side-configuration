@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [21.0.3](https://github.com/kyubisation/angular-server-side-configuration/compare/v21.0.2...v21.0.3) (2026-02-24)
+
+
+### Bug Fixes
+
+* update golang version ([#117](https://github.com/kyubisation/angular-server-side-configuration/issues/117)) ([d5e1d47](https://github.com/kyubisation/angular-server-side-configuration/commit/d5e1d47d9fdee9284d05edd5941f3dfdb44a7718))
+
 ## [21.0.2](https://github.com/kyubisation/angular-server-side-configuration/compare/v21.0.1...v21.0.2) (2025-12-05)
 
 ## [21.0.1](https://github.com/kyubisation/angular-server-side-configuration/compare/v21.0.0...v21.0.1) (2025-12-05)
