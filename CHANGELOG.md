@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [22.0.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v21.0.4...v22.0.0) (2026-06-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* This library now expects Angular 22
+
+### Features
+
+* update to Angular 22 ([#118](https://github.com/kyubisation/angular-server-side-configuration/issues/118)) ([05dde3a](https://github.com/kyubisation/angular-server-side-configuration/commit/05dde3a23811f6f158e2dcd1b20d25197bb271ea))
+
 ## [21.0.4](https://github.com/kyubisation/angular-server-side-configuration/compare/v21.0.3...v21.0.4) (2026-05-13)
 
 ## [21.0.3](https://github.com/kyubisation/angular-server-side-configuration/compare/v21.0.2...v21.0.3) (2026-02-24)
