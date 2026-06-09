@@ -31,7 +31,8 @@ export function updateToV17(): Rule {
   return (_tree: Tree, context: SchematicContext) => {
     return updateWorkspace((workspace) => {
       context.logger.info(`Renaming 'browserTarget' to 'buildTarget'.`);
-      workspace.projects.forEach((project, name) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      workspace.projects.forEach((project, _name) => {
         const ngsscbuild = project.targets.get('ngsscbuild');
         if (!ngsscbuild || !ngsscbuild.options) {
           return;
@@ -64,6 +65,7 @@ export function dockerfile(): Rule {
         /https:\/\/bin.sbb.ch\/artifactory\/angular-server-side-configuration\/download\/v((0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)/,
         'https://bin.sbb.ch/artifactory/angular-server-side-configuration/download/v',
       );
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const version = require('../../package.json').version;
     tree.visit((path, entry) => {
       if (basename(path).indexOf('Dockerfile') >= 0 && entry) {

@@ -44,14 +44,14 @@ function insertWithNgssc(directory: string, dryRun: boolean) {
 }
 
 function populateVariables(variables: string[]) {
-  const populatedVariables: { [key: string]: string | null } = {};
+  const populatedVariables: Record<string, string | null> = {};
   variables.forEach(
     (v) => (populatedVariables[v] = v in process.env ? process.env[v] || '' : null),
   );
   return populatedVariables;
 }
 
-function generateIife(variant: Variant, populatedVariables: { [key: string]: string | null }) {
+function generateIife(variant: Variant, populatedVariables: Record<string, string | null>) {
   let iife: string;
   if (variant === 'NG_ENV') {
     iife = `(function(self){self.NG_ENV=${JSON.stringify(populatedVariables)};})(window)`;
@@ -95,6 +95,5 @@ function walk(root: string, filePattern: string): string[] {
 }
 
 function log(message: string) {
-  // tslint:disable-next-line: no-console
   console.log(message);
 }

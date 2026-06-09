@@ -1,4 +1,5 @@
 // Source: https://github.com/fitzgen/glob-to-regexp/blob/master/index.js
+/* eslint-disable no-fallthrough, no-var */
 
 export interface Options {
   extended?: boolean | undefined;
@@ -11,15 +12,15 @@ export function globToRegExp(glob: string, opts?: Options) {
     throw new TypeError('Expected a string');
   }
 
-  var str = String(glob);
+  const str = String(glob);
 
   // The regexp we are building, as a string.
-  var reStr = '';
+  let reStr = '';
 
   // Whether we are matching so called "extended" globs (like bash) and should
   // support single character matching, matching ranges of characters, group
   // matching, etc.
-  var extended = opts ? !!opts.extended : false;
+  const extended = opts ? !!opts.extended : false;
 
   // When globstar is _false_ (default), '/foo/*' is translated a regexp like
   // '^\/foo\/.*$' which will match any string beginning with '/foo/'
@@ -30,17 +31,17 @@ export function globToRegExp(glob: string, opts?: Options) {
   // these will not '/foo/bar/baz', '/foo/bar/baz.txt'
   // Lastely, when globstar is _true_, '/foo/**' is equivelant to '/foo/*' when
   // globstar is _false_
-  var globstar = opts ? !!opts.globstar : false;
+  const globstar = opts ? !!opts.globstar : false;
 
   // If we are doing extended matching, this boolean is true when we are inside
   // a group (eg {*.html,*.js}), and false otherwise.
-  var inGroup = false;
+  let inGroup = false;
 
   // RegExp flags (eg "i" ) to pass in to RegExp constructor.
-  var flags = opts && typeof opts.flags === 'string' ? opts.flags : '';
+  const flags = opts && typeof opts.flags === 'string' ? opts.flags : '';
 
-  var c;
-  for (var i = 0, len = str.length; i < len; i++) {
+  let c;
+  for (let i = 0, len = str.length; i < len; i++) {
     c = str[i];
 
     switch (c) {
@@ -57,7 +58,7 @@ export function globToRegExp(glob: string, opts?: Options) {
         reStr += '\\' + c;
         break;
 
-      // @ts-ignore
+      // @ts-expect-error Allowed
       case '?':
         if (extended) {
           reStr += '.';
@@ -65,14 +66,14 @@ export function globToRegExp(glob: string, opts?: Options) {
         }
 
       case '[':
-      // @ts-ignore
+      // @ts-expect-error Allowed
       case ']':
         if (extended) {
           reStr += c;
           break;
         }
 
-      // @ts-ignore
+      // @ts-expect-error Allowed
       case '{':
         if (extended) {
           inGroup = true;
@@ -80,7 +81,7 @@ export function globToRegExp(glob: string, opts?: Options) {
           break;
         }
 
-      // @ts-ignore
+      // @ts-expect-error Allowed
       case '}':
         if (extended) {
           inGroup = false;
@@ -112,7 +113,7 @@ export function globToRegExp(glob: string, opts?: Options) {
           reStr += '.*';
         } else {
           // globstar is enabled, so determine if this is a globstar segment
-          var isGlobstar =
+          const isGlobstar =
             starCount > 1 && // multiple "*"'s
             (prevChar === '/' || prevChar === undefined) && // from the start of the segment
             (nextChar === '/' || nextChar === undefined); // to the end of the segment

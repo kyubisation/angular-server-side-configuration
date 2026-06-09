@@ -6,7 +6,7 @@ import { Ngssc, Variant } from './ngssc';
 import { insert } from './insert';
 
 describe('insert', () => {
-  let directory: string = '';
+  let directory = '';
   let subdirectories: string[];
   const ngssc: Ngssc = {
     environmentVariables: ['TEST', 'TEST2'],
@@ -41,8 +41,7 @@ describe('insert', () => {
   }
 
   beforeEach(() => {
-    // tslint:disable-next-line: no-console
-    console.log = () => void 0;
+       console.log = () => void 0;
     process.env['TEST'] = envTestContent;
     directory = mkdtempSync(join(tmpdir(), 'insert'));
     subdirectories = ['de', 'en', 'fr'].map((d) => join(directory, d));
@@ -92,8 +91,7 @@ describe('insert', () => {
     const test2Value = 'test2';
     process.env['TEST2'] = test2Value;
     const changedIife =
-      // tslint:disable-next-line: max-line-length
-      `<script>(function(self){self.process=${JSON.stringify({
+           `<script>(function(self){self.process=${JSON.stringify({
         env: { TEST: envTestContent, TEST2: test2Value },
       })};})(window)</script>`;
     insert({ directory, recursive: true });

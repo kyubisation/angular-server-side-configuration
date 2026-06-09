@@ -53,7 +53,7 @@ export async function detectVariablesAndBuildNgsscJson(
   options: NgsscBuildSchema,
   builderOptions: ApplicationBuilderOptions,
   context: BuilderContext,
-  multiple: boolean = false,
+  multiple = false,
   applicationBuilderVariant: ApplicationBuilderVariant = undefined,
 ) {
   const ngsscContext = await detectVariables(context, options.searchPattern);
@@ -134,7 +134,7 @@ export function buildNgssc(
   ngsscContext: NgsscContext,
   options: NgsscBuildSchema,
   builderOptions?: ApplicationBuilderOptions,
-  multiple: boolean = false,
+  multiple = false,
   applicationBuilderVariant: ApplicationBuilderVariant = undefined,
 ): Ngssc {
   return {

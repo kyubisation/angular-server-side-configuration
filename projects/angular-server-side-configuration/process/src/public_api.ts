@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const process = (function (self: any) {
   self = self || {};
   self.process = self.process || {};
