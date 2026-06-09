@@ -50,8 +50,8 @@ describe('globToRegExp', () => {
     // Test string  "\\\\/$^+?.()=!|{},[].*"  represents  <glob>\\/$^+?.()=!|{},[].*</glob>
     // The equivalent regex is:  /^\\\/\$\^\+\?\.\(\)\=\!\|\{\}\,\[\]\..*$/
     // Both glob and regex match:  \/$^+?.()=!|{},[].*
-    var testStr = '\\\\/$^+?.()=!|{},[].*';
-    var targetStr = '\\/$^+?.()=!|{},[].*';
+    const testStr = '\\\\/$^+?.()=!|{},[].*';
+    const targetStr = '\\/$^+?.()=!|{},[].*';
     assertMatch(testStr, targetStr);
     assertMatch(testStr, targetStr, { flags: 'g' });
 
@@ -177,8 +177,8 @@ describe('globToRegExp', () => {
     // Test string  "\\\\/$^+.()=!|,.*"  represents  <glob>\\/$^+.()=!|,.*</glob>
     // The equivalent regex is:  /^\\\/\$\^\+\.\(\)\=\!\|\,\..*$/
     // Both glob and regex match:  \/$^+.()=!|,.*
-    var testExtStr = '\\\\/$^+.()=!|,.*';
-    var targetExtStr = '\\/$^+.()=!|,.*';
+    const testExtStr = '\\\\/$^+.()=!|,.*';
+    const targetExtStr = '\\/$^+.()=!|,.*';
     assertMatch(testExtStr, targetExtStr, { extended: true });
     assertMatch(testExtStr, targetExtStr, { extended: true, globstar: globstar, flags: 'g' });
   }

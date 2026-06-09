@@ -52,6 +52,7 @@ describe('ng-update', () => {
       workspace.projects.get(appOptions.name)!.targets.get('ngsscbuild')!.options![
         'ngsscEnvironmentFile'
       ] = 'projects/dummy/src/environments/environment.prod.ts';
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     })(tree, undefined as any);
     const migratedTree = await runner.runSchematic('migration-v15', {}, tree);
     const angularJson = JSON.parse(migratedTree.readContent('angular.json'));
@@ -72,6 +73,7 @@ describe('ng-update', () => {
       const options = workspace.projects.get(appOptions.name)!.targets.get('ngsscbuild')!.options!;
       options['browserTarget'] = options['buildTarget'];
       delete options['buildTarget'];
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     })(tree, undefined as any);
     const migratedTree = await runner.runSchematic('migration-v17', {}, tree);
     const angularJson = JSON.parse(migratedTree.readContent('angular.json'));
@@ -99,6 +101,7 @@ CMD ["./start.sh"]
     const tree = await runner.runSchematic('dockerfile', {}, appTree);
 
     const dockerfileContent = tree.read('Dockerfile')!.toString();
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const version = require('../../package.json').version;
     expect(dockerfileContent).toContain(
       `https://github.com/kyubisation/angular-server-side-configuration/releases/download/v${version}/ngssc_64bit`,

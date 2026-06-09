@@ -65,8 +65,9 @@ describe('ng-add', () => {
     try {
       await runner.runSchematic('ng-add', { project: appOptions.name }, appTree);
       fail();
-      // tslint:disable-next-line: no-empty
-    } catch {}
+    } catch {
+      /* empty */
+    }
   });
 
   it('should fail with missing index.html', async () => {
@@ -74,8 +75,9 @@ describe('ng-add', () => {
     try {
       await runner.runSchematic('ng-add', { project: appOptions.name }, appTree);
       fail();
-      // tslint:disable-next-line: no-empty
-    } catch {}
+    } catch {
+      /* empty */
+    }
   });
 
   it('should add ngssc content to correct files', async () => {

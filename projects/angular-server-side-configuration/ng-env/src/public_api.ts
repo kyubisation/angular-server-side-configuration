@@ -1,1 +1,2 @@
-export var NG_ENV: { [name: string]: string } = (globalThis as any).NG_ENV || {};
+export const NG_ENV: Record<string, string> =
+  (globalThis as unknown as { NG_ENV?: Record<string, string> }).NG_ENV || {};
