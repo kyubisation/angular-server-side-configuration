@@ -4,5 +4,6 @@
     "outDir": "../../../dist/angular-server-side-configuration/builders",
     "rootDir": "."
   },
+  "include": ["**/*.cts"],
   "exclude": ["**/files/**/*", "**/*.spec.ts"]
 }

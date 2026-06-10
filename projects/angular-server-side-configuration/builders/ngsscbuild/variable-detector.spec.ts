@@ -1,4 +1,4 @@
-import { VariableDetector } from './variable-detector';
+import { VariableDetector } from './variable-detector.cjs';
 
 describe('VariableDetector', () => {
   const expectedEnvVariables = [

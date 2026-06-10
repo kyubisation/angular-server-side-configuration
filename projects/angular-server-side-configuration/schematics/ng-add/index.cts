@@ -8,7 +8,7 @@ import {
 } from '@angular-devkit/schematics';
 import { InsertChange } from '@schematics/angular/utility/change';
 import { getWorkspace, updateWorkspace } from '@schematics/angular/utility/workspace';
-import type { Schema } from './schema';
+import type { Schema } from './schema.cjs';
 
 export function ngAdd(options: Schema): Rule {
   return chain([

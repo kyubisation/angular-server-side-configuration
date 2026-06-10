@@ -2,8 +2,8 @@ import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
 
-import { Ngssc, Variant } from './ngssc';
-import { insert } from './insert';
+import { Ngssc, Variant } from './ngssc.js';
+import { insert } from './insert.js';
 
 describe('insert', () => {
   let directory = '';
