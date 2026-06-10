@@ -4,17 +4,17 @@
     "migration-v15": {
       "version": "15-next",
       "description": "Updates angular-server-side-configuration to v15",
-      "factory": "./ng-update/index#updateToV15"
+      "factory": "./ng-update/index.cts#updateToV15"
     },
     "migration-v17": {
       "version": "17-next",
       "description": "Updates angular-server-side-configuration to v17",
-      "factory": "./ng-update/index#updateToV17"
+      "factory": "./ng-update/index.cts#updateToV17"
     },
     "dockerfile": {
       "version": "22.0.0",
       "description": "Updates the download url for ngssc",
-      "factory": "./ng-update/index#dockerfile"
+      "factory": "./ng-update/index.cts#dockerfile"
     }
   }
 }

@@ -1,8 +1,8 @@
 import type { Ngssc } from 'angular-server-side-configuration';
 
 import { describeBuilder } from '../../../../modules/testing/builder/src';
-import { Schema } from './schema';
-import { ngsscBuild } from './index';
+import { Schema } from './schema.cjs';
+import { ngsscBuild } from './index.cjs';
 
 const APPLICATION_BUILDER_INFO = Object.freeze({
   name: 'angular-server-side-configuration:ngsscbuild',

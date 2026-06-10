@@ -1,6 +1,6 @@
 // Source: https://github.com/fitzgen/glob-to-regexp/blob/master/test.js
 
-import { globToRegExp, Options } from './glob-to-regexp';
+import { globToRegExp, Options } from './glob-to-regexp.js';
 
 describe('globToRegExp', () => {
   function assertMatch(glob: string, str: string, opts?: Options) {

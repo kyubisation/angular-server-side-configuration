@@ -1,2 +1,2 @@
-export * from './ngssc';
-export * from './insert';
+export * from './ngssc.js';
+export * from './insert.js';

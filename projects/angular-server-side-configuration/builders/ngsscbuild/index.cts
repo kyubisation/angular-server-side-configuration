@@ -9,9 +9,9 @@ import type { ApplicationBuilderOptions } from '@angular/build';
 import type { json, JsonObject } from '@angular-devkit/core';
 import type { Ngssc } from 'angular-server-side-configuration';
 import * as glob from 'glob';
-import type { Schema } from './schema';
-import { VariableDetector } from './variable-detector';
-import type { NgsscContext } from './ngssc-context';
+import type { Schema } from './schema.cjs';
+import { VariableDetector } from './variable-detector.cjs';
+import type { NgsscContext } from './ngssc-context.cjs';
 
 export type NgsscBuildSchema = Schema;
 type ApplicationBuilderVariant = undefined | 'browser-only' | 'server';

@@ -1,6 +1,6 @@
 import { execSync } from 'child_process';
 import { lstatSync, readdirSync, readFileSync, writeFileSync } from 'fs';
-import { copyFile, mkdir, readFile } from 'fs/promises';
+import { copyFile, mkdir, readFile, writeFile } from 'fs/promises';
 import * as glob from 'glob';
 import { dirname, join, relative } from 'path';
 
@@ -27,7 +27,8 @@ async function finalizePackage() {
     const targetPath = join(targetDir, relativePath);
     console.log(` - ${relativePath}`);
     await mkdir(dirname(targetPath), { recursive: true });
-    await copyFile(file, targetPath);
+    const content = await readFile(file, 'utf8');
+    await writeFile(targetPath, content.replaceAll('.cts', '.cjs'), 'utf8');
   }
 
   const ngsscSchema: Schema = JSON.parse(

@@ -3,5 +3,6 @@
   "compilerOptions": {
     "outDir": "../../../dist/angular-server-side-configuration/schematics"
   },
+  "include": ["**/*.cts"],
   "exclude": ["**/files/**/*", "**/*.spec.ts"]
 }

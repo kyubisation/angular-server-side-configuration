@@ -11,7 +11,7 @@ import {
 } from 'typescript';
 import type { Variant } from 'angular-server-side-configuration';
 import type { logging } from '@angular-devkit/core';
-import type { NgsscContext } from './ngssc-context';
+import type { NgsscContext } from './ngssc-context.cjs';
 
 /** Detect environment variables in given file. */
 export class VariableDetector {
