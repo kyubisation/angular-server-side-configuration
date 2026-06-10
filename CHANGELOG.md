@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [22.0.1](https://github.com/kyubisation/angular-server-side-configuration/compare/v22.0.0...v22.0.1) (2026-06-10)
+
+
+### Bug Fixes
+
+* adapt builder and schematics to .cjs ([7566892](https://github.com/kyubisation/angular-server-side-configuration/commit/756689257428b69b243e3d6c70f5f967d7f99525))
+
 ## [22.0.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v21.0.4...v22.0.0) (2026-06-09)
 
 
