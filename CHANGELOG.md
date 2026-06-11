@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [22.0.2](https://github.com/kyubisation/angular-server-side-configuration/compare/v22.0.0...v22.0.2) (2026-06-11)
+
+
+### Bug Fixes
+
+* adapt builder and schematics to .cjs ([#119](https://github.com/kyubisation/angular-server-side-configuration/issues/119)) ([b645048](https://github.com/kyubisation/angular-server-side-configuration/commit/b645048d2b415fd27ad43f41b09b205b5c041add))
+* correct builder implementation path ([#120](https://github.com/kyubisation/angular-server-side-configuration/issues/120)) ([17853eb](https://github.com/kyubisation/angular-server-side-configuration/commit/17853eb27e7d56e4a59cc6f760b27940863bcde0))
+
 ## [22.0.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v21.0.4...v22.0.0) (2026-06-09)
 
 

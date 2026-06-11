@@ -12,7 +12,7 @@
       "factory": "./ng-update/index.cts#updateToV17"
     },
     "dockerfile": {
-      "version": "22.0.0",
+      "version": "22.0.2",
       "description": "Updates the download url for ngssc",
       "factory": "./ng-update/index.cts#dockerfile"
     }
