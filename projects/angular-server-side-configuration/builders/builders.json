@@ -1,7 +1,7 @@
 {
   "builders": {
     "ngsscbuild": {
-      "implementation": "./ngsscbuild",
+      "implementation": "./ngsscbuild/index.cjs",
       "schema": "./ngsscbuild/schema.json",
       "description": "Build angular with defined builder and generates ngssc.json."
     }
