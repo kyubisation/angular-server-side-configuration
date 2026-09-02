@@ -49,7 +49,7 @@ jobs:
                 release_id: release.data.id,
                 name: file,
                 data: await fs.readFileSync(`./dist/cli/${file}`),
-              });           
+              });
             }
 
   release-library:
@@ -85,3 +85,26 @@ jobs:
           npm install --global npm@latest
           cd dist/angular-server-side-configuration
           npm publish --tag ${{ steps.npm_tag.outputs.npm_tag }}
+
+  release-docker-cli:
+    runs-on: ubuntu-latest
+    needs: release-cli
+    permissions:
+      packages: write
+    steps:
+      - uses: actions/checkout@v6
+      - uses: docker/login-action@v4
+        with:
+          registry: https://ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - run: |
+          ref_name="${{ github.ref_name }}"
+          echo "VERSION=${ref_name#v}" >> $GITHUB_ENV
+      - uses: docker/build-push-action@v7
+        with:
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ghcr.io/kyubisation/angular-server-side-configuration:latest
+            ghcr.io/kyubisation/angular-server-side-configuration:${{ env.VERSION }}
