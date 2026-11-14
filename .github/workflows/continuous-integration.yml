@@ -21,7 +21,7 @@ jobs:
       - name: 'Run eslint'
         run: yarn -s lint
 
-  build-and-test-library:
+  library:
     runs-on: ubuntu-latest
     needs: lint
     steps:
@@ -38,7 +38,7 @@ jobs:
       - name: 'Test library'
         run: yarn test:lib
 
-  build-and-test-cli:
+  cli:
     runs-on: ubuntu-latest
     needs: lint
     steps:
@@ -57,10 +57,10 @@ jobs:
         run: yarn build:cli
       - name: 'Test cli'
         run: yarn test:cli
-
-  build-docker-cli:
-    runs-on: ubuntu-latest
-    needs: lint
-    steps:
-      - uses: actions/checkout@v6
-      - uses: docker/build-push-action@v7
+      - name: 'Build container image'
+        run: |
+          imageName="ghcr.io/$GITHUB_REPOSITORY"
+          version=$(node -p -e "require('./package.json').version")
+          yarn build:container \
+            --tag $imageName:$version \
+            --tag $imageName:latest
