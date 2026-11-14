@@ -8,7 +8,7 @@
     "build:ngssc": "ng run ngssc-app:ngsscbuild:production",
     "build:demo": "ng build ngssc-app",
     "build:demo-i18n": "ng build ngssc-app -c i18n",
-    "build:container": "podman build --platform linux/amd64,linux/arm64 .",
+    "build:container": "node ./scripts/build-container.mts",
     "build": "run-s build:*",
     "format": "prettier --write **/*.{js,ts,css,scss,json,md,html}",
     "pretest:lib": "run-s build:lib",

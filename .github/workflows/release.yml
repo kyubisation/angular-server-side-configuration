@@ -38,7 +38,8 @@ jobs:
               .split(/\n## \[\d+\.\d+\.\d+/)[1]
               .replace(/^[\w\W]+?\n/, '')
               .trim();
-            const release = await github.rest.repos.createRelease({ owner, repo, tag_name, body });
+            const prerelease = tag_name.includes('-');
+            const release = await github.rest.repos.createRelease({ owner, repo, tag_name, body, prerelease });
             const release_id = release.data.id;
             for (const name of fs.readdirSync('./dist/cli')) {
               console.log(`Adding asset ${name}`);
@@ -47,15 +48,8 @@ jobs:
             }
       - name: 'Publish container image'
         run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" | podman login ghcr.io -u $ --password-stdin
-
-          imageName="ghcr.io/$GITHUB_REPOSITORY"
-          version=$(node -p -e "require('./package.json').version")
-          npm run build:container -- \
-            --tag $imageName:$version \
-            --tag $imageName:latest
-          podman push $imageName:$version
-          podman push $imageName:latest
+          echo "${{ secrets.GITHUB_TOKEN }}" | podman login ghcr.io -u $GITHUB_ACTOR --password-stdin
+          npm run build:container -- --release
 
   library:
     runs-on: ubuntu-latest

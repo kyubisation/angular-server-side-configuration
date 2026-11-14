@@ -58,9 +58,4 @@ jobs:
       - name: 'Test cli'
         run: npm run test:cli
       - name: 'Build container image'
-        run: |
-          imageName="ghcr.io/$GITHUB_REPOSITORY"
-          version=$(node -p -e "require('./package.json').version")
-          npm run build:container -- \
-            --tag $imageName:$version \
-            --tag $imageName:latest
+        run: npm run build:container
