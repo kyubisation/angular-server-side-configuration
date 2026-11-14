@@ -14,12 +14,12 @@ jobs:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
-          cache: yarn
+          cache: npm
           node-version-file: '.nvmrc'
-      - run: yarn install --frozen-lockfile --non-interactive
+      - run: npm clean-install
 
       - name: 'Run eslint'
-        run: yarn -s lint
+        run: npm run lint
 
   library:
     runs-on: ubuntu-latest
@@ -28,15 +28,15 @@ jobs:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
-          cache: yarn
+          cache: npm
           node-version-file: '.nvmrc'
-      - run: yarn install --frozen-lockfile --non-interactive
+      - run: npm clean-install
 
 
       - name: 'Build library'
-        run: yarn build:lib
+        run: npm run build:lib
       - name: 'Test library'
-        run: yarn test:lib
+        run: npm run test:lib
 
   cli:
     runs-on: ubuntu-latest
@@ -45,22 +45,22 @@ jobs:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
-          cache: yarn
+          cache: npm
           node-version-file: '.nvmrc'
-      - run: yarn install --frozen-lockfile --non-interactive
+      - run: npm clean-install
       - uses: actions/setup-go@v6
         with:
           go-version-file: 'go.mod'
       - run: go version
 
       - name: 'Build cli'
-        run: yarn build:cli
+        run: npm run build:cli
       - name: 'Test cli'
-        run: yarn test:cli
+        run: npm run test:cli
       - name: 'Build container image'
         run: |
           imageName="ghcr.io/$GITHUB_REPOSITORY"
           version=$(node -p -e "require('./package.json').version")
-          yarn build:container \
+          npm run build:container -- \
             --tag $imageName:$version \
             --tag $imageName:latest

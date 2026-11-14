@@ -1,6 +1,7 @@
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { basename, join } from 'path';
 import {
+  Builder,
   type BuilderContext,
   createBuilder,
   targetFromTargetString,
@@ -172,4 +173,7 @@ function extractFilePattern(
   return multiple && !result.startsWith('*') ? `**/${result}` : result;
 }
 
-export default createBuilder<NgsscBuildSchema & JsonObject>(ngsscBuild);
+const builder: Builder<NgsscBuildSchema & JsonObject> = createBuilder<
+  NgsscBuildSchema & JsonObject
+>(ngsscBuild);
+export default builder;
