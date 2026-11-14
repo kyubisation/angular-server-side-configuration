@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [22.1.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v22.0.2...v22.1.0) (2026-11-14)
+
+
+### Features
+
+* add Docker image ([#123](https://github.com/kyubisation/angular-server-side-configuration/issues/123)) ([efc2025](https://github.com/kyubisation/angular-server-side-configuration/commit/efc202525e727979959a20dd639e0ff87338d290)), closes [#122](https://github.com/kyubisation/angular-server-side-configuration/issues/122)
+
 ## [22.0.2](https://github.com/kyubisation/angular-server-side-configuration/compare/v22.0.0...v22.0.2) (2026-06-11)
 
 
