@@ -6,24 +6,25 @@ on:
       - 'v[0-9]+.[0-9]+.[0-9]+-*'
 
 jobs:
-  release-cli:
+  cli:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      packages: write
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
-          cache: yarn
+          cache: npm
           node-version-file: '.nvmrc'
-      - run: yarn install --frozen-lockfile --non-interactive
+      - run: npm clean-install
       - uses: actions/setup-go@v6
         with:
           go-version-file: 'go.mod'
       - run: go version
 
       - name: 'Build cli'
-        run: yarn build:cli
+        run: npm run build:cli
 
       - uses: actions/github-script@v8
         with:
@@ -31,80 +32,45 @@ jobs:
             const fs = require('fs');
 
             const { owner, repo } = context.repo;
-            const tagName = context.ref.split('/')[2];
-            console.log(`Creating release for ${owner} in ${repo} at ${tagName}`);
-            const release = await github.rest.repos.createRelease({
-              owner,
-              repo,
-              tag_name: tagName,
-              generate_release_notes: true,
-              draft: true,
-            });
-
-            for (const file of fs.readdirSync('./dist/cli')) {
-              console.log(`Adding asset ${file}`);
-              await github.rest.repos.uploadReleaseAsset({
-                owner,
-                repo,
-                release_id: release.data.id,
-                name: file,
-                data: await fs.readFileSync(`./dist/cli/${file}`),
-              });
+            const tag_name = `v${require('./package.json').version}`;
+            console.log(`Creating release for ${owner}/${repo} at ${tag_name}`);
+            const body = fs.readFileSync('./CHANGELOG.md', 'utf-8')
+              .split(/\n## \[\d+\.\d+\.\d+/)[1]
+              .replace(/^[\w\W]+?\n/, '')
+              .trim();
+            const prerelease = tag_name.includes('-');
+            const release = await github.rest.repos.createRelease({ owner, repo, tag_name, body, prerelease });
+            const release_id = release.data.id;
+            for (const name of fs.readdirSync('./dist/cli')) {
+              console.log(`Adding asset ${name}`);
+              const data = await fs.readFileSync(`./dist/cli/${name}`);
+              await github.rest.repos.uploadReleaseAsset({ owner, repo, release_id, name, data });
             }
+      - name: 'Publish container image'
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | podman login ghcr.io -u $GITHUB_ACTOR --password-stdin
+          npm run build:container -- --release
 
-  release-library:
+  library:
     runs-on: ubuntu-latest
-    needs: release-cli
+    needs: cli
     permissions:
       id-token: write # Required for OIDC
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
-          cache: yarn
+          cache: npm
           node-version-file: '.nvmrc'
           registry-url: 'https://registry.npmjs.org'
-      - run: yarn install --frozen-lockfile --non-interactive
+      - run: npm clean-install
 
       - name: 'Build library'
-        run: yarn build:lib
+        run: npm run build:lib
 
-      - name: 'Publish: Determine npm tag'
-        id: npm_tag
-        run: |
-          if [[ "$REF" == *"-"* ]]
-          then
-              echo "npm_tag=next" >> $GITHUB_OUTPUT
-          else
-              echo "npm_tag=latest" >> $GITHUB_OUTPUT
-          fi
-        env:
-          REF: ${{ github.ref }}
       - name: 'Publish: angular-server-side-configuration'
         run: |
           npm install --global npm@latest
+          tag=$(node -p -e "require('./package.json').version.includes('-') ? 'next' : 'latest'")
           cd dist/angular-server-side-configuration
-          npm publish --tag ${{ steps.npm_tag.outputs.npm_tag }}
-
-  release-docker-cli:
-    runs-on: ubuntu-latest
-    needs: release-cli
-    permissions:
-      packages: write
-    steps:
-      - uses: actions/checkout@v6
-      - uses: docker/login-action@v4
-        with:
-          registry: https://ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - run: |
-          ref_name="${{ github.ref_name }}"
-          echo "VERSION=${ref_name#v}" >> $GITHUB_ENV
-      - uses: docker/build-push-action@v7
-        with:
-          push: true
-          platforms: linux/amd64,linux/arm64
-          tags: |
-            ghcr.io/kyubisation/angular-server-side-configuration:latest
-            ghcr.io/kyubisation/angular-server-side-configuration:${{ env.VERSION }}
+          npm publish --tag $tag

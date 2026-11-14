@@ -15,7 +15,7 @@ async function finalizePackage() {
   const sourceDir = join(rootDir, 'projects/angular-server-side-configuration');
   const targetDir = join(rootDir, 'dist/angular-server-side-configuration');
   const schemaDirs = ['builders', 'schematics'].map((d) => join(sourceDir, d));
-  execSync('yarn ng build angular-server-side-configuration', { cwd: rootDir, stdio: 'inherit' });
+  execSync('npx ng build angular-server-side-configuration', { cwd: rootDir, stdio: 'inherit' });
 
   console.log(`Copying required assets:`);
   for (const file of ['README.md', 'LICENSE']) {
@@ -40,7 +40,7 @@ async function finalizePackage() {
   for (const schemaDir of schemaDirs) {
     const relativeSchemaDir = relative(rootDir, schemaDir);
     console.log(`Building ${relativeSchemaDir}`);
-    execSync(`yarn tsc --project ${relativeSchemaDir}/tsconfig.json`, {
+    execSync(`npx tsc --project ${relativeSchemaDir}/tsconfig.json`, {
       cwd: rootDir,
       stdio: 'inherit',
     });

@@ -1,3 +1,4 @@
+import { BuilderContext } from '@angular-devkit/architect';
 import {
   createSourceFile,
   forEachChild,
@@ -10,14 +11,13 @@ import {
   isImportDeclaration,
 } from 'typescript';
 import type { Variant } from 'angular-server-side-configuration';
-import type { logging } from '@angular-devkit/core';
 import type { NgsscContext } from './ngssc-context.cjs';
 
 /** Detect environment variables in given file. */
 export class VariableDetector {
-  private _logger?: logging.LoggerApi;
+  private _logger?: BuilderContext['logger'];
 
-  constructor(logger?: logging.LoggerApi) {
+  constructor(logger?: BuilderContext['logger']) {
     this._logger = logger;
   }
 
