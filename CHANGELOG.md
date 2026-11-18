@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [22.1.1](https://github.com/kyubisation/angular-server-side-configuration/compare/v22.1.0...v22.1.1) (2026-11-18)
+
 ## [22.1.0](https://github.com/kyubisation/angular-server-side-configuration/compare/v22.0.2...v22.1.0) (2026-11-14)
 
 
