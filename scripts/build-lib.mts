@@ -1,7 +1,6 @@
 import { execSync } from 'child_process';
-import { lstatSync, readdirSync, readFileSync, writeFileSync } from 'fs';
+import { globSync, lstatSync, readdirSync, readFileSync, writeFileSync } from 'fs';
 import { copyFile, mkdir, readFile, writeFile } from 'fs/promises';
-import * as glob from 'glob';
 import { dirname, join, relative } from 'path';
 
 await finalizePackage();
@@ -48,12 +47,14 @@ async function finalizePackage() {
 
   const packageJsonPath = join(targetDir, 'package.json');
   const distPackageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8'));
-  distPackageJson.sideEffects = glob
-    .sync(['esm*/**/public_api.{mjs,js}', 'fesm*/*{ng-env,process}.{mjs,js}'], {
+  distPackageJson.sideEffects = globSync(
+    ['esm*/**/public_api.{mjs,js}', 'fesm*/*{ng-env,process}.{mjs,js}'],
+    {
       cwd: targetDir,
-      dotRelative: true,
-    })
-    .sort();
+    },
+  )
+    .sort()
+    .map((f) => `./${f}`);
   writeFileSync(packageJsonPath, JSON.stringify(distPackageJson, null, 2), 'utf8');
 }
 

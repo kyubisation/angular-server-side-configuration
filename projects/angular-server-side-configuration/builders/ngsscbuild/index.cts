@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { existsSync, globSync, readFileSync, writeFileSync } from 'fs';
 import { basename, join } from 'path';
 import {
   Builder,
@@ -9,7 +9,6 @@ import {
 import type { ApplicationBuilderOptions } from '@angular/build';
 import type { json, JsonObject } from '@angular-devkit/core';
 import type { Ngssc } from 'angular-server-side-configuration';
-import * as glob from 'glob';
 import type { Schema } from './schema.cjs';
 import { VariableDetector } from './variable-detector.cjs';
 import type { NgsscContext } from './ngssc-context.cjs';
@@ -95,11 +94,18 @@ export async function detectVariables(
     : '**/environments/environment*.ts';
 
   const detector = new VariableDetector(context.logger);
-  const typeScriptFiles = await glob.glob(searchPattern || defaultSearchPattern, {
-    absolute: true,
+  const typeScriptFiles = globSync(searchPattern || defaultSearchPattern, {
+    withFileTypes: true,
     cwd: context.workspaceRoot,
-    ignore: ['**/node_modules/**', '**/*.spec.ts', '**/*.d.ts'],
-  });
+  })
+    .filter(
+      (d) =>
+        d.isFile() &&
+        !d.parentPath.includes('node_modules') &&
+        !d.name.endsWith('.spec.ts') &&
+        !d.name.endsWith('.d.ts'),
+    )
+    .map((d) => join(d.parentPath, d.name));
   let ngsscContext: NgsscContext | null = null;
   for (const file of typeScriptFiles) {
     const fileContent = readFileSync(file, 'utf8');
